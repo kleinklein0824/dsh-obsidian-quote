@@ -33,7 +33,7 @@ These results do not establish installation compatibility with actual Obsidian, 
 
 Run commands sequentially: they share bundles, ports and fixture directories. Generated vaults, temporary homes, browser profiles, result JSON and audit bundles must not be published as source. No actual user knowledge-base config is required by these test commands.
 
-## Client marketplace packaging (integration 0.1.0)
+## Client marketplace packaging (integration 0.1.1)
 
 Windows / Codex CLI 0.166.0-alpha.6 / Claude Code 2.1.318: the original missing-manifest error was reproduced in an isolated Codex configuration. With the new catalogs, both actual CLIs added the local marketplace and installed `obsidian-quote@dsh-obsidian-quote`. Claude's strict plugin and marketplace manifest validations passed. This checks installer compatibility, independently of the host stubs used by the original 134-case suite.
 
