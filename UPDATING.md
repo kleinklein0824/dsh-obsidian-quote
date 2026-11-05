@@ -4,6 +4,8 @@
 
 本次安全与功能修订需要同步更新三部分。只刷新 Harness 页面不能修复 Obsidian 服务端；只替换 Obsidian 插件也不会替换 Harness 中已复制的适配器和脚本。
 
+仓库：[kleinklein0824/dsh-obsidian-quote](https://github.com/kleinklein0824/dsh-obsidian-quote)。Obsidian / DeepSeek / CLI-MCP 安装包：[v0.2.1 预发布](https://github.com/kleinklein0824/dsh-obsidian-quote/releases/tag/v0.2.1)。Codex / Claude 的新增市场入口使用 `main`。
+
 ## 代码是否更新，以及当前应安装的版本
 
 已对照原始归档和首次发布逐文件核对。原始包到修复版确实更新了运行代码；本轮新增市场安装支持复用已修复的代码。
@@ -127,9 +129,11 @@
 
 本次自动化检查：完整套件 **134/134**；Host **25/25**；Client **90/90**；真实 Chrome **14/14**；锁定依赖的已知漏洞 **0 项**。Host 使用真实 HTTP 和生成笔记，Client 与 Obsidian 面板使用宿主 API 桩；Chrome 使用真实浏览器加测试服务。
 
+新增市场适配还用真正的 Codex CLI 0.166.0-alpha.6、Claude Code 2.1.318，在独立配置中完成了本地目录和 GitHub 地址两种安装；从远端安装缓存启动的 MCP 六工具各调用一次，合计 **12/12**。这些测试使用合成知识库与临时凭据，没有更新用户真实安装或配置。
+
 这些结果不能代替真实 Obsidian / DeepSeek Harness / AI 客户端安装验收，也不保证启发式规则抽取没有遗漏。用户笔记只读，配置与台账会保存；本地检索结果交给 AI 后仍可能发往其模型服务商。Windows 权限使用继承 ACL，POSIX 文件模式未在本次 Windows 环境实测。
 
 ## 可直接交给 DeepSeek Harness 的处理要求
 
-请检查当前安装的 `dsh-obsidian-quote-panel`、Obsidian Quote 与 MCP/Skill 的实际文件位置和运行版本，按本说明更新为 **Obsidian 0.2.1 / Harness 面板 0.5.1 / CLI-MCP 0.2.1**。先做私下备份，保留原知识库、插件 data.json、其他 profile 和 MCP 条目；不要显示或上传旧/新令牌。关闭 Obsidian 后更换受影响凭据，更新三个组件与环境变量，重启 Host/MCP 后刷新客户端。最终报告版本位置、实际加载路径、鉴权状态、范围检索和各模式结果，以及仍未通过的宿主验收项；不要仅凭页面加载就宣称全部修好。
+请检查当前安装的 `dsh-obsidian-quote-panel`、Obsidian Quote 与 MCP/Skill 的实际文件位置和运行版本，按本说明将需要替换的部分更新为 **Obsidian 0.2.1 / Harness 面板 0.5.1 / CLI-MCP 0.2.1**。先做私下备份，保留原知识库、插件 data.json、其他 profile 和 MCP 条目；不要显示或上传旧/新令牌。若尚未撤销原始包中的受影响凭据，关闭 Obsidian 后更换，更新接入配置与环境变量。已完整修复并更换令牌的安装无需重复替换运行文件。更新后重启 Host/MCP 并刷新客户端，报告版本位置、实际加载路径、文件校验、鉴权状态、范围检索和各模式结果，以及仍未通过的宿主验收项；不要仅凭页面加载就宣称全部修好。
 

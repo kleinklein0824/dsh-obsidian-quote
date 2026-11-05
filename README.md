@@ -114,7 +114,7 @@ npm test
 
 Codex / Claude Code 的市场接入不提供 DeepSeek 专用侧栏。其他客户端可用工具，或在本机浏览器打开 Obsidian 服务的 `/ui`。只有远程 HTTP MCP、无法运行本地 stdio 进程的客户端不能直接使用此 MCP 适配器；Obsidian 的 HTTP 检索 API 本身也不是 MCP HTTP 端点，不应直接填为远程 MCP URL。
 
-本次在 Windows 上用 **Codex CLI 0.166.0-alpha.6** 与 **Claude Code 2.1.318** 的独立测试配置完成了本地市场添加和插件安装；Claude 两份清单严格校验通过。分别从两个安装缓存中的 MCP 配置启动服务器，连接合成知识库，六个工具各调用一次，合计 **12/12**。这验证了安装器和打包入口；桌面端操作、真实用户知识库联调及其他客户端的完整验收仍待进行。
+本次在 Windows 上用 **Codex CLI 0.166.0-alpha.6** 与 **Claude Code 2.1.318** 的独立测试配置，分别完成本地目录及 GitHub 地址的市场添加和插件安装；Claude 两份清单严格校验通过。从 GitHub 安装后，再分别按两个缓存中的 MCP 配置启动服务器，连接合成知识库，六个工具各调用一次，合计 **12/12**。这验证了安装器和打包入口；桌面端操作、真实用户知识库联调及其他客户端的完整验收仍待进行。
 
 格式依据：[Codex 插件文档](https://developers.openai.com/plugins/build/plugins)、[Claude Code 插件文档](https://code.claude.com/docs/en/plugins-reference)。
 
