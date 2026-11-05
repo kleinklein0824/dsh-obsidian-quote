@@ -2,20 +2,20 @@
 
 把多个本地 Obsidian 知识库接成 AI 编码助手的只读参考资料。按需检索笔记、提取编码规则、生成带来源的上下文和项目规范摘要，提供浏览器面板、命令行与 MCP 接口。
 
-Obsidian 桌面插件版本 **0.2.3**；可选 DeepSeek Harness 面板版本 **0.5.1**；Codex / Claude Code 插件接入包版本 **0.1.2**。交付包含可复现的自动化验证；真实 Obsidian 与各 AI 客户端的完整联调仍待进行。
+Obsidian 桌面插件版本 **0.2.3**；可选 DeepSeek Harness 面板版本 **0.5.1**；Codex 接入 **0.1.3**，Claude Code 清单 **0.1.2**。本次只增加 Codex 对话内检索入口，保留已经可用的 DeepSeek、Obsidian 与 CLI/MCP 文件。原生 Codex 弹窗和所有客户端的完整操作验收仍有边界。
 
-完整安装包与源码见 [v0.2.3 预发布](https://github.com/kleinklein0824/dsh-obsidian-quote/releases/tag/v0.2.3)，包含 Codex / Claude 市场清单、Obsidian、Harness 与 CLI/MCP 组件，文件选择见 [发行说明](RELEASE-NOTES-v0.2.3.md)。
+完整安装包与源码见 [v0.2.4 预发布](https://github.com/kleinklein0824/dsh-obsidian-quote/releases/tag/v0.2.4)，包含 Codex / Claude 市场清单、Obsidian、Harness 与 CLI/MCP 组件，文件选择见 [发行说明](RELEASE-NOTES-v0.2.4.md)。未变更的组件沿用原版本文件名。
 
 ### Codex 安装后怎么使用
 
-1. 在插件详情运行“首次配置”（客户端可能显示为 Set up），或在对话中输入“检查 Obsidian Quote 连接并打开面板”。插件的配置 Skill 会检查真实连接状态，并按请求打开本机浏览器面板。
+1. 在插件详情运行“首次配置”（客户端可能显示为 Set up），或输入“在 Codex 对话里显示 Obsidian 知识库面板”。具备对话可视化能力的 Codex 会显示实际连接快照及检索入口；选择来源和关键词后，请 Codex 在后续回复调用工具并显示结果。界面本身不需要粘贴令牌，也不直接连接服务。
 2. **添加/移除知识库、设置包含/排除目录**：到 Obsidian → 设置 → 第三方插件 → Obsidian Quote；也可点击 Obsidian 左侧书本图标。登记后点击“写入接入配置”，并重建索引。
 3. **日常检索**：在 Codex 说“列出我的知识库和笔记数量”或“在前端规范库查找组件命名规则”。六个 MCP 工具按配置读取已登记的知识库，不会自行扫描整块磁盘。
-4. **可视化检索**：运行插件附带的 `node harness-skill/scripts/setup.mjs --open` 打开服务实际端口的 `/ui`；登录凭据在本机 Obsidian 面板查看，避免贴到聊天中。浏览器面板支持检索和来源选择，库管理位于 Obsidian。
+4. **浏览器检索**：明确要求打开浏览器，或运行 `node harness-skill/scripts/setup.mjs --open`，打开服务实际端口的 `/ui`。登录凭据在本机 Obsidian 面板查看，避免贴到聊天中。浏览器面板支持检索和来源选择，库管理位于 Obsidian。
 
-Codex 接入提供工具和首次配置会话；DeepSeek 专用的侧栏按钮依赖 Harness 的界面接口。旧客户端接入包 **0.1.0 / 0.1.1 存在 MCP 路径加载故障**，请从市场更新到 0.1.2 后重开会话。仅能看到 Skill 或插件徽标不能证明工具已加载。
+对话内入口需要当前 Codex 的对话可视化与消息发送能力；缺少发送入口时可复制面板中的请求，没有可视化能力时使用文本工具。它不是固定侧栏或已经验证的原生桌面弹窗。DeepSeek 原有侧栏和配置保持原样。旧客户端接入包 **0.1.0 / 0.1.1 存在 MCP 路径加载故障**，Codex 请从市场更新到 **0.1.3** 后重开会话。仅能看到 Skill 或插件徽标不能证明工具已加载。
 
-已安装用户的故障排查、令牌更换及分组件更新步骤见 [UPDATING.md](UPDATING.md)。
+已安装用户的排查和更新步骤见 [UPDATING.md](UPDATING.md)。已经正常使用的 DeepSeek 环境无需为本次 Codex 改动重装、改令牌或重写连接配置。
 
 ## 功能与工作方式
 
@@ -93,7 +93,7 @@ npm test
 
 | 客户端 | 接入方式 | 安装位置与边界 |
 | --- | --- | --- |
-| Codex 桌面版 | 本仓库的插件市场 → 安装 Obsidian Quote | 提供首次配置 Skill、检索 Skill 和六个 MCP 工具，不安装 Obsidian 本体或 DeepSeek 面板 |
+| Codex 桌面版 | 本仓库的插件市场 → 安装 Obsidian Quote | 首次配置、检索 Skill 与六个 MCP 工具；支持对话可视化时可显示检索入口 |
 | Claude Code | 本仓库的 Claude 插件市场，或手动注册 MCP | 提供同一套 Skill 和六个 MCP 工具 |
 | DeepSeek Harness | 安装 `harness-plugin/` 组合包；也可用 CLI / MCP / Skill | 专用 Host/Client 侧栏面板依赖宿主服务；修订版仍需真实宿主验收 |
 | 其他本地客户端 | 由客户端注册 stdio MCP，或使用 CLI / Skill | 必须支持对应接口；尚未逐一验证，不承诺所有插件市场直接通装 |
@@ -105,12 +105,12 @@ npm test
 在 Codex 的“添加插件市场”窗口填写：
 
 - 来源：`https://github.com/kleinklein0824/dsh-obsidian-quote`
-- Git 引用：`main`（或固定版本 `v0.2.3`）
+- Git 引用：`main`（或固定版本 `v0.2.4`）
 - 稀疏路径：**留空**，本项目的清单和工具跨多个目录。
 
 添加后选择市场 **Klein · Obsidian Quote**，安装并启用 **Obsidian Quote**。按客户端提示重开会话或刷新插件，再要求“检索我的 Obsidian 知识库中的命名规范”。接入包带首次配置与检索两项 Skill，以及 `kb_search` 等六个工具。
 
-如果出现 `marketplace root does not contain a supported manifest`，检查是否仍在使用旧缓存、旧标签 `v0.2.1`，或填写了稀疏路径。**首次 `v0.2.1` Release 早于市场适配；此入口应使用更新后的 `main` 或 `v0.2.3`。**添加市场不等于已安装其中的插件。
+如果出现 `marketplace root does not contain a supported manifest`，检查是否仍在使用旧缓存、旧标签 `v0.2.1`，或填写了稀疏路径。**首次 `v0.2.1` Release 早于市场适配；此入口应使用更新后的 `main` 或 `v0.2.4`。**添加市场不等于已安装其中的插件。
 
 ### Claude Code：从插件市场安装
 
@@ -209,7 +209,7 @@ Host 从本机配置读取令牌，通过 `/dsh-obsidian-quote-panel/rpc` 代查
 
 ## 可复现验证（2026-11-05）
 
-本次环境为 Windows、Node.js 26.7.0、npm 12.0.2：
+验证环境为 Windows、Node.js 26.7.0、npm 12.0.2。Obsidian、Harness 和 CLI/MCP 的下列结果来自 v0.2.3，运行文件与本版逐字节相同；本次重新验证 Codex 运行时、setup 和新增对话面板：
 
 | 检查 | 结果 | 验证范围 |
 | --- | --- | --- |
@@ -220,13 +220,14 @@ Host 从本机配置读取令牌，通过 `/dsh-obsidian-quote-panel/rpc` 代查
 | `npm run test:browser` | 14/14 | 真实 Chrome、测试服务与生成笔记；登录、五页签、HTML 注入、范围、360px 布局、注销 |
 | `npm run test:codex` | 通过 | 真实 Codex 安装与自动启动 MCP，发现六工具和首次配置入口；不手工展开安装路径 |
 | `npm run test:setup` | 6/6 | 本机连接状态、鉴权失败、远程地址拒绝、凭据脱敏和服务离线 |
+| 根目录 `node audit/codex-panel.cjs` | 9/9 | 合成数据、独立浏览器；凭据字段排除、注入防护、来源限定、真实输入事件后的状态恢复、发送失败与 320px 布局 |
 | `npm audit` | 0 项已知漏洞 | 验证时锁定依赖的漏洞数据库审计 |
 
 复现方法见 [audit/README.md](audit/README.md)。本次未将修订版安装到用户真实知识库，也没有对真实 Obsidian / DeepSeek Harness / Claude / Cursor / Codex 做完整联调。测试和漏洞审计不是安全认证。
 
 ## 发布
 
-将源代码 ZIP 解压后的内容上传为仓库文件；不要只把 ZIP 当作仓库源码。本次 `v0.2.3` 标签和 Release 包含完整源码、`main.js`、`manifest.json`、`styles.css` 与各组件安装 ZIP。根清单与 `plugin/manifest.json` 一致；`versions.json` 记录声明的最低版本。
+将源代码 ZIP 解压后的内容上传为仓库文件；不要只把 ZIP 当作仓库源码。本次 `v0.2.4` 标签和 Release 包含完整源码与 Codex 0.1.3 接入，以及内容保持不变的 Obsidian、Harness、CLI/MCP 安装附件。Obsidian 根清单与 `plugin/manifest.json` 仍一致；`versions.json` 记录 Obsidian 声明的最低版本。
 
 背景见 `idea.md`，本版修订见 [CHANGELOG.md](CHANGELOG.md)。许可证：MIT，见 [LICENSE](LICENSE)。
 

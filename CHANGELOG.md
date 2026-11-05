@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.4 — 2026-11-05 (prerelease; Codex integration 0.1.3)
+
+- Add a Codex setup branch for a conversation panel with real metadata, source selection and follow-up requests to the existing MCP tools; results appear in subsequent assistant replies.
+- Add a credential-free allowlist renderer and a template with injection-safe text rendering, scope preservation, host-state restoration and copyable requests when the host bridge is unavailable.
+- Keep every file under `plugin/`, `harness-plugin/` and `harness-skill/` unchanged from v0.2.3. Preserve existing DeepSeek installations and connection settings; Claude metadata remains 0.1.2.
+- Distinguish conversation UI from unverified native desktop modals/sidebars and move the original-archive security migration to a historical guide.
+
 ## 0.2.3 — 2026-11-05 (prerelease; client integration 0.1.2)
 
 - Fix actual Codex MCP startup: use canonical root plugin.json and typed mcp.json so the runtime expands the plugin root. The legacy custom config passed its placeholder literally and Node exited during initialization.

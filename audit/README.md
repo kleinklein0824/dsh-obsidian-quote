@@ -40,6 +40,12 @@ Windows / Codex CLI 0.166.0-alpha.6 / Claude Code 2.1.318: the original missing-
 Both installers also added the published GitHub URL and installed the plugin in separate isolated configurations. The test script then resolved and substituted each remote-installed cache's plugin-root path before launching MCP against a synthetic vault through real HTTP. Each package initialized, listed six tools, and passed calls to all six tools: 12/12 combined. This did not test the client's own path expansion; the Codex runtime defect was subsequently reproduced and fixed in integration 0.1.2. Credentials were generated for the fixture, and existing user configuration was not modified. This does not certify desktop interaction, a real user's vault, or every client/version.
 
 
+## Codex conversation panel (0.1.3)
+
+Run `node audit/codex-panel.cjs` from the repository root with Node 22+ and Chrome/Edge. The check uses synthetic metadata and a dedicated browser profile. It verifies public-field filtering, script injection resistance, scoped follow-up requests, state restoration without silently broadening invalid sources, bridge failure recovery, and 320px/desktop layout containment. It does not inspect the user's browser or certify a native Codex desktop modal, sidebar or the host's real confirmation flow.
+
+The panel renderer reads only the supplied public snapshot. It has no connection-file or service access. Existing Obsidian, DeepSeek and MCP runtime files must remain byte-identical to v0.2.3 for this integration-only revision.
+
 ## Actual Codex runtime and setup regression (0.1.2)
 
 `npm run test:codex` requires an installed Codex CLI. It installs this package into a temporary isolated home, starts the actual app-server, and asserts automatic MCP startup, all six tool names and the registered onboarding Skill. No path placeholder is expanded by the test. The old 0.1.0/0.1.1 config fails this test during MCP initialization. `npm run test:setup` runs six real HTTP/local-config cases for the setup helper, including credential redaction and rejection of non-loopback endpoints. Existing 12/12 direct-process checks remain useful for tools but were insufficient to certify host startup.
