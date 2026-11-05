@@ -6,6 +6,12 @@
       "command": "node",
       "args": ["${PLUGIN_ROOT}/harness-skill/scripts/mcp-server.mjs"],
       "cwd": "${PLUGIN_ROOT}"
+    },
+    "obsidian-quote-panel": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["${PLUGIN_ROOT}/codex/mcp-server.mjs"],
+      "cwd": "${PLUGIN_ROOT}"
     }
   }
 }

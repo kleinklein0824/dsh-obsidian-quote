@@ -66,11 +66,19 @@ function cli(args) {
     assert.equal(server.toolsError, null, 'Codex must launch the bundled MCP without manual path substitution: ' + server.toolsError);
     const tools = Object.keys(server.tools).sort();
     assert.deepEqual(tools, ['kb_brief', 'kb_context', 'kb_rules', 'kb_search', 'kb_stats', 'kb_vaults']);
+    const panelInventory = await rpc('mcpServerStatus/list', { serverName: 'obsidian-quote-panel' });
+    const panelServer = panelInventory.result?.data?.find(item => item.name === 'obsidian-quote-panel');
+    assert.ok(panelServer, 'Installed plugin must expose its native settings server');
+    assert.equal(panelServer.toolsError, null, 'Codex must start the native settings server');
+    assert.deepEqual(panelServer.serverCapabilities?.extensions?.['openai/settings'], {
+      readTool: 'oq_settings_read', updateTool: 'oq_settings_update',
+    }, 'Native settings capability must survive actual Codex discovery');
+    assert.ok(panelServer.tools.oq_panel?._meta?.ui?.resourceUri?.startsWith('ui://'));
     const details = await rpc('plugin/read', { pluginName: 'obsidian-quote', marketplacePath: path.join(root, '.agents/plugins/marketplace.json') });
     assert.ok(details.result?.plugin?.onboardingSkill, 'Codex setup entry must be registered');
-    const report = { actual_codex_runtime: 'passed', discovered_tools: tools, setup_entry: 'present', manual_placeholder_substitution: false, user_configuration_modified: false };
+    const report = { actual_codex_runtime: 'passed', discovered_tools: tools, native_settings_capability: panelServer.serverCapabilities.extensions['openai/settings'], native_panel_resource: panelServer.tools.oq_panel._meta.ui.resourceUri, setup_entry: 'present', manual_placeholder_substitution: false, user_configuration_modified: false };
     fs.writeFileSync(path.join(__dirname, 'codex-runtime-results.json'), JSON.stringify(report, null, 2) + '\n');
-    console.log('PASS actual Codex installation, automatic MCP startup, six tools and setup entry');
+    console.log('PASS actual Codex installation, both MCP servers, six original tools, native settings capability and UI resource');
   } finally {
     if (child.exitCode === null && child.signalCode === null) child.kill();
     await closed;

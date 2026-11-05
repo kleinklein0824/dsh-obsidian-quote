@@ -49,3 +49,11 @@ The panel renderer reads only the supplied public snapshot. It has no connection
 ## Actual Codex runtime and setup regression (0.1.2)
 
 `npm run test:codex` requires an installed Codex CLI. It installs this package into a temporary isolated home, starts the actual app-server, and asserts automatic MCP startup, all six tool names and the registered onboarding Skill. No path placeholder is expanded by the test. The old 0.1.0/0.1.1 config fails this test during MCP initialization. `npm run test:setup` runs six real HTTP/local-config cases for the setup helper, including credential redaction and rejection of non-loopback endpoints. Existing 12/12 direct-process checks remain useful for tools but were insufficient to certify host startup.
+
+## Codex native settings and direct-query panel (0.1.4)
+
+From the repository root, run `node audit/codex-settings.cjs` (7 checks) and `node audit/codex-settings-ui.cjs` (7 checks). The first starts the actual dedicated stdio panel server against synthetic authenticated HTTP data. It checks settings capability and output schema, UI resources, app-only tools, credential/path exclusion, stable vault ids, strict source handling and absence of connection-file writes.
+
+The second opens the actual panel HTML in an isolated Chrome/Edge bridge fixture. Clicks display results without model messages; tests cover injection, expired selection preservation, explicit recovery, two sequential 11-second service responses and 320px layout. Node 22+ and Chrome/Edge are required; expect the slow-response case to take about 22 seconds. This does not certify the actual desktop settings-button renderer.
+
+`test:codex` now also checks automatic startup of `obsidian-quote-panel`, discovery of `openai/settings` and the UI resource. The original six-tool server launch and all Obsidian/Harness/CLI runtime files are unchanged. Original conversation-panel coverage remains in `codex-panel.cjs`.

@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="zh-CN">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Obsidian 知识库</title>
+<style>
+  :root { color-scheme: light dark; font: 14px/1.6 system-ui, sans-serif; --border: color-mix(in srgb, CanvasText 18%, transparent); }
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 20px; color: CanvasText; background: Canvas; overflow-wrap: anywhere; }
+  h1 { font-size: 18px; margin: 0; } h2 { font-size: 15px; margin: 0 0 6px; }
+  p { margin: 8px 0; } .muted { opacity: .7; font-size: 12px; }
+  header, .row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+  header { justify-content: space-between; }
+  form { display: grid; gap: 16px; margin-top: 20px; }
+  .fields { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; }
+  label { display: grid; gap: 6px; min-width: 0; }
+  input, select, button { font: inherit; color: inherit; background: Canvas; border: 1px solid var(--border); border-radius: 8px; min-height: 44px; }
+  input, select { padding: 8px 10px; width: 100%; min-width: 0; }
+  button { padding: 8px 14px; cursor: pointer; } button:disabled { cursor: default; opacity: .5; }
+  :focus-visible { outline: 2px solid Highlight; outline-offset: 3px; }
+  button[type=submit] { background: CanvasText; color: Canvas; border-color: CanvasText; }
+  #status { margin: 14px 0; } #results { display: grid; gap: 14px; }
+  article { border-top: 1px solid var(--border); padding-top: 14px; }
+  pre { font: inherit; white-space: pre-wrap; overflow-wrap: anywhere; margin: 6px 0; }
+  @media (max-width: 420px) { body { padding: 14px; } .fields { grid-template-columns: 1fr; } }
+</style>
+<main>
+  <header><h1>Obsidian 知识库</h1><button id="refresh" type="button" disabled>刷新连接</button></header>
+  <p id="summary" class="muted">正在连接已有知识库服务…</p>
+  <form id="form">
+    <div class="fields">
+      <label>检索范围<select id="source" disabled><option value="">全部已启用知识库</option></select></label>
+      <label>返回内容<select id="mode"><option value="search">原文片段</option><option value="context">引用上下文</option></select></label>
+    </div>
+    <label>关键词<input id="query" maxlength="500" autocomplete="off" placeholder="例如：组件命名规范"></label>
+    <div class="row"><button id="search" type="submit" disabled>查询</button><label>返回条数<select id="limit"><option>3</option><option selected>5</option><option>10</option></select></label></div>
+  </form>
+  <p id="status" role="status" aria-live="polite">正在初始化面板…</p>
+  <div id="results" aria-label="检索结果"></div>
+  <p class="muted">知识库登记与服务配置在 Obsidian 中管理。对话调用方式也可以继续使用。</p>
+</main>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  let next = 0, ready = false, busy = false, invalidSource = false;
+  const pending = new Map();
+  function notify(method, params) { parent.postMessage({ jsonrpc: '2.0', method, params }, '*'); }
+  function rpc(method, params) {
+    return new Promise((resolve, reject) => {
+      const id = ++next;
+      const timeout = method === 'tools/call' ? 40000 : 20000;
+      const timer = setTimeout(() => { pending.delete(id); reject(Error('面板请求超时，请刷新连接后重试。')); }, timeout);
+      pending.set(id, { resolve, reject, timer });
+      parent.postMessage({ jsonrpc: '2.0', id, method, params }, '*');
+    });
+  }
+  function theme(context) {
+    if (context?.theme === 'dark' || context?.theme === 'light') document.documentElement.style.colorScheme = context.theme;
+  }
+  window.addEventListener('message', event => {
+    if (event.source !== parent || !event.data || event.data.jsonrpc !== '2.0') return;
+    const message = event.data, request = pending.get(message.id);
+    if (request) {
+      clearTimeout(request.timer); pending.delete(message.id);
+      message.error ? request.reject(Error('客户端没有完成面板请求，请重试。')) : request.resolve(message.result);
+    }
+    if (message.method === 'ui/notifications/host-context-changed') theme(message.params);
+  });
+  async function call(name, args = {}) {
+    const result = await rpc('tools/call', { name, arguments: args });
+    if (result?.isError) throw Error(result.content?.find(item => item.type === 'text')?.text || '知识库请求失败。');
+    if (!result?.structuredContent || typeof result.structuredContent !== 'object') throw Error('面板响应格式异常。');
+    return result.structuredContent;
+  }
+  function lock(value) {
+    busy = value; $('form').setAttribute('aria-busy', String(value));
+    $('refresh').disabled = value || !ready; $('search').disabled = value || !ready;
+    $('source').disabled = value || !ready;
+  }
+  async function refresh() {
+    lock(true); $('status').textContent = '正在检查知识库连接…';
+    try {
+      const selected = $('source').value;
+      const data = await call('oq_panel_state');
+      const enabled = data.vaults.filter(v => v.enabled);
+      $('source').replaceChildren(new Option('全部已启用知识库', ''));
+      for (const vault of enabled) {
+        const duplicates = enabled.filter(v => v.name === vault.name).length > 1;
+        $('source').appendChild(new Option(vault.name + (duplicates ? ' (' + vault.id + ')' : ''), vault.id));
+      }
+      invalidSource = selected !== '' && !enabled.some(v => v.id === selected);
+      if (invalidSource) {
+        const expired = new Option('之前的来源已失效，请重新选择', selected); expired.disabled = true;
+        $('source').appendChild(expired);
+      }
+      $('source').value = selected;
+      const docs = enabled.every(v => Number.isSafeInteger(v.docs)) ? ' · ' + enabled.reduce((sum, v) => sum + v.docs, 0) + ' 篇笔记' : '';
+      $('summary').textContent = enabled.length + ' 个已启用知识库' + docs + ' · 刚刚刷新';
+      $('status').textContent = invalidSource ? '之前选择的来源已失效，请重新选择检索范围。' : enabled.length ? '连接成功。选择来源并查询，结果会直接显示在下方。' : '没有已启用知识库，请在 Obsidian 中检查登记状态。';
+    } catch (error) { $('summary').textContent = '连接尚未验证'; $('status').textContent = error.message; }
+    finally { lock(false); }
+  }
+  $('source').addEventListener('change', () => { invalidSource = false; $('status').textContent = ''; $('results').replaceChildren(); });
+  $('refresh').addEventListener('click', refresh);
+  $('form').addEventListener('submit', async event => {
+    event.preventDefault(); if (busy || !ready) return;
+    if (invalidSource) { $('status').textContent = '之前选择的来源已失效，请重新选择检索范围。'; return; }
+    const query = $('query').value.trim();
+    if (!query) { $('status').textContent = '请先填写关键词。'; $('query').focus(); return; }
+    lock(true); $('status').textContent = '正在检索…'; $('results').replaceChildren();
+    try {
+      const data = await call('oq_panel_query', { query, source: $('source').value, mode: $('mode').value, limit: Number($('limit').value) });
+      const results = $('results');
+      for (const hit of data.hits || []) {
+        const article = document.createElement('article');
+        const heading = document.createElement('h2'); heading.textContent = hit.title + (hit.heading ? ' › ' + hit.heading : '');
+        const source = document.createElement('p'); source.className = 'muted'; source.textContent = hit.vault + ' / ' + hit.path;
+        const excerpt = document.createElement('pre'); excerpt.textContent = hit.excerpt;
+        article.append(heading, source, excerpt); results.append(article);
+      }
+      if (data.mode === 'context' && data.markdown) { const pre = document.createElement('pre'); pre.textContent = data.markdown; results.append(pre); }
+      $('status').textContent = (data.warnings || []).join('\n') || (results.childElementCount ? '检索完成。' : '没有匹配的笔记。');
+    } catch (error) { $('status').textContent = error.message; }
+    finally { lock(false); }
+  });
+  async function start() {
+    try {
+      const init = await rpc('ui/initialize', { protocolVersion: '2026-01-26', appInfo: { name: 'Obsidian Quote', version: '0.1.4' }, appCapabilities: {} });
+      theme(init?.hostContext); notify('ui/notifications/initialized', {}); ready = true;
+      new ResizeObserver(() => notify('ui/notifications/size-changed', { height: document.documentElement.scrollHeight })).observe(document.body);
+      await refresh();
+    } catch (error) { $('status').textContent = '当前窗口未建立原生面板连接。请从插件设置中的“打开知识库面板”重新打开。'; }
+  }
+  start();
+})();
+</script>
+</html>

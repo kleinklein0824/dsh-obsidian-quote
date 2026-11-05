@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.2.5 — 2026-11-05 (prerelease; Codex integration 0.1.4)
+
+- Add a dedicated app-only Codex MCP server with structured settings and a native settings action that opens an MCP Apps knowledge-base panel. Declare optional global and thread entrypoints.
+- Query the existing authenticated loopback service directly through the host bridge; display results inside the panel without sending model messages. Preserve the earlier conversation panel and all six original MCP tools.
+- Use stable vault ids, distinguish duplicate names, and reject expired or disabled sources without broadening retrieval. Keep credentials and absolute vault directories out of UI metadata.
+- Complete the settings output schema and allow valid sequential slow service responses to finish within the UI deadline.
+- Keep Obsidian, DeepSeek Harness, Claude and original CLI/MCP runtime files unchanged. Add seven protocol checks, seven isolated browser click checks and actual Codex settings-capability discovery. Desktop visual acceptance remains pending.
+- Document separate installation, panel entrypoints and text retrieval for Codex desktop/CLI, DeepSeek Harness, Claude Code and other local MCP clients.
+
 ## 0.2.4 — 2026-11-05 (prerelease; Codex integration 0.1.3)
 
 - Add a Codex setup branch for a conversation panel with real metadata, source selection and follow-up requests to the existing MCP tools; results appear in subsequent assistant replies.
