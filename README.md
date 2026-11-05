@@ -2,9 +2,18 @@
 
 把多个本地 Obsidian 知识库接成 AI 编码助手的只读参考资料。按需检索笔记、提取编码规则、生成带来源的上下文和项目规范摘要，提供浏览器面板、命令行与 MCP 接口。
 
-Obsidian 桌面插件版本 **0.2.2**；可选 DeepSeek Harness 面板版本 **0.5.1**；Codex / Claude Code 插件接入包版本 **0.1.1**。交付包含可复现的自动化验证；真实 Obsidian 与各 AI 客户端的完整联调仍待进行。
+Obsidian 桌面插件版本 **0.2.3**；可选 DeepSeek Harness 面板版本 **0.5.1**；Codex / Claude Code 插件接入包版本 **0.1.2**。交付包含可复现的自动化验证；真实 Obsidian 与各 AI 客户端的完整联调仍待进行。
 
-完整安装包与源码见 [v0.2.2 预发布](https://github.com/kleinklein0824/dsh-obsidian-quote/releases/tag/v0.2.2)，包含 Codex / Claude 市场清单、Obsidian、Harness 与 CLI/MCP 组件，文件选择见 [发行说明](RELEASE-NOTES-v0.2.2.md)。
+完整安装包与源码见 [v0.2.3 预发布](https://github.com/kleinklein0824/dsh-obsidian-quote/releases/tag/v0.2.3)，包含 Codex / Claude 市场清单、Obsidian、Harness 与 CLI/MCP 组件，文件选择见 [发行说明](RELEASE-NOTES-v0.2.3.md)。
+
+### Codex 安装后怎么使用
+
+1. 在插件详情运行“首次配置”（客户端可能显示为 Set up），或在对话中输入“检查 Obsidian Quote 连接并打开面板”。插件的配置 Skill 会检查真实连接状态，并按请求打开本机浏览器面板。
+2. **添加/移除知识库、设置包含/排除目录**：到 Obsidian → 设置 → 第三方插件 → Obsidian Quote；也可点击 Obsidian 左侧书本图标。登记后点击“写入接入配置”，并重建索引。
+3. **日常检索**：在 Codex 说“列出我的知识库和笔记数量”或“在前端规范库查找组件命名规则”。六个 MCP 工具按配置读取已登记的知识库，不会自行扫描整块磁盘。
+4. **可视化检索**：运行插件附带的 `node harness-skill/scripts/setup.mjs --open` 打开服务实际端口的 `/ui`；登录凭据在本机 Obsidian 面板查看，避免贴到聊天中。浏览器面板支持检索和来源选择，库管理位于 Obsidian。
+
+Codex 接入提供工具和首次配置会话；DeepSeek 专用的侧栏按钮依赖 Harness 的界面接口。旧客户端接入包 **0.1.0 / 0.1.1 存在 MCP 路径加载故障**，请从市场更新到 0.1.2 后重开会话。仅能看到 Skill 或插件徽标不能证明工具已加载。
 
 已安装用户的故障排查、令牌更换及分组件更新步骤见 [UPDATING.md](UPDATING.md)。
 
@@ -84,7 +93,7 @@ npm test
 
 | 客户端 | 接入方式 | 安装位置与边界 |
 | --- | --- | --- |
-| Codex 桌面版 | 本仓库的插件市场 → 安装 Obsidian Quote | 提供 Skill 和六个 MCP 工具，不安装 Obsidian 本体或 DeepSeek 面板 |
+| Codex 桌面版 | 本仓库的插件市场 → 安装 Obsidian Quote | 提供首次配置 Skill、检索 Skill 和六个 MCP 工具，不安装 Obsidian 本体或 DeepSeek 面板 |
 | Claude Code | 本仓库的 Claude 插件市场，或手动注册 MCP | 提供同一套 Skill 和六个 MCP 工具 |
 | DeepSeek Harness | 安装 `harness-plugin/` 组合包；也可用 CLI / MCP / Skill | 专用 Host/Client 侧栏面板依赖宿主服务；修订版仍需真实宿主验收 |
 | 其他本地客户端 | 由客户端注册 stdio MCP，或使用 CLI / Skill | 必须支持对应接口；尚未逐一验证，不承诺所有插件市场直接通装 |
@@ -96,12 +105,12 @@ npm test
 在 Codex 的“添加插件市场”窗口填写：
 
 - 来源：`https://github.com/kleinklein0824/dsh-obsidian-quote`
-- Git 引用：`main`（或固定版本 `v0.2.2`）
+- Git 引用：`main`（或固定版本 `v0.2.3`）
 - 稀疏路径：**留空**，本项目的清单和工具跨多个目录。
 
-添加后选择市场 **Klein · Obsidian Quote**，安装并启用 **Obsidian Quote**。按客户端提示重开会话或刷新插件，再要求“检索我的 Obsidian 知识库中的命名规范”。接入包带一项 Skill 和 `kb_search` 等六个工具。
+添加后选择市场 **Klein · Obsidian Quote**，安装并启用 **Obsidian Quote**。按客户端提示重开会话或刷新插件，再要求“检索我的 Obsidian 知识库中的命名规范”。接入包带首次配置与检索两项 Skill，以及 `kb_search` 等六个工具。
 
-如果出现 `marketplace root does not contain a supported manifest`，检查是否仍在使用旧缓存、旧标签 `v0.2.1`，或填写了稀疏路径。**首次 `v0.2.1` Release 早于市场适配；此入口应使用更新后的 `main` 或 `v0.2.2`。**添加市场不等于已安装其中的插件。
+如果出现 `marketplace root does not contain a supported manifest`，检查是否仍在使用旧缓存、旧标签 `v0.2.1`，或填写了稀疏路径。**首次 `v0.2.1` Release 早于市场适配；此入口应使用更新后的 `main` 或 `v0.2.3`。**添加市场不等于已安装其中的插件。
 
 ### Claude Code：从插件市场安装
 
@@ -112,11 +121,11 @@ npm test
 /plugin install obsidian-quote@dsh-obsidian-quote
 ```
 
-按提示确认安装并启用，在 `/mcp` 中检查服务器；必要时重新加载插件或新开会话。仓库分别提供 Codex 和 Claude 的清单及路径变量，二者复用相同 MCP 脚本。若不使用插件市场，可按下文登记 MCP。
+按提示确认安装并启用，在 `/mcp` 中检查服务器；必要时重新加载插件或新开会话。Codex 使用根 `plugin.json` 与 `mcp.json` 的完整插件格式来展开安装路径；Claude 使用 `.claude-plugin/` 与 `mcp.claude.json`，二者复用相同 MCP 脚本。若不使用插件市场，可按下文登记 MCP。
 
 Codex / Claude Code 的市场接入不提供 DeepSeek 专用侧栏。其他客户端可用工具，或在本机浏览器打开 Obsidian 服务的 `/ui`。只有远程 HTTP MCP、无法运行本地 stdio 进程的客户端不能直接使用此 MCP 适配器；Obsidian 的 HTTP 检索 API 本身也不是 MCP HTTP 端点，不应直接填为远程 MCP URL。
 
-本次在 Windows 上用 **Codex CLI 0.166.0-alpha.6** 与 **Claude Code 2.1.318** 的独立测试配置，分别完成本地目录及 GitHub 地址的市场添加和插件安装；Claude 两份清单严格校验通过。从 GitHub 安装后，再分别按两个缓存中的 MCP 配置启动服务器，连接合成知识库，六个工具各调用一次，合计 **12/12**。这验证了安装器和打包入口；桌面端操作、真实用户知识库联调及其他客户端的完整验收仍待进行。
+本次在 Windows 上用 **Codex CLI 0.166.0-alpha.6** 与 **Claude Code 2.1.318** 的独立测试配置，分别完成本地目录及 GitHub 地址的市场添加和插件安装；Claude 两份清单严格校验通过。从 GitHub 安装后，再分别按两个缓存中的 MCP 配置启动服务器，连接合成知识库，六个工具各调用一次，合计 **12/12**。早期 12/12 是测试脚本展开路径后直接启动 MCP，不能证明 Codex 自动启动成功；0.1.2 修订增加 `npm run test:codex`，让实际 Codex 安装器与运行时原样加载清单、启动 MCP、枚举六工具并识别首次配置入口。桌面端操作、真实用户知识库联调及其他客户端的完整验收仍待进行。
 
 格式依据：[Codex 插件文档](https://developers.openai.com/plugins/build/plugins)、[Claude Code 插件文档](https://code.claude.com/docs/en/plugins-reference)。
 
@@ -209,13 +218,15 @@ Host 从本机配置读取令牌，通过 `/dsh-obsidian-quote-panel/rpc` 代查
 | `npm run test:host` | 25/25 | 生成笔记、测试令牌、真实 HTTP 与模拟 Host |
 | `npm run test:client` | 90/90 | 模拟 React、语言与槽位服务 |
 | `npm run test:browser` | 14/14 | 真实 Chrome、测试服务与生成笔记；登录、五页签、HTML 注入、范围、360px 布局、注销 |
+| `npm run test:codex` | 通过 | 真实 Codex 安装与自动启动 MCP，发现六工具和首次配置入口；不手工展开安装路径 |
+| `npm run test:setup` | 6/6 | 本机连接状态、鉴权失败、远程地址拒绝、凭据脱敏和服务离线 |
 | `npm audit` | 0 项已知漏洞 | 验证时锁定依赖的漏洞数据库审计 |
 
 复现方法见 [audit/README.md](audit/README.md)。本次未将修订版安装到用户真实知识库，也没有对真实 Obsidian / DeepSeek Harness / Claude / Cursor / Codex 做完整联调。测试和漏洞审计不是安全认证。
 
 ## 发布
 
-将源代码 ZIP 解压后的内容上传为仓库文件；不要只把 ZIP 当作仓库源码。本次 `v0.2.2` 标签和 Release 包含完整源码、`main.js`、`manifest.json`、`styles.css` 与各组件安装 ZIP。根清单与 `plugin/manifest.json` 一致；`versions.json` 记录声明的最低版本。
+将源代码 ZIP 解压后的内容上传为仓库文件；不要只把 ZIP 当作仓库源码。本次 `v0.2.3` 标签和 Release 包含完整源码、`main.js`、`manifest.json`、`styles.css` 与各组件安装 ZIP。根清单与 `plugin/manifest.json` 一致；`versions.json` 记录声明的最低版本。
 
 背景见 `idea.md`，本版修订见 [CHANGELOG.md](CHANGELOG.md)。许可证：MIT，见 [LICENSE](LICENSE)。
 

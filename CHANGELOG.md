@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.3 — 2026-11-05 (prerelease; client integration 0.1.2)
+
+- Fix actual Codex MCP startup: use canonical root plugin.json and typed mcp.json so the runtime expands the plugin root. The legacy custom config passed its placeholder literally and Node exited during initialization.
+- Add a registered onboarding Skill and a local connection/panel helper. Knowledge-base registration remains in the Obsidian settings UI; Codex does not inherit the DeepSeek-only sidebar.
+- Add an actual Codex installation/startup/discovery regression with no manual path substitution and six setup-state checks. Correct earlier installer/direct-process verification claims.
+- Keep the six read-only tools and existing Obsidian/Harness functionality; advance Obsidian/MCP version declarations to 0.2.3.
+
 ## 0.2.2 — 2026-11-05 (prerelease; client integration 0.1.1)
 
 - Add Codex and Claude Code marketplace catalogs and plugin manifests so each client can discover and install the integration from this repository.

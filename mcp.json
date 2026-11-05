@@ -1,0 +1,11 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/mcp.schema.json",
+  "mcpServers": {
+    "obsidian-quote": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["${PLUGIN_ROOT}/harness-skill/scripts/mcp-server.mjs"],
+      "cwd": "${PLUGIN_ROOT}"
+    }
+  }
+}

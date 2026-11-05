@@ -1,21 +1,23 @@
 # DeepSeek Harness 已安装用户：问题排查与更新
 
-修订日期：2026-11-05。目标版本：**Obsidian Quote 0.2.2、Harness 面板 0.5.1、CLI/MCP 0.2.2**。
+修订日期：2026-11-05。目标版本：**Obsidian Quote 0.2.3、Harness 面板 0.5.1、CLI/MCP 0.2.3**。
+
+若 Codex 已安装但回答“知识库工具未加载”：0.1.0 / 0.1.1 的旧接入包可能将 `${PLUGIN_ROOT}` 原样传给 Node，导致握手断开。这与 Obsidian 是否已登记知识库是两层故障。请从市场更新到 **接入包 0.1.2**，重新加载会话，再运行“首次配置”或要求“检查 Obsidian Quote 连接”。v0.2.3 包含该运行时修复和设置入口。
 
 本次安全与功能修订需要同步更新三部分。只刷新 Harness 页面不能修复 Obsidian 服务端；只替换 Obsidian 插件也不会替换 Harness 中已复制的适配器和脚本。
 
-仓库：[kleinklein0824/dsh-obsidian-quote](https://github.com/kleinklein0824/dsh-obsidian-quote)。Obsidian / DeepSeek / CLI-MCP 安装包：[v0.2.2 预发布](https://github.com/kleinklein0824/dsh-obsidian-quote/releases/tag/v0.2.2)。Codex / Claude 的市场入口使用 `main` 或本次 `v0.2.2` 标签；完整源码包也包含两套市场清单。
+仓库：[kleinklein0824/dsh-obsidian-quote](https://github.com/kleinklein0824/dsh-obsidian-quote)。Obsidian / DeepSeek / CLI-MCP 安装包：[v0.2.3 预发布](https://github.com/kleinklein0824/dsh-obsidian-quote/releases/tag/v0.2.3)。Codex / Claude 的市场入口使用 `main` 或本次 `v0.2.3` 标签；完整源码包也包含两套市场清单。
 
 ## 代码是否更新，以及当前应安装的版本
 
-已对照原始归档和首次发布逐文件核对。原始包到修复版确实更新了运行代码；本次 v0.2.2 将市场安装支持、最新文档和各组件统一发行；版本元数据更新，继续复用 v0.2.1 已修复的功能逻辑。
+已对照原始归档和首次发布逐文件核对。原始包到修复版确实更新了运行代码；本次 v0.2.3 修复 Codex 的实际 MCP 启动，并新增首次配置 Skill 与连接检查/面板打开脚本。Obsidian 服务和 Harness 面板继续使用已修复的功能代码。
 
 | 部件 | 当前版本 | 相比原始归档的实际变更 | 相较 v0.2.1 安全修复版的变化 |
 | --- | --- | --- | --- |
-| Obsidian 服务 | 0.2.2 | `main.js` 已重建；服务鉴权/会话、来源索引、规则身份、配置写入等源码已修复 | 发布清单升级至 0.2.2；`main.js` 与 v0.2.1 相同 |
+| Obsidian 服务 | 0.2.3 | `main.js` 已重建；服务鉴权/会话、来源索引、规则身份、配置写入等源码已修复 | 发布清单升级至 0.2.3；`main.js` 与 v0.2.1 相同 |
 | DeepSeek Harness 面板 | 0.5.1 | `index.js` 加入代理来源与错误处理防护；`client.js` 和包元数据更新可见版本；探针移除旧凭据 | 面板代码与 0.5.1 安装包相同 |
-| CLI / MCP | 0.2.2 | `kb.mjs` 配置权限处理、`mcp-server.mjs` 来源警告传递已更新 | MCP 声明版本改为 0.2.2，功能逻辑不变；技能文档示例已同步 |
-| Codex / Claude Code 接入 | 0.1.1 | 新增两套市场/插件清单、各自 MCP 路径配置及共享 Skill | 两套市场清单随 v0.2.2 一同发布，接入包版本升级至 0.1.1 |
+| CLI / MCP | 0.2.3 | `kb.mjs` 配置权限处理、`mcp-server.mjs` 来源警告传递已更新 | 六个 MCP 工具的功能逻辑不变；新增 `setup.mjs` 检查连接并按请求打开面板 |
+| Codex / Claude Code 接入 | 0.1.2 | 新增两套市场/插件清单、各自 MCP 路径配置及共享 Skill | 改用完整 Codex 插件格式以展开安装路径，新增首次配置 Skill 和本机面板打开命令 |
 
 如果已完整安装 v0.2.1 安全修复版、Harness 面板 0.5.1 与更新后的 CLI/MCP，且受影响令牌已更换，原有安全修复已生效。本次可按下文升级版本清单和客户端接入包以保持发行版本一致，无需再次更换已妥善生成的新令牌。仍用原始 7z 中的版本时，应执行下文完整更新。不要仅凭文件夹名或面板截图判断脚本已更新。
 
@@ -41,13 +43,13 @@
 
 1. 记录当前 Obsidian 知识库、插件版本、实际服务地址/端口、Harness 当前 profile、插件 id `dsh-obsidian-quote-panel`、已安装插件目录，以及 MCP `args` 指向的真实脚本位置。不要在公开记录中写令牌或私人笔记。
 2. 私下备份 `<知识库>/.obsidian/plugins/obsidian-quote/data.json`、用户目录的 `.obsidian-quote/config.json` 和相关 Harness 接入条目。备份含凭据，不能上传 GitHub。
-3. 下载仓库 `v0.2.2` Release 的三个组件包，并核对附件 `Release-SHA256SUMS.txt`。该 Release 标为预发布，因为真实宿主联调尚未完成。
+3. 下载仓库 `v0.2.3` Release 的三个组件包，并核对附件 `Release-SHA256SUMS.txt`。该 Release 标为预发布，因为真实宿主联调尚未完成。
 
 ## 一、更新 Obsidian 插件
 
 1. 关闭 Obsidian，或先停用插件以免旧进程继续使用旧文件。
-2. 将 `obsidian-quote-v0.2.2.zip` 中 `obsidian-quote/` 下的 `main.js`、`manifest.json`、`styles.css` 覆盖到原插件目录。保留原 `data.json`，不要覆盖整个知识库或删除已有配置。
-3. 按下一节更换受影响的旧令牌。完成后重开 Obsidian，确认版本为 **0.2.2**、原有库列表仍在，打开面板并重建索引。
+2. 将 `obsidian-quote-v0.2.3.zip` 中 `obsidian-quote/` 下的 `main.js`、`manifest.json`、`styles.css` 覆盖到原插件目录。保留原 `data.json`，不要覆盖整个知识库或删除已有配置。
+3. 按下一节更换受影响的旧令牌。完成后重开 Obsidian，确认版本为 **0.2.3**、原有库列表仍在，打开面板并重建索引。
 
 ## 二、更换受影响的令牌
 
@@ -79,31 +81,33 @@
    这是供支持该接口的宿主使用的模板，不是 PowerShell 命令。若当前版本要求不同参数，应以实际工具定义为准；不要猜测更新参数或盲目修改整个 profile。
 
 4. Host 的 `index.js` 有安全修复，需重载插件 Host 或退出后重启 Harness；只按浏览器刷新不能替换仍在运行的 Host 模块。随后刷新客户端面板。
-5. 验收两个不同的版本位置：面板自身构建徽标应为 **`v0.5.1 · i18n`**；服务状态中的 Obsidian 版本应为 **0.2.2**。如果仍显示 `v0.5.0`，检查实际加载的包目录、重复条目和缓存。
+5. 验收两个不同的版本位置：面板自身构建徽标应为 **`v0.5.1 · i18n`**；服务状态中的 Obsidian 版本应为 **0.2.3**。如果仍显示 `v0.5.0`，检查实际加载的包目录、重复条目和缓存。
 
 代理拒绝直接来自非回环地址或非回环 Host 的请求，并检查浏览器 Origin。本机转发或反向代理可能绕过这一即时连接边界，因此不得公开暴露或反向代理。该代理没有独立多用户登录系统，仅适用于可信单用户本机环境；不要关闭这些检查。
 
 ## 四、更新 Skill / CLI / MCP
 
-1. 解压 `obsidian-quote-cli-mcp-v0.2.2.zip`，以其中 `harness-skill/` 替换原先复制的技能目录。仓库里的文件更新不会自动更新其他目录中的副本。
+1. 解压 `obsidian-quote-cli-mcp-v0.2.3.zip`，以其中 `harness-skill/` 替换原先复制的技能目录。仓库里的文件更新不会自动更新其他目录中的副本。
 2. 找到实际 MCP 注册项的 `args`，确认它指向已更新的 `harness-skill/scripts/mcp-server.mjs`。如果改了安装位置，只更新这一条记录，不覆盖其他 MCP 或 profile 设置。
 3. 同步更新 `scripts/kb.mjs` 和技能文档；脚本没有运行时 npm 依赖。关闭并重新建立 MCP 连接，让进程读取新脚本、新 URL 和新令牌。
 
 ## 可选：安装 Codex / Claude Code 接入包
 
-新增的客户端接入包版本为 **0.1.1**，通过 MCP 访问同一套 Obsidian 0.2.2 服务；它与 DeepSeek Harness 面板 0.5.1 分别安装。
+知识库登记与设置在 **Obsidian → 设置 → 第三方插件 → Obsidian Quote** 中管理；Codex 插件详情的“首次配置”入口会启动配置会话。输入“检查 Obsidian Quote 连接并打开面板”也可调用配置 Skill，打开本机浏览器检索面板。
 
-- Codex：添加本仓库为插件市场，Git 引用填 `main` 或 `v0.2.2`，稀疏路径留空；添加后再安装并启用 **Obsidian Quote**。`v0.2.1` 是市场适配前的历史标签；本次 `v0.2.2` 已包含市场清单。
+新增的客户端接入包版本为 **0.1.2**，通过 MCP 访问同一套 Obsidian 0.2.3 服务；它与 DeepSeek Harness 面板 0.5.1 分别安装。
+
+- Codex：添加本仓库为插件市场，更新市场与插件到 0.1.2，Git 引用填 `main` 或 `v0.2.3`，稀疏路径留空；添加后再安装并启用 **Obsidian Quote**。`v0.2.1` 是市场适配前的历史标签；本次 `v0.2.3` 已包含市场清单。
 - Claude Code：执行 `/plugin marketplace add kleinklein0824/dsh-obsidian-quote`，再执行 `/plugin install obsidian-quote@dsh-obsidian-quote`；重新加载后在 `/mcp` 检查服务器。
 - 其他本地客户端：按其要求注册 `harness-skill/scripts/mcp-server.mjs`，需要支持本地 stdio MCP，并能运行 Node.js。不要把 Obsidian 的普通 HTTP API 当作远程 MCP URL。
 
-这不会自动安装 Obsidian 服务或其他客户端的侧栏；所有接入仍需本机连接配置和更新后的令牌。详细步骤与实测范围见 README 的“各客户端的安装方式”。历史 v0.2.1 的 `UPDATING-zh-CN.md` 附件保留当时快照；本次 v0.2.2 的同名附件与仓库本文件同步。
+这不会自动安装 Obsidian 服务或其他客户端的侧栏；所有接入仍需本机连接配置和更新后的令牌。详细步骤与实测范围见 README 的“各客户端的安装方式”。历史 v0.2.1 的 `UPDATING-zh-CN.md` 附件保留当时快照；本次 v0.2.3 的同名附件与仓库本文件同步。
 
 ## 更新后的验收
 
 按顺序完成，并记录结果；失败时先定位所在层，不要把旧版重新暴露到公网：
 
-1. Obsidian 面板显示 **0.2.2**，库登记和引用范围仍正确；本机 `/health` 可访问。该接口免令牌，能访问不代表鉴权已经通过。
+1. Obsidian 面板显示 **0.2.3**，库登记和引用范围仍正确；本机 `/health` 可访问。该接口免令牌，能访问不代表鉴权已经通过。
 2. 在仓库或新解压接入目录执行 `node harness-skill/scripts/kb.mjs status`，服务与鉴权都通过。然后对一条已知测试笔记执行 search/context/rules/brief。
 3. 打开本机 `/ui`，用新令牌登录，检查五个页签、退出登录，以及旧令牌/旧会话被拒绝。
 4. 在两个测试库或目录放入相同规则，只选择第二个来源时仍能得到它，返回来源属于第二个库/目录。
@@ -129,11 +133,11 @@
 
 本次自动化检查：完整套件 **134/134**；Host **25/25**；Client **90/90**；真实 Chrome **14/14**；锁定依赖的已知漏洞 **0 项**。Host 使用真实 HTTP 和生成笔记，Client 与 Obsidian 面板使用宿主 API 桩；Chrome 使用真实浏览器加测试服务。
 
-新增市场适配还用真正的 Codex CLI 0.166.0-alpha.6、Claude Code 2.1.318，在独立配置中完成了本地目录和 GitHub 地址两种安装；从远端安装缓存启动的 MCP 六工具各调用一次，合计 **12/12**。这些测试使用合成知识库与临时凭据，没有更新用户真实安装或配置。
+新增市场适配还用真正的 Codex CLI 0.166.0-alpha.6、Claude Code 2.1.318，在独立配置中完成了本地目录和 GitHub 地址两种安装；从远端安装缓存启动的 MCP 六工具各调用一次，合计 **12/12**。上述 12/12 使用脚本展开安装路径，未验证 Codex 自身的路径展开；本次另加真实 Codex 运行时安装、启动与六工具发现回归，以及 6/6 首次配置状态检查。其余检索测试使用合成知识库与临时凭据，没有更新用户真实安装或配置。
 
 这些结果不能代替真实 Obsidian / DeepSeek Harness / AI 客户端安装验收，也不保证启发式规则抽取没有遗漏。用户笔记只读，配置与台账会保存；本地检索结果交给 AI 后仍可能发往其模型服务商。Windows 权限使用继承 ACL，POSIX 文件模式未在本次 Windows 环境实测。
 
 ## 可直接交给 DeepSeek Harness 的处理要求
 
-请检查当前安装的 `dsh-obsidian-quote-panel`、Obsidian Quote 与 MCP/Skill 的实际文件位置和运行版本，按本说明将需要替换的部分更新为 **Obsidian 0.2.2 / Harness 面板 0.5.1 / CLI-MCP 0.2.2**。先做私下备份，保留原知识库、插件 data.json、其他 profile 和 MCP 条目；不要显示或上传旧/新令牌。若尚未撤销原始包中的受影响凭据，关闭 Obsidian 后更换，更新接入配置与环境变量。已完整安装 v0.2.1 安全修复并更换令牌的用户，按需完成此次版本与接入包更新，不必再次更换新令牌。更新后重启 Host/MCP 并刷新客户端，报告版本位置、实际加载路径、文件校验、鉴权状态、范围检索和各模式结果，以及仍未通过的宿主验收项；不要仅凭页面加载就宣称全部修好。
+请检查当前安装的 `dsh-obsidian-quote-panel`、Obsidian Quote 与 MCP/Skill 的实际文件位置和运行版本，按本说明将需要替换的部分更新为 **Obsidian 0.2.3 / Harness 面板 0.5.1 / CLI-MCP 0.2.3**。先做私下备份，保留原知识库、插件 data.json、其他 profile 和 MCP 条目；不要显示或上传旧/新令牌。若尚未撤销原始包中的受影响凭据，关闭 Obsidian 后更换，更新接入配置与环境变量。已完整安装 v0.2.1 安全修复并更换令牌的用户，按需完成此次版本与接入包更新，不必再次更换新令牌。更新后重启 Host/MCP 并刷新客户端，报告版本位置、实际加载路径、文件校验、鉴权状态、范围检索和各模式结果，以及仍未通过的宿主验收项；不要仅凭页面加载就宣称全部修好。
 

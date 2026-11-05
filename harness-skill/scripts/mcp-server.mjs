@@ -16,7 +16,7 @@ import readline from "node:readline";
 
 const CONFIG_PATH = path.join(os.homedir(), ".obsidian-quote", "config.json");
 const DEFAULT_URL = "http://127.0.0.1:43117";
-const SERVER_INFO = { name: "obsidian-quote", version: "0.2.2" };
+const SERVER_INFO = { name: "obsidian-quote", version: "0.2.3" };
 
 function resolveConfig() {
 	let file = {};

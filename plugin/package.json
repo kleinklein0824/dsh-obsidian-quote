@@ -1,6 +1,6 @@
 {
   "name": "obsidian-quote",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Register local Obsidian vaults as read-only reference sources for AI coding harnesses.",
   "main": "main.js",
   "scripts": {
@@ -12,7 +12,9 @@
     "test:security": "node ../audit/bundle.mjs && node ../audit/run-security.cjs",
     "test:host": "node ../audit/bundle.mjs && node ../audit/run-host-probe.cjs",
     "test:client": "node ../harness-plugin/probe-client.mjs",
-    "test:browser": "node ../audit/bundle.mjs && node ../audit/browser.cjs"
+    "test:browser": "node ../audit/bundle.mjs && node ../audit/browser.cjs",
+    "test:codex": "node ../audit/codex-runtime.cjs",
+    "test:setup": "node ../audit/setup.cjs"
   },
   "keywords": [
     "obsidian",
