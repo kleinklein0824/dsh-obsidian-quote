@@ -33,3 +33,9 @@ These results do not establish installation compatibility with actual Obsidian, 
 
 Run commands sequentially: they share bundles, ports and fixture directories. Generated vaults, temporary homes, browser profiles, result JSON and audit bundles must not be published as source. No actual user knowledge-base config is required by these test commands.
 
+## Client marketplace packaging (integration 0.1.0)
+
+Windows / Codex CLI 0.166.0-alpha.6 / Claude Code 2.1.318: the original missing-manifest error was reproduced in an isolated Codex configuration. With the new catalogs, both actual CLIs added the local marketplace and installed `obsidian-quote@dsh-obsidian-quote`. Claude's strict plugin and marketplace manifest validations passed. This checks installer compatibility, independently of the host stubs used by the original 134-case suite.
+
+The MCP entry was then resolved from each installed cache's own manifest and client-specific config, launched with that client's plugin-root substitution, and called against a synthetic vault through real HTTP. Each package initialized, listed six tools, and passed calls to all six tools: 12/12 combined. Credentials were generated for the fixture, and existing user configuration was not modified. This does not certify desktop interaction, a real user's vault, or every client/version.
+

@@ -1,0 +1,15 @@
+{
+  "name": "dsh-obsidian-quote",
+  "description": "Klein's local Obsidian knowledge retrieval integration.",
+  "owner": {
+    "name": "Klein",
+    "email": "kleinkleinwu@gmail.com"
+  },
+  "plugins": [
+    {
+      "name": "obsidian-quote",
+      "source": "./",
+      "description": "Search local Obsidian notes and coding conventions through read-only MCP tools."
+    }
+  ]
+}

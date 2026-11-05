@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased — client integration 0.1.0
+
+- Add Codex and Claude Code marketplace catalogs and plugin manifests so each client can discover and install the integration from this repository.
+- Reuse the existing MCP server with each client's plugin-root variable; keep local credentials outside the package.
+- Add a shared knowledge-retrieval skill and document installation, stdio requirements, the separate Obsidian service, and the DeepSeek-only panel.
+- Correct legacy skill examples to use the current 16-hex-digit rule IDs; add an installed-component code and version checklist to UPDATING.md.
+- Existing Obsidian 0.2.1 and Harness panel 0.5.1 release assets remain unchanged; marketplace installation uses the updated main branch.
+
 ## 0.2.1 — 2026-11-05
 
 - Remove an accidentally embedded credential and machine-specific test paths from release source.

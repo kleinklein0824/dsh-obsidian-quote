@@ -2,7 +2,7 @@
 
 把多个本地 Obsidian 知识库接成 AI 编码助手的只读参考资料。按需检索笔记、提取编码规则、生成带来源的上下文和项目规范摘要，提供浏览器面板、命令行与 MCP 接口。
 
-Obsidian 桌面插件版本 **0.2.1**；可选 DeepSeek Harness 面板版本 **0.5.1**。交付包含可复现的自动化验证；真实 Obsidian 与各 AI 客户端的完整安装验收仍待进行。
+Obsidian 桌面插件版本 **0.2.1**；可选 DeepSeek Harness 面板版本 **0.5.1**；Codex / Claude Code 插件接入包版本 **0.1.0**。交付包含可复现的自动化验证；真实 Obsidian 与各 AI 客户端的完整联调仍待进行。
 
 已安装用户的故障排查、令牌更换及分组件更新步骤见 [UPDATING.md](UPDATING.md)。
 
@@ -77,6 +77,46 @@ npm test
 | `injection.timing` | manual | `manual` / `brief-first`，供接入层参考，不强制客户端调用 |
 
 高级面板中的引用组合按一行一个来源填写，例如 `规范库/前端`、`技术库/wiki`。多个来源取并集；未指定范围表示所有已启用库。遇到同名知识库须使用明确的知识库 id。
+
+## 各客户端的安装方式
+
+| 客户端 | 接入方式 | 安装位置与边界 |
+| --- | --- | --- |
+| Codex 桌面版 | 本仓库的插件市场 → 安装 Obsidian Quote | 提供 Skill 和六个 MCP 工具，不安装 Obsidian 本体或 DeepSeek 面板 |
+| Claude Code | 本仓库的 Claude 插件市场，或手动注册 MCP | 提供同一套 Skill 和六个 MCP 工具 |
+| DeepSeek Harness | 安装 `harness-plugin/` 组合包；也可用 CLI / MCP / Skill | 专用 Host/Client 侧栏面板依赖宿主服务；修订版仍需真实宿主验收 |
+| 其他本地客户端 | 由客户端注册 stdio MCP，或使用 CLI / Skill | 必须支持对应接口；尚未逐一验证，不承诺所有插件市场直接通装 |
+
+所有方式都需要先在本机 Obsidian 中安装并运行桌面插件、登记知识库，再点击“写入接入配置”。仅安装 AI 客户端的接入包不会自动部署 Obsidian 端服务。MCP 进程需要 Node.js 18+，客户端进程也须能找到 `node`。
+
+### Codex：从插件市场安装
+
+在 Codex 的“添加插件市场”窗口填写：
+
+- 来源：`https://github.com/kleinklein0824/dsh-obsidian-quote`
+- Git 引用：`main`
+- 稀疏路径：**留空**，本项目的清单和工具跨多个目录。
+
+添加后选择市场 **Klein · Obsidian Quote**，安装并启用 **Obsidian Quote**。按客户端提示重开会话或刷新插件，再要求“检索我的 Obsidian 知识库中的命名规范”。接入包带一项 Skill 和 `kb_search` 等六个工具。
+
+如果出现 `marketplace root does not contain a supported manifest`，检查是否仍在使用旧缓存、旧标签 `v0.2.1`，或填写了稀疏路径。**首次 `v0.2.1` Release 早于市场适配；此入口应使用更新后的 `main`。**添加市场不等于已安装其中的插件。
+
+### Claude Code：从插件市场安装
+
+在 Claude Code 会话中执行：
+
+```text
+/plugin marketplace add kleinklein0824/dsh-obsidian-quote
+/plugin install obsidian-quote@dsh-obsidian-quote
+```
+
+按提示确认安装并启用，在 `/mcp` 中检查服务器；必要时重新加载插件或新开会话。仓库分别提供 Codex 和 Claude 的清单及路径变量，二者复用相同 MCP 脚本。若不使用插件市场，可按下文登记 MCP。
+
+Codex / Claude Code 的市场接入不提供 DeepSeek 专用侧栏。其他客户端可用工具，或在本机浏览器打开 Obsidian 服务的 `/ui`。只有远程 HTTP MCP、无法运行本地 stdio 进程的客户端不能直接使用此 MCP 适配器；Obsidian 的 HTTP 检索 API 本身也不是 MCP HTTP 端点，不应直接填为远程 MCP URL。
+
+本次在 Windows 上用 **Codex CLI 0.166.0-alpha.6** 与 **Claude Code 2.1.318** 的独立测试配置完成了本地市场添加和插件安装；Claude 两份清单严格校验通过。分别从两个安装缓存中的 MCP 配置启动服务器，连接合成知识库，六个工具各调用一次，合计 **12/12**。这验证了安装器和打包入口；桌面端操作、真实用户知识库联调及其他客户端的完整验收仍待进行。
+
+格式依据：[Codex 插件文档](https://developers.openai.com/plugins/build/plugins)、[Claude Code 插件文档](https://code.claude.com/docs/en/plugins-reference)。
 
 ## CLI、Skill 与 MCP
 

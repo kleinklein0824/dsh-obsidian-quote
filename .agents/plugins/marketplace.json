@@ -1,0 +1,19 @@
+{
+  "name": "dsh-obsidian-quote",
+  "interface": {
+    "displayName": "Klein · Obsidian Quote"
+  },
+  "plugins": [
+    {
+      "name": "obsidian-quote",
+      "source": {
+        "source": "local",
+        "path": "./"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

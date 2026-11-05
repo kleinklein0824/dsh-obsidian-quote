@@ -4,6 +4,21 @@
 
 本次安全与功能修订需要同步更新三部分。只刷新 Harness 页面不能修复 Obsidian 服务端；只替换 Obsidian 插件也不会替换 Harness 中已复制的适配器和脚本。
 
+## 代码是否更新，以及当前应安装的版本
+
+已对照原始归档和首次发布逐文件核对。原始包到修复版确实更新了运行代码；本轮新增市场安装支持复用已修复的代码。
+
+| 部件 | 当前版本 | 相比原始归档的实际变更 | 本轮市场适配是否再次修改运行代码 |
+| --- | --- | --- | --- |
+| Obsidian 服务 | 0.2.1 | `main.js` 已重建；服务鉴权/会话、来源索引、规则身份、配置写入等源码已修复 | 否，与 `v0.2.1` 安装包一致 |
+| DeepSeek Harness 面板 | 0.5.1 | `index.js` 加入代理来源与错误处理防护；`client.js` 和包元数据更新可见版本；探针移除旧凭据 | 否，与 0.5.1 面板包一致 |
+| CLI / MCP | 0.2.1 | `kb.mjs` 配置权限处理、`mcp-server.mjs` 来源警告传递已更新 | 否，两份脚本与已发布包一致；技能文档示例同步更新 |
+| Codex / Claude Code 接入 | 0.1.0 | 新增两套市场/插件清单、各自 MCP 路径配置及共享 Skill | 新增接入文件，复用同一 MCP 脚本 |
+
+如果已安装完整的 Obsidian 0.2.1、Harness 面板 0.5.1 与更新后的 CLI/MCP，且受影响令牌已更换，本轮无需重复覆盖这些运行文件。仍用原始 7z 中的版本时，应执行下文完整更新。不要仅凭文件夹名或面板截图判断脚本已更新。
+
+请核对实际加载路径，并将本机 `main.js`、Harness 的 `index.js` / `client.js`、CLI/MCP 两份脚本与相应 Release 包里的文件逐一比较 SHA256；面板版本与服务版本分别确认。已安装文件未匹配前，不能把仓库中的修复视为本机已生效。
+
 ## 发现的问题及修复
 
 | 旧版问题或症状 | 原因与本次处理 | 需要更新的部分 |
@@ -71,6 +86,16 @@
 1. 解压 `obsidian-quote-cli-mcp-v0.2.1.zip`，以其中 `harness-skill/` 替换原先复制的技能目录。仓库里的文件更新不会自动更新其他目录中的副本。
 2. 找到实际 MCP 注册项的 `args`，确认它指向已更新的 `harness-skill/scripts/mcp-server.mjs`。如果改了安装位置，只更新这一条记录，不覆盖其他 MCP 或 profile 设置。
 3. 同步更新 `scripts/kb.mjs` 和技能文档；脚本没有运行时 npm 依赖。关闭并重新建立 MCP 连接，让进程读取新脚本、新 URL 和新令牌。
+
+## 可选：安装 Codex / Claude Code 接入包
+
+新增的客户端接入包版本为 **0.1.0**，通过 MCP 访问同一套 Obsidian 0.2.1 服务；它与 DeepSeek Harness 面板 0.5.1 分别安装。
+
+- Codex：添加本仓库为插件市场，Git 引用填 `main`，稀疏路径留空；添加后再安装并启用 **Obsidian Quote**。`v0.2.1` 是市场适配前的旧标签，不能用来安装新增的市场。
+- Claude Code：执行 `/plugin marketplace add kleinklein0824/dsh-obsidian-quote`，再执行 `/plugin install obsidian-quote@dsh-obsidian-quote`；重新加载后在 `/mcp` 检查服务器。
+- 其他本地客户端：按其要求注册 `harness-skill/scripts/mcp-server.mjs`，需要支持本地 stdio MCP，并能运行 Node.js。不要把 Obsidian 的普通 HTTP API 当作远程 MCP URL。
+
+这不会自动安装 Obsidian 服务或其他客户端的侧栏；所有接入仍需本机连接配置和更新后的令牌。详细步骤与实测范围见 README 的“各客户端的安装方式”。原有 `UPDATING-zh-CN.md` 发布附件是首次发布时的说明，仓库内本文件包含后续客户端适配补充。
 
 ## 更新后的验收
 

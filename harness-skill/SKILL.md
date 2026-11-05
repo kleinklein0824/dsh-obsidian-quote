@@ -48,7 +48,7 @@ node "$SKILL_DIR/scripts/kb.mjs" status
    node "$SKILL_DIR/scripts/kb.mjs" brief --project .
    ```
 
-   返回按 `必须 / 建议 / 可选` 分组的条款清单，每条带稳定编号（如 `R-3F2A1B`）与来源路径。技术栈由目录自动识别，也可 `--stack vue,typescript` 指定；用户建过引用组合时优先加 `--profile 组合名`。**这是一次性摘要，不要每轮重复生成。**
+   返回按 `必须 / 建议 / 可选` 分组的条款清单，每条带稳定编号（如 `R-3F2A1B6C7D8E9012`）与来源路径。技术栈由目录自动识别，也可 `--stack vue,typescript` 指定；用户建过引用组合时优先加 `--profile 组合名`。**这是一次性摘要，不要每轮重复生成。**
 
 2. **具体问题**：按主题检索原文片段或条款。
 
@@ -124,7 +124,7 @@ node "$SKILL_DIR/scripts/kb.mjs" rules "命名" --json
 - Obsidian test1 / STM32/课程知识图谱/02-GPIO/GPIO工作方式.md
 ```
 
-引用条款时可带编号：`按 R-3F2A1B（组件名必须 PascalCase）`。不要把来源写成代码注释塞进产物文件，除非用户要求。
+引用条款时可带编号：`按 R-3F2A1B6C7D8E9012（组件名必须 PascalCase）`。不要把来源写成代码注释塞进产物文件，除非用户要求。
 
 ## 失败处理
 

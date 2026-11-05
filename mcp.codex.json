@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "obsidian-quote": {
+      "command": "node",
+      "args": ["${PLUGIN_ROOT}/harness-skill/scripts/mcp-server.mjs"]
+    }
+  }
+}
