@@ -1,0 +1,39 @@
+{
+  "checked_at_utc": "2026-11-05T15:49:34.160Z",
+  "total": 6,
+  "passed": 6,
+  "checks": [
+    {
+      "name": "Eight simultaneous starts reuse one listener",
+      "passed": true
+    },
+    {
+      "name": "A second service on the occupied port uses another port",
+      "passed": true
+    },
+    {
+      "name": "Four independent stdio clients initialize against the same service",
+      "passed": true
+    },
+    {
+      "name": "48 HTTP and 32 MCP searches preserve their own requested source",
+      "passed": true
+    },
+    {
+      "name": "All clients contribute to one shared citation ledger",
+      "passed": true
+    },
+    {
+      "name": "Concurrent rebuild requests converge and leave both notes unchanged",
+      "passed": true
+    }
+  ],
+  "synthetic_notes": 2,
+  "independent_mcp_clients": 4,
+  "concurrent_http_searches": 48,
+  "concurrent_mcp_searches": 32,
+  "shared_ledger_queries": 80,
+  "real_vaults_accessed": false,
+  "real_configuration_written": false,
+  "runtime_revision": "94ba820381836f53c1d11a6ce76f4e154967c602"
+}

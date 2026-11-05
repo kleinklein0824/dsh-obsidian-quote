@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.2.6 — 2026-11-05 (prerelease; documentation and screenshots only)
+
+- Add user-provided screenshots of the Codex plugin settings, native knowledge panel and existing DeepSeek sidebar. Redact private workspace, vault and note names in the published copy.
+- Match the actual Codex settings button label, “Obsidian 知识库”, and record observed desktop entry/connection acceptance without claiming screenshot evidence of query results.
+- Explain sharing one Obsidian service across harnesses, distinct service port collisions, shared connection-file overwrites, cached client connections and shared citation statistics.
+- Record six isolated concurrent-use checks: four stdio clients, 48 HTTP and 32 MCP searches, scoped results, occupied-port fallback and unchanged synthetic notes.
+- Remove optional personal email fields from four marketplace/plugin manifests; keep the explicitly published contact in the root README. Launch settings and component versions are unchanged.
+- Keep every runtime code file and component version identical to v0.2.5. Reuse existing Obsidian, Harness and CLI/MCP installation assets; no user configuration or installed DeepSeek package is rewritten.
+
 ## 0.2.5 — 2026-11-05 (prerelease; Codex integration 0.1.4)
 
 - Add a dedicated app-only Codex MCP server with structured settings and a native settings action that opens an MCP Apps knowledge-base panel. Declare optional global and thread entrypoints.

@@ -2,8 +2,7 @@
   "name": "dsh-obsidian-quote",
   "description": "Klein's local Obsidian knowledge retrieval integration.",
   "owner": {
-    "name": "Klein",
-    "email": "kleinkleinwu@gmail.com"
+    "name": "Klein"
   },
   "plugins": [
     {

@@ -4,8 +4,7 @@
   "version": "0.1.4",
   "description": "Search local Obsidian vaults and cited coding conventions through six read-only MCP tools.",
   "author": {
-    "name": "Klein",
-    "email": "kleinkleinwu@gmail.com"
+    "name": "Klein"
   },
   "homepage": "https://github.com/kleinklein0824/dsh-obsidian-quote",
   "repository": "https://github.com/kleinklein0824/dsh-obsidian-quote",

@@ -57,3 +57,11 @@ From the repository root, run `node audit/codex-settings.cjs` (7 checks) and `no
 The second opens the actual panel HTML in an isolated Chrome/Edge bridge fixture. Clicks display results without model messages; tests cover injection, expired selection preservation, explicit recovery, two sequential 11-second service responses and 320px layout. Node 22+ and Chrome/Edge are required; expect the slow-response case to take about 22 seconds. This does not certify the actual desktop settings-button renderer.
 
 `test:codex` now also checks automatic startup of `obsidian-quote-panel`, discovery of `openai/settings` and the UI resource. The original six-tool server launch and all Obsidian/Harness/CLI runtime files are unchanged. Original conversation-panel coverage remains in `codex-panel.cjs`.
+
+## Documentation acceptance and concurrent-use check (v0.2.6)
+
+User-provided screenshots in the main README show the actual Codex settings entry, open native panel and existing DeepSeek sidebar. They establish the observed entry and connection state; the Codex screenshot has an empty query field, so it does not establish desktop query-result acceptance. Private workspace, vault and note names are covered in the published copy.
+
+`concurrent-use-evidence.json` records a separate isolated acceptance run against the existing `QuoteServer`, `VaultIndexer`, original MCP script and Codex panel script. It created two synthetic vaults and a temporary loopback service, started three independent six-tool MCP processes plus one panel MCP process, then issued 48 HTTP and 32 MCP searches together. Each requested source was checked; the shared ledger reached 80 queries and note bytes/mtimes stayed unchanged. Repeated starts, a second listener on the occupied port and concurrent index rebuilds were also checked, for 6/6 checks. No real user vault or connection-file write was involved. This is a recorded acceptance run, not a new all-Harness UI test suite or a throughput guarantee.
+
+Runtime files and versions remain identical to v0.2.5. Earlier suite results keep their original validation version; they were not all rerun for a documentation release.
