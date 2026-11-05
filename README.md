@@ -177,3 +177,9 @@ Host 从本机配置读取令牌，通过 `/dsh-obsidian-quote-panel/rpc` 代查
 
 背景见 `idea.md`，本版修订见 [CHANGELOG.md](CHANGELOG.md)。许可证：MIT，见 [LICENSE](LICENSE)。
 
+## 作者
+
+Klein
+
+邮箱：[kleinkleinwu@gmail.com](mailto:kleinkleinwu@gmail.com)
+
