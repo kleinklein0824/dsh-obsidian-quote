@@ -1,0 +1,30 @@
+{
+  "name": "obsidian-quote",
+  "version": "0.2.1",
+  "description": "Register local Obsidian vaults as read-only reference sources for AI coding harnesses.",
+  "main": "main.js",
+  "scripts": {
+    "dev": "node esbuild.config.mjs",
+    "build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
+    "typecheck": "tsc -noEmit -skipLibCheck",
+    "test": "node ../audit/bundle.mjs && node ../audit/run.cjs",
+    "audit": "node ../audit/bundle.mjs && node ../audit/run.cjs",
+    "test:security": "node ../audit/bundle.mjs && node ../audit/run-security.cjs",
+    "test:host": "node ../audit/bundle.mjs && node ../audit/run-host-probe.cjs",
+    "test:client": "node ../harness-plugin/probe-client.mjs",
+    "test:browser": "node ../audit/bundle.mjs && node ../audit/browser.cjs"
+  },
+  "keywords": [
+    "obsidian",
+    "vault",
+    "context",
+    "harness"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "esbuild": "0.28.2",
+    "obsidian": "^1.6.6",
+    "typescript": "^5.5.2"
+  }
+}

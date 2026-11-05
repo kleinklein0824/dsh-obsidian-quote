@@ -1,0 +1,496 @@
+/* Obsidian Quote panel — card-based layout inspired by EasyUI components.
+   All colors come from Obsidian theme variables so light/dark themes work. */
+
+.obsidian-quote-panel {
+	--oq-radius-lg: 16px;
+	--oq-radius: 12px;
+	--oq-radius-sm: 8px;
+	--oq-gap: 10px;
+	padding-bottom: 24px;
+}
+
+.obsidian-quote-panel .oq-title {
+	margin: 0;
+	font-size: 1.35em;
+	font-weight: 650;
+	letter-spacing: -0.01em;
+	line-height: 1.25;
+}
+
+.obsidian-quote-panel .oq-hint {
+	margin: 4px 0 0;
+	color: var(--text-muted);
+	font-size: var(--font-ui-smaller);
+	line-height: 1.5;
+}
+
+/* ------------------------------------------------------------------ hero */
+.obsidian-quote-panel .oq-hero {
+	padding: 16px;
+	margin-bottom: 14px;
+	border: 1px solid var(--background-modifier-border);
+	border-radius: var(--oq-radius-lg);
+	background: linear-gradient(180deg, var(--background-secondary), var(--background-primary));
+}
+
+.obsidian-quote-panel .oq-hero-top {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-start;
+	justify-content: space-between;
+	gap: 12px;
+}
+
+.obsidian-quote-panel .oq-hero-heading {
+	min-width: 0;
+}
+
+.obsidian-quote-panel .oq-hero-sub {
+	max-width: 34em;
+}
+
+.obsidian-quote-panel .oq-pill {
+	display: inline-flex;
+	flex: none;
+	align-items: center;
+	gap: 6px;
+	padding: 4px 10px;
+	border: 1px solid var(--background-modifier-border);
+	border-radius: 999px;
+	background: var(--background-primary);
+	color: var(--text-muted);
+	font-size: 11.5px;
+	font-weight: 500;
+	white-space: nowrap;
+}
+
+.obsidian-quote-panel .oq-pill-dot {
+	width: 6px;
+	height: 6px;
+	border-radius: 50%;
+	background: var(--text-faint);
+}
+
+.obsidian-quote-panel .oq-pill.is-on .oq-pill-dot {
+	background: var(--color-green, #22c55e);
+}
+
+.obsidian-quote-panel .oq-pill.is-busy .oq-pill-dot {
+	background: var(--color-orange, var(--text-warning, #f59e0b));
+}
+
+.obsidian-quote-panel .oq-status {
+	padding: 8px 10px;
+	margin-top: 12px;
+	border: 1px solid var(--background-modifier-border);
+	border-radius: var(--oq-radius-sm);
+	background: var(--background-primary);
+}
+
+.obsidian-quote-panel .oq-status-line {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	font-size: 12.5px;
+	font-weight: 500;
+}
+
+.obsidian-quote-panel .oq-status-meta {
+	margin-top: 2px;
+	color: var(--text-muted);
+	font-size: 11.5px;
+}
+
+.obsidian-quote-panel .oq-dot {
+	width: 8px;
+	height: 8px;
+	flex: none;
+	border-radius: 50%;
+	background: var(--text-faint);
+}
+
+.obsidian-quote-panel .oq-dot.is-on {
+	background: var(--color-green, #22c55e);
+}
+
+.obsidian-quote-panel .oq-dot.is-off {
+	background: var(--text-faint);
+}
+
+.obsidian-quote-panel .oq-metrics {
+	display: grid;
+	/* Container-driven, so a narrow sidebar does not depend on window width. */
+	grid-template-columns: repeat(auto-fit, minmax(58px, 1fr));
+	gap: 8px;
+	margin-top: 10px;
+}
+
+.obsidian-quote-panel .oq-metric {
+	padding: 8px 10px;
+	border: 1px solid var(--background-modifier-border);
+	border-radius: var(--oq-radius-sm);
+	background: var(--background-primary);
+}
+
+.obsidian-quote-panel .oq-metric-value {
+	font-size: 18px;
+	font-weight: 650;
+	line-height: 1.2;
+	font-variant-numeric: tabular-nums;
+}
+
+.obsidian-quote-panel .oq-metric-label {
+	margin-top: 2px;
+	color: var(--text-muted);
+	font-size: 11px;
+}
+
+.obsidian-quote-panel .oq-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin-top: 12px;
+}
+
+/* --------------------------------------------------------------- buttons */
+.obsidian-quote-panel .oq-btn {
+	height: 32px;
+	padding: 0 12px;
+	border: 1px solid var(--background-modifier-border);
+	border-radius: var(--oq-radius-sm);
+	background: var(--background-primary);
+	color: var(--text-normal);
+	font-size: 13px;
+	font-weight: 500;
+	line-height: 1;
+	box-shadow: none;
+	cursor: pointer;
+	transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+}
+
+.obsidian-quote-panel .oq-btn:hover {
+	background: var(--background-modifier-hover);
+}
+
+.obsidian-quote-panel .oq-btn:active {
+	transform: translateY(1px);
+}
+
+.obsidian-quote-panel .oq-btn:focus-visible {
+	outline: 2px solid var(--interactive-accent);
+	outline-offset: 2px;
+}
+
+.obsidian-quote-panel .oq-btn:disabled {
+	opacity: 0.55;
+	cursor: default;
+}
+
+.obsidian-quote-panel .oq-btn-primary {
+	border-color: var(--interactive-accent);
+	background: var(--interactive-accent);
+	color: var(--text-on-accent);
+}
+
+.obsidian-quote-panel .oq-btn-primary:hover {
+	background: var(--interactive-accent-hover);
+	border-color: var(--interactive-accent-hover);
+}
+
+.obsidian-quote-panel .oq-btn-secondary {
+	background: var(--background-secondary);
+}
+
+.obsidian-quote-panel .oq-btn-ghost {
+	border-color: transparent;
+	background: transparent;
+	color: var(--text-muted);
+}
+
+.obsidian-quote-panel .oq-btn-ghost:hover {
+	color: var(--text-normal);
+	background: var(--background-modifier-hover);
+}
+
+/* ----------------------------------------------------------------- cards */
+.obsidian-quote-panel .oq-card {
+	margin-bottom: 12px;
+	border: 1px solid var(--background-modifier-border);
+	border-radius: 14px;
+	background: var(--background-primary);
+	overflow: hidden;
+}
+
+.obsidian-quote-panel .oq-card-head {
+	padding: 12px 14px 0;
+}
+
+.obsidian-quote-panel .oq-card-heading {
+	min-width: 0;
+}
+
+.obsidian-quote-panel .oq-card-title {
+	margin: 0;
+	font-size: 13.5px;
+	font-weight: 650;
+	letter-spacing: 0.01em;
+	line-height: 1.35;
+}
+
+.obsidian-quote-panel .oq-card-desc {
+	margin: 3px 0 0;
+	color: var(--text-muted);
+	font-size: 11.5px;
+	line-height: 1.5;
+}
+
+.obsidian-quote-panel .oq-card-body {
+	padding: 6px 14px 10px;
+}
+
+.obsidian-quote-panel .oq-card-body .setting-item {
+	flex-wrap: wrap;
+	align-items: flex-start;
+	gap: 10px;
+	padding: 10px 0;
+	border-top: 1px solid var(--background-modifier-border);
+}
+
+.obsidian-quote-panel .oq-card-body .setting-item:first-child {
+	padding-top: 4px;
+	border-top: none;
+}
+
+.obsidian-quote-panel .oq-card-body .setting-item:last-child {
+	padding-bottom: 2px;
+}
+
+.obsidian-quote-panel .oq-card-body .setting-item-name {
+	font-size: 13px;
+	font-weight: 550;
+}
+
+.obsidian-quote-panel .oq-card-body .setting-item-description {
+	margin-top: 2px;
+	color: var(--text-muted);
+	font-size: 11.5px;
+	line-height: 1.45;
+}
+
+.obsidian-quote-panel .oq-card-body .setting-item-info {
+	flex: 1 1 160px;
+	min-width: 0;
+}
+
+.obsidian-quote-panel .oq-card-body .setting-item-control {
+	flex: 0 1 auto;
+	flex-wrap: wrap;
+	gap: 6px;
+}
+
+/* Rows that carry a free-text field need the full card width; numeric rows
+   stay compact. :has() is supported by Obsidian's Electron runtime. */
+.obsidian-quote-panel .oq-card-body .setting-item:has(.oq-textarea),
+.obsidian-quote-panel .oq-card-body .setting-item:has(.oq-token),
+.obsidian-quote-panel .oq-card-body .setting-item:has(.oq-input:not(.oq-input-number)) {
+	flex-direction: column;
+	align-items: stretch;
+}
+
+.obsidian-quote-panel .oq-card-body .setting-item:has(.oq-textarea) .setting-item-info,
+.obsidian-quote-panel .oq-card-body .setting-item:has(.oq-token) .setting-item-info,
+.obsidian-quote-panel .oq-card-body .setting-item:has(.oq-input:not(.oq-input-number)) .setting-item-info {
+	flex: none;
+}
+
+.obsidian-quote-panel .oq-card-body .setting-item:has(.oq-textarea) .setting-item-control,
+.obsidian-quote-panel .oq-card-body .setting-item:has(.oq-token) .setting-item-control,
+.obsidian-quote-panel .oq-card-body .setting-item:has(.oq-input:not(.oq-input-number)) .setting-item-control {
+	width: 100%;
+	flex-wrap: nowrap;
+}
+
+.obsidian-quote-panel .oq-card-body .setting-item:has(.oq-textarea) .oq-input,
+.obsidian-quote-panel .oq-card-body .setting-item:has(.oq-token) .oq-input,
+.obsidian-quote-panel .oq-card-body .setting-item:has(.oq-input:not(.oq-input-number)) .oq-input {
+	flex: 1 1 auto;
+	width: auto;
+	max-width: none;
+	min-width: 0;
+}
+
+.obsidian-quote-panel .oq-card-body .setting-item:has(.oq-textarea) .oq-textarea {
+	flex: 1 1 auto;
+	width: 100%;
+}
+
+/* -------------------------------------------------------------- vault list */
+.obsidian-quote-panel .oq-vault-list {
+	padding: 0;
+	margin: 0;
+	border: none;
+}
+
+.obsidian-quote-panel .oq-vault-list .setting-item {
+	padding: 10px 0;
+	border-top: 1px solid var(--background-modifier-border);
+}
+
+.obsidian-quote-panel .oq-vault-list .setting-item:first-child {
+	padding-top: 2px;
+	border-top: none;
+}
+
+.obsidian-quote-panel .oq-empty {
+	padding: 14px;
+	margin: 4px 0 8px;
+	border: 1px dashed var(--background-modifier-border);
+	border-radius: var(--oq-radius-sm);
+	color: var(--text-muted);
+	font-size: 12px;
+	text-align: center;
+}
+
+/* ------------------------------------------------------------------ forms */
+.obsidian-quote-panel .oq-input,
+.obsidian-quote-panel .oq-select {
+	min-width: 0;
+	max-width: 320px;
+	height: 32px;
+	padding: 0 8px;
+	border: 1px solid var(--background-modifier-border);
+	border-radius: var(--oq-radius-sm);
+	background: var(--background-modifier-form-field);
+	color: var(--text-normal);
+	font-size: 12.5px;
+	box-shadow: none;
+}
+
+.obsidian-quote-panel .oq-input:focus,
+.obsidian-quote-panel .oq-select:focus {
+	border-color: var(--interactive-accent);
+	box-shadow: 0 0 0 2px var(--background-modifier-border-focus);
+	outline: none;
+}
+
+.obsidian-quote-panel .oq-input-number {
+	width: 96px;
+	max-width: 96px;
+	text-align: right;
+	font-variant-numeric: tabular-nums;
+}
+
+.obsidian-quote-panel .oq-textarea {
+	width: 100%;
+	min-width: 0;
+	min-height: 62px;
+	padding: 6px 8px;
+	border: 1px solid var(--background-modifier-border);
+	border-radius: var(--oq-radius-sm);
+	background: var(--background-modifier-form-field);
+	color: var(--text-normal);
+	font-family: var(--font-monospace);
+	font-size: 12px;
+	line-height: 1.5;
+	resize: vertical;
+	box-shadow: none;
+}
+
+.obsidian-quote-panel .oq-textarea:focus {
+	border-color: var(--interactive-accent);
+	box-shadow: 0 0 0 2px var(--background-modifier-border-focus);
+	outline: none;
+}
+
+.obsidian-quote-panel .oq-switch {
+	cursor: pointer;
+	accent-color: var(--interactive-accent);
+}
+
+.obsidian-quote-panel .oq-select {
+	cursor: pointer;
+}
+
+.obsidian-quote-panel .oq-icon-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 28px;
+	height: 28px;
+	border-radius: 6px;
+	color: var(--text-muted);
+	cursor: pointer;
+}
+
+.obsidian-quote-panel .oq-icon-btn:hover {
+	background: var(--background-modifier-hover);
+	color: var(--text-normal);
+}
+
+.obsidian-quote-panel .oq-icon-btn-danger:hover {
+	color: var(--text-error);
+}
+
+.obsidian-quote-panel .oq-token {
+	width: 100%;
+	max-width: 100%;
+	font-family: var(--font-monospace);
+	color: var(--text-muted);
+}
+
+.obsidian-quote-panel .oq-config {
+	max-height: 150px;
+	padding: 10px 12px;
+	margin: 6px 0 0;
+	border: 1px solid var(--background-modifier-border);
+	border-radius: var(--oq-radius-sm);
+	background: var(--background-secondary);
+	font-size: 11.5px;
+	line-height: 1.5;
+	white-space: pre-wrap;
+	word-break: break-all;
+	overflow: auto;
+	user-select: all;
+}
+
+/* ----------------------------------------------------------------- ledger */
+.obsidian-quote-panel .oq-ledger {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	margin: 8px 0;
+}
+
+.obsidian-quote-panel .oq-ledger-row {
+	display: flex;
+	justify-content: space-between;
+	gap: 8px;
+	padding: 8px 10px;
+	border: 1px solid var(--background-modifier-border);
+	border-radius: var(--oq-radius-sm);
+	background: var(--background-secondary);
+	font-size: 11.5px;
+}
+
+.obsidian-quote-panel .oq-ledger-query {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.obsidian-quote-panel .oq-ledger-meta {
+	flex: none;
+	color: var(--text-muted);
+	font-variant-numeric: tabular-nums;
+}
+
+/* ------------------------------------------------------------- settings tab */
+.obsidian-quote-settings .oq-title {
+	font-size: var(--font-ui-large);
+}
+
+@media (max-width: 460px) {
+	.obsidian-quote-panel .oq-hero-top {
+		flex-direction: column;
+	}
+}

@@ -1,0 +1,179 @@
+# Obsidian Quote
+
+把多个本地 Obsidian 知识库接成 AI 编码助手的只读参考资料。按需检索笔记、提取编码规则、生成带来源的上下文和项目规范摘要，提供浏览器面板、命令行与 MCP 接口。
+
+Obsidian 桌面插件版本 **0.2.1**；可选 DeepSeek Harness 面板版本 **0.5.1**。交付包含可复现的自动化验证；真实 Obsidian 与各 AI 客户端的完整安装验收仍待进行。
+
+已安装用户的故障排查、令牌更换及分组件更新步骤见 [UPDATING.md](UPDATING.md)。
+
+## 功能与工作方式
+
+- 多知识库登记、启用/停用，按库、子目录、标签限制范围，并可保存命名引用组合。
+- 只读扫描 Markdown，按标题分块，使用 BM25 与中文二元组进行词法检索。
+- 根据“必须、建议、避免”等线索提取规范条款，保留来源；按技术栈生成有字符预算的项目规范摘要。
+- 本地引用台账统计查询与被引用的片段。
+- 自包含浏览器面板 `/ui`，包含检索、上下文、规则、摘要、统计五个页签。
+- 零运行时 npm 依赖的 CLI、六个只读 MCP 工具，以及实验性的 DeepSeek Harness 原生面板适配。
+
+```text
+本地 Markdown 知识库 → Obsidian 桌面插件 → 本机 HTTP 服务
+                                              ↑
+                        浏览器 / CLI / MCP / 可选 Harness 面板
+```
+
+默认按需检索，不把整个知识库一次性交给模型。检索与索引在本机完成；如果 AI 客户端把检索结果发给模型服务商，后续处理可能经过网络。
+
+## 安装与构建
+
+从发行附件取得 `main.js`、`manifest.json`、`styles.css`，将三者放到：
+
+```text
+<你的知识库>/.obsidian/plugins/obsidian-quote/
+```
+
+或者将安装 ZIP 中的 `obsidian-quote/` 文件夹解压到 `<你的知识库>/.obsidian/plugins/`。重新加载 Obsidian，在第三方插件中启用 **Obsidian Quote**。只提供桌面版；发布到 GitHub 不代表已经上架 Obsidian 社区插件目录。
+
+在仓库根目录执行开发构建：
+
+```bash
+cd plugin
+npm ci --ignore-scripts
+npm run build
+npm test
+```
+
+构建输出是 `plugin/main.js`，安装时搭配同目录中的清单和样式。CLI 与 MCP 需要 Node.js 18+；可选浏览器测试要求 Node.js 22+。
+
+## 首次使用
+
+1. 点击 Obsidian 左侧书本图标，或执行“打开知识库引用面板”。首次启用且列表为空时会登记当前库，可在面板关闭这一选项。
+2. 添加其他知识库的绝对路径，设置包含目录、排除目录、标签和启用状态。“扫描本机”只读取 Obsidian 已登记库清单。
+3. 保持引用服务只监听回环地址。默认 `127.0.0.1:43117`，端口占用时顺延，以面板实际地址为准。
+4. 点击“写入接入配置”，将地址与令牌保存到当前用户的 `~/.obsidian-quote/config.json`。已有文件会尝试备份到 `config.json.bak`。
+5. 打开 `http://127.0.0.1:43117/ui`，在登录表单输入令牌，或配置 CLI/MCP。
+
+不要提交 `data.json`、接入配置、备份文件或带令牌的截图。浏览器登录使用 `HttpOnly; SameSite=Strict` 会话 Cookie。兼容 `?token=` 链接和 API 查询参数，但推荐登录表单与 `Authorization: Bearer` 请求头，以免令牌进入浏览历史和复制的 URL。
+
+## 可配置项
+
+| 配置 | 默认值 | 含义 |
+| --- | --- | --- |
+| `topK` | 5 | 单次返回片段数 |
+| `maxCharsPerSnippet` | 1200 | 单片段字符上限 |
+| `totalCharsBudget` | 6000 | 上下文字符预算 |
+| `perFileLimit` | 3 | 同一笔记最多片段数 |
+| `minScoreRatio` | 0.2 | 相对最高分的最低比例 |
+| `server.enabled` | true | 启用本地服务 |
+| `host` | 127.0.0.1 | 只允许回环监听 |
+| `port` | 43117 | 优先使用的端口 |
+| `refreshSeconds` | 120 | 超时后在查询时触发后台刷新 |
+| `maxFileSizeKB` | 512 | 跳过超过上限的笔记 |
+| `watch` | true | 支持时监听变更，防抖 1.2 秒 |
+| `includeFolders` / `excludeFolders` / `requiredTags` | 空 | 全局索引范围 |
+| `profiles` | 空 | 命名来源组合 |
+| `ui.advanced` | false | 显示组合、注入与台账等高级项 |
+| `ui.autoRegisterCurrentVault` | true | 空列表首次登记当前库 |
+| `injection.format` | markdown | 可选 `markdown` / `plain` |
+| `injection.timing` | manual | `manual` / `brief-first`，供接入层参考，不强制客户端调用 |
+
+高级面板中的引用组合按一行一个来源填写，例如 `规范库/前端`、`技术库/wiki`。多个来源取并集；未指定范围表示所有已启用库。遇到同名知识库须使用明确的知识库 id。
+
+## CLI、Skill 与 MCP
+
+在仓库根目录执行：
+
+```bash
+node harness-skill/scripts/kb.mjs status
+node harness-skill/scripts/kb.mjs search "组件 命名" --limit 5
+node harness-skill/scripts/kb.mjs context "目录结构" --budget 4000
+node harness-skill/scripts/kb.mjs rules "命名" --priority must
+node harness-skill/scripts/kb.mjs brief --project .
+node harness-skill/scripts/kb.mjs search "命名" --source "规范库/前端"
+node harness-skill/scripts/kb.mjs search "命名" --profile "前端规范"
+```
+
+配置格式见 `harness-skill/config.example.json`。环境变量 `OBSIDIAN_QUOTE_URL` 与 `OBSIDIAN_QUOTE_TOKEN` 可覆盖文件配置；不要将实际令牌写进仓库。
+
+支持 Skill 的客户端可把整个 `harness-skill/` 复制到其技能目录，例如 `<项目>/.claude/skills/obsidian-vault-quote/`。
+
+支持 MCP stdio 的客户端可登记以下服务器。替换为实际绝对路径，Windows JSON 中路径分隔符可写 `/`：
+
+```json
+{
+  "mcpServers": {
+    "obsidian-quote": {
+      "command": "node",
+      "args": ["<绝对路径>/harness-skill/scripts/mcp-server.mjs"]
+    }
+  }
+}
+```
+
+六个工具为 `kb_search`、`kb_context`、`kb_rules`、`kb_brief`、`kb_vaults`、`kb_stats`。前四个支持 `sources` / `profile`；无法解析来源时保留警告并返回空结果。客户端配置位置和协议支持因版本而异，协议测试不代表已在所有 AI 产品中验收。
+
+## 可选 DeepSeek Harness 面板
+
+`harness-plugin/` 提供 Host 代理和 Client 面板，依赖宿主的 `dsh.bundle`、`dsh.client`、侧栏、语言和目录选择服务。包含检索、上下文、规则、摘要、来源选择与统计。
+
+适配器预期的安装命令如下，需要宿主实际提供对应接口：
+
+```text
+plugin_manager action=install_bundle target=<harness-plugin 的绝对目录>
+```
+
+已验证模拟宿主契约、真实 HTTP 和模拟 React 渲染；尚未在真实 DeepSeek Harness 中验收本次修订，宿主接口变化可能需要适配。其他客户端可使用 `/ui`。
+
+Host 从本机配置读取令牌，通过 `/dsh-obsidian-quote-panel/rpc` 代查结果。正常响应不将令牌交给浏览器，异常凭据会被拒绝。RPC 校验实际连接来源、回环 Host 与浏览器 Origin，但没有独立用户登录，只适用于受信任的单用户本机环境，不要公网暴露或反向代理。
+
+## HTTP API
+
+| 方法 | 路径 | 功能 |
+| --- | --- | --- |
+| GET | `/health` | 无需令牌的服务概况 |
+| GET | `/vaults` | 已登记库、启用状态与索引数量 |
+| GET / POST | `/search` | 查询片段；POST 接收 query/limit/sources/profile 等 |
+| POST | `/context` | 按 query/budget 返回带来源的 Markdown |
+| GET / POST | `/rules` | 按 query/topic/priority/sources/profile 获取规则 |
+| POST | `/brief` | 按项目目录或显式技术栈生成摘要 |
+| GET | `/stats` | 本机引用台账 |
+| POST | `/reindex` | 重建索引，须显式令牌，Cookie 无此权限 |
+| GET | `/ui` | 浏览器面板壳页 |
+| POST | `/ui/session` | 校验令牌并建立 12 小时会话 |
+| POST | `/ui/logout` | 注销并撤销会话 |
+
+除 `/health` 与浏览器登录所需的页面/会话接口外，数据接口需要鉴权。推荐 `Authorization: Bearer <token>`；Cookie 只用于同源浏览器访问，服务重启和更换令牌会撤销会话。
+
+## 数据边界与限制
+
+- 笔记只读；插件会保存自身设置和引用台账。主动点击“写入接入配置”或执行 CLI `init` 还会写入本机接入文件与备份。
+- 索引和解析缓存在内存中，启动后重建，没有磁盘索引缓存，不承诺固定耗时。
+- 递归文件监听取决于宿主 Node.js 和操作系统；不支持时使用刷新周期在后续查询触发重建。真实 Obsidian 中的监听尚待验收。
+- BM25 不理解语义。规则提取、优先级与技术栈识别是启发式，可能遗漏或误分类，关键决策应回看原文。
+- 0.2.1 按完整规则文本去重，保留大小写、代码标点和内联代码空格；编号为 `R-` 加 16 位十六进制。旧版 6 位编号会改变，保存的引用须重新获取；这不是语义等价判定。
+- `/health` 显示全局去重规则数，`/vaults` 显示各库提取数量，口径不同。规则与摘要先限定来源再去重，避免选中库的副本规则消失。
+- 令牌以明文保存在插件 `data.json` 和主动写出的接入配置。POSIX 上仅对导出的 `~/.obsidian-quote/` 目录申请 `0700`，对其中的 `config.json` 及备份申请 `0600`；插件 `data.json` 由 Obsidian 保存，访问权限取决于知识库/Obsidian。Windows 使用继承 ACL，不能据此保证只有当前用户能读。POSIX 权限未在本次 Windows 环境实测。
+- 清单声明最低 Obsidian 1.5.0，尚未逐版本运行验证。
+
+安全边界和令牌更换步骤见 [SECURITY.md](SECURITY.md)。
+
+## 可复现验证（2026-11-05）
+
+本次环境为 Windows、Node.js 26.7.0、npm 12.0.2：
+
+| 检查 | 结果 | 验证范围 |
+| --- | --- | --- |
+| `npm run build` | 通过 | 类型检查与生产构建 |
+| `npm test` | 134/134 | 索引、范围、预算、HTTP、CLI、MCP、安全回归；Obsidian UI 使用 API 桩 |
+| `npm run test:host` | 25/25 | 生成笔记、测试令牌、真实 HTTP 与模拟 Host |
+| `npm run test:client` | 90/90 | 模拟 React、语言与槽位服务 |
+| `npm run test:browser` | 14/14 | 真实 Chrome、测试服务与生成笔记；登录、五页签、HTML 注入、范围、360px 布局、注销 |
+| `npm audit` | 0 项已知漏洞 | 验证时锁定依赖的漏洞数据库审计 |
+
+复现方法见 [audit/README.md](audit/README.md)。本次未将修订版安装到用户真实知识库，也没有对真实 Obsidian / DeepSeek Harness / Claude / Cursor / Codex 做完整联调。测试和漏洞审计不是安全认证。
+
+## 发布
+
+将源代码 ZIP 解压后的内容上传为仓库文件；不要只把 ZIP 当作仓库源码。建议使用 `v0.2.1` 标签创建 Release，附加 `main.js`、`manifest.json`、`styles.css` 与安装 ZIP。根清单与 `plugin/manifest.json` 一致；`versions.json` 记录声明的最低版本。
+
+背景见 `idea.md`，本版修订见 [CHANGELOG.md](CHANGELOG.md)。许可证：MIT，见 [LICENSE](LICENSE)。
+

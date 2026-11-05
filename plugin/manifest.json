@@ -1,0 +1,9 @@
+{
+  "id": "obsidian-quote",
+  "name": "Obsidian Quote",
+  "version": "0.2.1",
+  "minAppVersion": "1.5.0",
+  "description": "Register local Obsidian vaults as read-only reference sources for AI coding harnesses.",
+  "author": "Klein",
+  "isDesktopOnly": true
+}

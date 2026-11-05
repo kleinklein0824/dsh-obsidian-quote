@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Obsidian Knowledge Base",
+    "description": "Reads the local Obsidian knowledge base: pick the vaults or sub-folders that take part in a query, then run read-only search, context, rule, and brief lookups over the obsidian-quote service."
+  }
+}
