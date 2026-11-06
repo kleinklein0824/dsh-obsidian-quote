@@ -25,6 +25,62 @@ Obsidian 安装用 [**0.2.7 Release（无 `v`）**](https://github.com/kleinklei
 
 本仓库包含上述插件与接入源码。个人笔记、已登记的库路径、令牌和用户配置保存在各自本机；Obsidian 与 DeepSeek Harness 宿主应用需另外安装。社区首次安装提供相同面板功能，个人数据需要自行登记或按[迁移说明](docs/OBSIDIAN-SUBMISSION.md#已有用户怎样保留配置)沿用。
 
+## 安装、上架与旧版兼容 FAQ
+
+### 1. 在 Harness 安装一次，就会自动出现在 Obsidian 里吗？
+
+**需要分别安装 Obsidian 端与所用 Harness 的接入组件。** 同一仓库包含两端代码，各自的插件市场只安装对应组件。
+
+1. 在 Obsidian 安装并启用 **Vault Quote**，登记需要的知识库与范围，建立索引并开启引用服务。
+2. 在 Obsidian 管理面板点击“写入接入配置”，让本机客户端读取服务地址和令牌。
+3. 在 DeepSeek Harness 安装 **Obsidian Quote** 面板组件，或在 Codex、Claude 等客户端安装对应接入；保持 Obsidian 运行，再在客户端使用。
+
+同一台电脑、同一用户下的多个客户端可连接同一个 Obsidian 服务，无需为每个 Harness 再启动一套索引。不同设备、系统用户、远程环境需要各自可用的服务和连接方式。
+
+### 2. 任意 Harness 安装后都会有截图那样的面板吗？
+
+界面由各客户端的接入能力决定。**DeepSeek Harness** 提供图示知识库侧栏；**Codex 桌面版** 提供本项目的设置按钮与弹出检索面板，需客户端支持对应扩展；**Claude Code、Codex CLI** 主要通过六个 MCP 工具和对话返回结果。其他本机 stdio MCP 客户端可按其文档接入工具，可视面板需要额外支持。需要独立可点击界面时，还可使用本机浏览器 `/ui`。各入口见[客户端指南](docs/HARNESS-USAGE.md)。
+
+### 3. 为什么 Obsidian 里叫 Vault Quote，Harness 里仍叫 Obsidian Quote？
+
+Obsidian 新插件提交规则禁止 ID 包含 `obsidian`，显示名称也不能包含 `Obsidian` 或 `Plugin`。因此 Obsidian 发行身份改为 **Vault Quote / `vault-quote`**。GitHub 仓库仍为 `kleinklein0824/dsh-obsidian-quote`，DeepSeek、Codex、Claude 的名称与接入标识继续沿用。名称不同的两端仍通过同一套本机 API 协作。
+
+### 4. 原来本地安装的 Obsidian Quote 还能用吗，会与社区版冲突吗？
+
+**可以继续使用。** 更新 GitHub 仓库、发布 Release 或申请市场收录，不会自动覆盖旧本地安装。新 ID 安装在另一个插件目录，也不会自动迁移旧设置。
+
+迁移时先停用旧 **Obsidian Quote**，备份旧目录的 `data.json`，将它复制到新 **Vault Quote** 目录后再启用新版；目标已有配置时先单独备份。旧设置与引用台账格式兼容。保持旧插件停用，避免两套面板/服务重复注册、端口顺延或共享接入配置指向另一份服务。完整操作见[迁移说明](docs/OBSIDIAN-SUBMISSION.md#已有用户怎样保留配置)。
+
+### 5. 社区版会保留我现在 Obsidian 里的面板和功能吗？
+
+**会保留。** 0.2.7 保留“知识库引用”管理面板、登记知识库、启用/停用、包含/排除范围、引用组合、重建索引、接入配置和引用统计等功能。本轮改动集中在市场名称/ID、发布材料，以及读取当前插件 ID 的设置按钮。
+
+首次安装者会得到同一套面板功能，并按自己的本机知识库生成索引；截图中的作者笔记、库路径、令牌、范围和历史统计不会随插件附送。已有用户迁移 `data.json` 后可沿用自己的登记、范围、引用组合与令牌。
+
+### 6. 已部署的 DeepSeek Harness 和 Codex 需要更新吗？
+
+**已经正常运行的 DeepSeek 0.5.1 与 Codex 0.1.4，无需因为 Obsidian 的市场改名重新部署。** 本轮比对确认作者既有 Harness 部署的 7 个运行文件与仓库一致。DeepSeek 仅补充发布说明与截图声明，客户端运行代码和共享连接格式保持原样。
+
+图中面板 **0.5.1** 与服务 **0.2.1** 是独立组件的版本；Obsidian 服务换为 **0.2.7** 后，Harness 面板仍可保持 **0.5.1**。迁移 Obsidian 时保留原服务地址和令牌，已有客户端连接可继续复用；连接有变化时再由当前启用的 Obsidian 插件写入接入配置。旧 Codex 接入的特定问题见 [UPDATING.md](UPDATING.md)。
+
+### 7. 新建一个项目或 Obsidian 知识库，还要重新部署吗？
+
+新建 **AI 编码工程**时，可复用当前正在运行的 Obsidian 服务与已安装的 Harness 接入。需要引用另一个知识库时，在现有 Obsidian 管理面板登记该库及允许范围。
+
+新建 **Obsidian 知识库**时，插件安装/启用状态由该库分别管理。希望在新库里也打开管理面板，需要在新库安装并启用插件；只想把它作为已有服务的参考来源，可在现有面板登记它。社区审核通过后能在“第三方插件 → 浏览”搜索 **Vault Quote**，省去手动复制安装文件。保持实际使用的一套引用服务供客户端连接。
+
+### 8. 仓库包含两张图的全部组件吗？包含我的知识库吗？
+
+**两端面板源码都包含在本仓库中**：Obsidian 端在 `plugin/`，DeepSeek 端在 `harness-plugin/`；CLI/MCP、Codex 和 Claude 接入也包含在前述对应目录和清单中。完整源码归档保留这些组件；专用安装附件只包含相应组件。
+
+宿主应用需另外安装，个人笔记和本机安装配置需自己保留。发布包不会包含作者的 Obsidian 笔记、真实令牌或 `data.json`；也不会把已装在本机的插件目录自动变成 Git 仓库工作副本。开发修改应在源码仓库提交并构建，再通过适用的安装方式更新。
+
+### 9. awesome-dsh 的申请等于 Obsidian 上架了吗，现在能搜索到吗？
+
+这是两个独立目录。DeepSeek 沿用已有的 [awesome-dsh PR #12409](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin/pull/12409)，条目指向 `harness-plugin/`，无需重复投稿。Obsidian 还需要作者在官方 Community 提交页面填本仓库地址、完成政策与维护承诺确认，并等待审核。**GitHub Release 和 awesome-dsh 的申请都不代表 Obsidian 已上架。**
+
+Obsidian 审核通过前，按下文用 Release 的三文件或 ZIP 手动安装；通过后搜索 **Vault Quote**。正式 Obsidian 安装使用标签 **`0.2.7`（无 `v`）**；完整源码、Harness 包和原版视频放在 **`v0.2.7` 配套发行**。提交与迁移步骤见 [Obsidian 上架说明](docs/OBSIDIAN-SUBMISSION.md)。
+
 ## 演示视频
 
 [![Obsidian Quote 1080p 项目介绍：点击观看完整视频](docs/images/obsidian-quote-promo-cover.jpg)](https://github.com/kleinklein0824/dsh-obsidian-quote/releases/download/v0.2.7/Obsidian-Quote-promo-1080p.mp4)
