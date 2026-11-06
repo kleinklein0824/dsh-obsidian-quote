@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.2.7 — 2026-11-06 (Obsidian submission compatibility)
+
+- Rename the Obsidian manifest id to `vault-quote` and its display name to `Vault Quote`, satisfying the community's forbidden-name rules. Keep the repository and AI-client brand Obsidian Quote.
+- Read the loaded manifest id when opening the plugin settings tab; cover the new and legacy installed identities with rendered-button tests.
+- Align the root/installable manifests, npm package and versions map at `0.2.7`; publish the exact `0.2.7` tag for Obsidian and keep supplementary integration/media assets under `v0.2.7`.
+- Add five release/settings regression checks. Re-run production build, 134 existing checks, 25 Host probes and 90 Client probes; do not claim a new full real-desktop acceptance run.
+- Keep DeepSeek 0.5.1, Codex 0.1.4, Claude 0.1.2 and CLI/MCP 0.2.3 runtime files unchanged. Do not modify installed packages, shared connection files, tokens or existing vault data.
+- Add the author's original 1080p promo video as a supplementary Release asset and a poster/watch link in the README. Preserve the actual Codex and DeepSeek screenshots; distinguish the promo's illustrative frames from those real screenshots.
+- Document optional migration of `data.json` from the legacy Obsidian plugin id, continued use of existing installations, and per-vault marketplace installation.
+- Add a Harness subpackage README and screenshot declaration, and provide a prebuilt npm-format tarball for the existing awesome-dsh submission #12409.
+
 ## 0.2.6 — 2026-11-05 (prerelease; documentation and screenshots only)
 
 - Add user-provided screenshots of the Codex plugin settings, native knowledge panel and existing DeepSeek sidebar. Redact private workspace, vault and note names in the published copy.

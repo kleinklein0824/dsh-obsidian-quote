@@ -8,7 +8,7 @@ import {
 	ToggleComponent,
 	WorkspaceLeaf,
 } from "obsidian";
-import { PLUGIN_ID, VIEW_TYPE } from "./constants";
+import { VIEW_TYPE } from "./constants";
 import type QuotePlugin from "./main";
 import { createVaultEntry, discoverLocalVaults, normalizeVaultPath } from "./vault-registry";
 
@@ -37,7 +37,7 @@ function openPluginSettings(plugin: QuotePlugin): void {
 	};
 	if (!app.setting) return;
 	app.setting.open();
-	app.setting.openTabById(PLUGIN_ID);
+	app.setting.openTabById(plugin.manifest.id);
 }
 
 /** Card shell: title + description + body, mirroring EasyUI's neutral cards. */

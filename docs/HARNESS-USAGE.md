@@ -1,6 +1,6 @@
 # 各 Harness 安装与使用指南
 
-适用发行：v0.2.6，2026-11-05。各客户端复用本机 Obsidian 引用服务；面板入口取决于本仓库提供的接入方式及客户端支持。
+适用发行：v0.2.7，2026-11-06。Obsidian 市场组件为 **Vault Quote 0.2.7 / `vault-quote`**，历史本地安装仍显示 **Obsidian Quote**，二者都可提供原有本机 API；已有安装继续使用，无需仅为改名迁移。迁移步骤见 [Obsidian 上架与配置迁移](OBSIDIAN-SUBMISSION.md)。各客户端继续使用 Obsidian Quote 品牌，复用本机引用服务；面板入口取决于本仓库提供的接入方式及客户端支持。
 
 ## 先找到自己的客户端
 
@@ -13,12 +13,12 @@
 | 其他支持本地 stdio MCP 的客户端 | 手动登记默认提供六工具；是否渲染扩展 UI 取决于客户端与额外接入，未逐一验证 | 对话检索；浏览器 `/ui` 可独立使用 | 按客户端文档登记下文的 stdio 配置 |
 | 只能连接远程 HTTP MCP 的客户端 | 此仓库的本地 stdio 适配器不能直接安装到这类远程连接 | 需另有经过验证的本地运行/桥接方案，本仓库未提供 | 不要把 Obsidian HTTP 地址直接填作远程 MCP 地址 |
 
-Codex 的新面板与 DeepSeek 已有侧栏分别使用自己的宿主入口。新增设置服务只写入 Codex 的 `mcp.json`；Claude 的启动配置及原有六工具脚本保持原样；本版清单仅移除额外邮箱。
+Codex 的面板与 DeepSeek 已有侧栏分别使用自己的宿主入口。设置服务只写入 Codex 的 `mcp.json`；Claude 的启动配置及原有六工具脚本保持原样。本轮未改变这些客户端的运行代码。
 
 ## 所有本机接入的共同前提
 
-1. 本机 Obsidian 已安装并启用 Obsidian Quote，引用服务已开启，Obsidian 保持运行。
-2. 需要的知识库已在 **Obsidian → 设置 → 第三方插件 → Obsidian Quote** 登记并启用。包含/排除目录、标签和引用组合也在这里管理。
+1. 本机 Obsidian 已安装并启用 **Vault Quote（旧安装为 Obsidian Quote）**，引用服务已开启，Obsidian 保持运行。
+2. 需要的知识库已在 **Obsidian → 设置 → 第三方插件 → Vault Quote（旧安装为 Obsidian Quote）** 登记并启用。包含/排除目录、标签和引用组合也在这里管理。
 3. 首次使用时，在 Obsidian 插件面板点击“写入接入配置”，客户端便可读取当前用户的 `~/.obsidian-quote/config.json`。已有连接正常时直接复用。
 4. MCP/CLI 运行环境能找到 Node.js 18+。客户端与 Obsidian 要能访问同一本机服务；远程主机、容器或不同用户账户不能自动继承本机配置。
 
@@ -29,7 +29,7 @@ Codex 的新面板与 DeepSeek 已有侧栏分别使用自己的宿主入口。�
 在“添加插件市场”中填写：
 
 - 来源：`https://github.com/kleinklein0824/dsh-obsidian-quote`
-- Git 引用：`main` 或 `v0.2.6`
+- Git 引用：`main` 或 `v0.2.7`
 - 稀疏路径：留空
 
 在 **Klein · Obsidian Quote** 市场中安装并启用 **Obsidian Quote**，核对版本 **0.1.4**，按提示刷新插件或重启 Codex。
@@ -62,7 +62,7 @@ codex plugin add obsidian-quote@dsh-obsidian-quote --json
 
 已可用的安装直接使用现有侧栏、来源选择、检索/上下文/规则/摘要/统计功能。本次无需更换组合包、修改 profile、重写接入配置或重置令牌。
 
-首次安装时使用 Release 的 `dsh-obsidian-quote-panel-v0.5.1.zip` 或源码中的 `harness-plugin/`。由支持 `dsh.bundle`、`dsh.client`、侧栏和目录选择服务的宿主执行组合包安装；宿主工具请求示例为：
+首次安装推荐使用 [v0.2.7 配套发行](https://github.com/kleinklein0824/dsh-obsidian-quote/releases/tag/v0.2.7)中的预构建 `dsh-obsidian-quote-panel-0.5.1.tgz`。该包以 `package.json` 所在目录为安装根，包含原有 0.5.1 运行代码；ZIP 和源码中的 `harness-plugin/` 也继续提供。由支持 `dsh.bundle`、`dsh.client`、侧栏和目录选择服务的宿主执行组合包安装；宿主工具请求示例为：
 
 ```text
 plugin_manager action=install_bundle target=<harness-plugin 的绝对目录>

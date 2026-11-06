@@ -2,7 +2,7 @@ import { randomBytes } from "crypto";
 import type { QuoteSettings } from "./types";
 
 export const VIEW_TYPE = "obsidian-quote-panel";
-export const PLUGIN_ID = "obsidian-quote";
+export const PLUGIN_ID = "vault-quote";
 
 function randomToken(): string {
 	return randomBytes(32).toString("hex");

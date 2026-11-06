@@ -65,3 +65,10 @@ User-provided screenshots in the main README show the actual Codex settings entr
 `concurrent-use-evidence.json` records a separate isolated acceptance run against the existing `QuoteServer`, `VaultIndexer`, original MCP script and Codex panel script. It created two synthetic vaults and a temporary loopback service, started three independent six-tool MCP processes plus one panel MCP process, then issued 48 HTTP and 32 MCP searches together. Each requested source was checked; the shared ledger reached 80 queries and note bytes/mtimes stayed unchanged. Repeated starts, a second listener on the occupied port and concurrent index rebuilds were also checked, for 6/6 checks. No real user vault or connection-file write was involved. This is a recorded acceptance run, not a new all-Harness UI test suite or a throughput guarantee.
 
 Runtime files and versions remain identical to v0.2.5. Earlier suite results keep their original validation version; they were not all rerun for a documentation release.
+
+
+## Obsidian submission metadata and settings identity (0.2.7, 2026-11-06)
+
+Run `npm run test:release` inside `plugin/`. The five checks verify the documented community ID/name requirements, identical root/installable manifests, numeric release/version mapping, and the actual rendered advanced-settings button under both `vault-quote` and legacy `obsidian-quote` manifests. The original metadata fails the two naming checks; the original hardcoded settings target fails the new-id button check. All five pass after the fix.
+
+The full 134-case suite (including production build), 25 Host probes and 90 Client probes were rerun in the isolated release worktree. Runtime files under `harness-plugin/`, `harness-skill/` and `codex/` remain identical to c79b152; the Harness README and screenshots sidecar are documentation additions. The live local deployments and shared user configuration were not overwritten. These checks do not assert approval by the Obsidian directory or complete real-desktop acceptance.
