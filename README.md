@@ -85,6 +85,8 @@ Obsidian 新插件提交规则禁止 ID 包含 `obsidian`，显示名称也不�
 
 这是两个独立目录。DeepSeek 沿用已有的 [awesome-dsh PR #12409](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin/pull/12409)，条目指向 `harness-plugin/`，无需重复投稿。Obsidian 已有[官方 Community 条目](https://community.obsidian.md/plugins/vault-quote)，用户截图显示 0.2.7 的自动审核仍有风险。0.2.8 针对这些意见修复；作者需在现有条目的管理入口检查新发行并跟进审核，避免重复提交。**公开条目、GitHub Release 和 awesome-dsh 申请均不能单独证明 Obsidian 已完成审核或已能在应用内搜索。**
 
+作者现在登录社区网站，进入 **Plugins → Your entries → Vault Quote → `…` → Check for new releases**，确认识别 **0.2.8**；需要立即重新扫描时再选择 **`…` → Request review**。[官方说明](https://docs.obsidian.md/community-directory/manage-entry)指出 Warnings 不阻止提交，应先核对新版本的错误或风险。
+
 Obsidian 审核通过前，按下文用 Release 的三文件或 ZIP 手动安装；通过后搜索 **Vault Quote**。正式 Obsidian 安装使用标签 **`0.2.8`（无 `v`）**；完整源码、Harness 包和原版视频放在 **`v0.2.7` 配套发行**。提交与迁移步骤见 [Obsidian 上架说明](docs/OBSIDIAN-SUBMISSION.md)。
 
 ## 演示视频

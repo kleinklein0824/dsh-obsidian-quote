@@ -29,11 +29,13 @@ Obsidian 用标签 **`0.2.8`**，不带 `v`，与清单版本逐字一致；该 
 
 ### 作者现在怎样操作
 
-1. 登录创建此条目的 Obsidian 账号，打开上述**已有 Vault Quote 条目**；从头像菜单或条目的 `…` 进入开发者/插件管理入口，以实际页面显示为准。公开 Scorecard 页主要展示结果，GitHub 登录不等于已登录该开发者账号。
-2. 在该插件的管理页面点击 **Check for new releases**。GitHub 仓库仍是 `https://github.com/kleinklein0824/dsh-obsidian-quote`，目标发行是 **`0.2.8`（无 `v`、正式发行）**，不要改成 `v0.2.7` 的配套素材发行。
+1. 登录创建此条目的 Obsidian 账号，在侧栏进入 **Plugins → Your entries → Vault Quote**，打开已有条目的管理页面。公开 Scorecard 页主要展示结果，GitHub 登录不等于已登录该开发者账号。
+2. 在管理页打开 **`…` → Check for new releases**。GitHub 仓库仍是 `https://github.com/kleinklein0824/dsh-obsidian-quote`，目标发行是 **`0.2.8`（无 `v`、正式发行）**，不要改成 `v0.2.7` 的配套素材发行。
 3. 确认网站的发行/更新列表识别了 **0.2.8**。新发行的清单必须为 `vault-quote` / `Vault Quote` / `0.2.8`，并具有 `main.js`、`manifest.json`、`styles.css` 三个安装附件。
-4. 等待网站扫描和审核。若管理页另有 **Request review** 且没有正在进行的审核，按页面要求申请；已有队列时继续跟进现有项。如果需要维护承诺确认，由作者阅读并确认。按钮与状态以网站实际显示为准，本仓库无法代替作者完成账号内操作。
+4. 需要立即重新扫描时，在管理页打开 **`…` → Request review**；已有队列时继续跟进现有项。官方说明新 Release 会触发新审核，这个菜单可主动请求立即检查。如果需要维护承诺确认，由作者阅读并确认；本仓库无法代替作者完成账号内操作。
 5. 重新打开 Scorecard，先确认它对应 **0.2.8** 再检查两项风险。仍显示 0.2.7 时是在看旧版结果；刷新公开页面本身不能保证后台已检查新发行。保留新版本号与具体意见后再定位剩余问题。
+
+上述路径来自[官方条目管理说明](https://docs.obsidian.md/community-directory/manage-entry)。官方说明 **Warnings 不阻止提交**，应先核对新版本仍有哪些错误或风险；不能把剩余能力提示等同于全部功能故障。公开简介仍显示旧文字时，可在 **Edit listing** 修改短介绍为 `Register local vaults as read-only reference sources for AI coding assistants.`，再点击 **Save**。
 
 只有网站显示相应完成状态，才可声称该版本审核通过。不要为同一插件新建重复条目或旧式 `obsidian-releases` PR；awesome-dsh #12409 是另一份独立申请。
 

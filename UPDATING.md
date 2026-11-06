@@ -22,7 +22,7 @@ Obsidian 自动安装使用 **`0.2.8`（无 `v`）** Release，附件是 `main.j
 
 现有官方条目的 0.2.7 分数卡指出描述禁词和卸载时关闭面板标签两项风险；0.2.8 修复这两项，并处理宽行样式、当前库自定义配置目录、常规日志、计时器和英文 README。保留原有面板、HTTP API 与最低 Obsidian 1.5.0 支持。
 
-作者登录后进入已有 Vault Quote 条目的开发者管理入口，使用 **Check for new releases** 检查 GitHub 的 **0.2.8**，确认新版本被识别，再等待扫描与审核。如果页面另有 **Request review** 且尚未排队，按页面要求申请；以网站实际状态为准。不要重新创建同 ID 条目，也不要只刷新旧版分数卡。
+作者登录后进入 **Plugins → Your entries → Vault Quote**，打开 **`…` → Check for new releases** 检查 GitHub 的 **0.2.8**，确认新版本被识别。需要立即重新扫描时再选择 **`…` → Request review**；已有审核队列时继续跟进现有项。路径依据[官方条目管理说明](https://docs.obsidian.md/community-directory/manage-entry)。不要重新创建同 ID 条目，也不要只刷新旧版分数卡。
 
 文件访问、主动复制接入配置、1.13 全局设置搜索未迁移和缺少 GitHub artifact attestation 的说明见 [审核指南](docs/OBSIDIAN-SUBMISSION.md)。本地测试和发布成功不代表官网已经重新扫描通过。
 
