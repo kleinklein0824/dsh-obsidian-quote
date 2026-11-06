@@ -1,0 +1,86 @@
+{
+  "checked_at_utc": "2026-11-06T14:37:49.064618+00:00",
+  "sources": {
+    "canonical_export": {
+      "ok": true,
+      "url": "https://community.obsidian.md/assets/community-plugins.json",
+      "headers": {
+        "Date": "Fri, 06 Nov 2026 14:37:38 GMT",
+        "cache-control": "s-maxage=3600",
+        "cf-cache-status": "DYNAMIC"
+      },
+      "entries": 10029,
+      "matches": [
+        {
+          "id": "vault-quote",
+          "name": "Vault Quote",
+          "author": "kleinwu",
+          "description": "Register local Obsidian vaults as read-only reference sources for AI coding harnesses. - This plugin has not been manually reviewed by Obsidian staff.",
+          "repo": "kleinklein0824/dsh-obsidian-quote"
+        }
+      ],
+      "sha256": "f3097d1de8fa20dd49f57beefaaa53d20213dc87ea510e549d8ab9efcdb117eb"
+    },
+    "query_export": {
+      "ok": true,
+      "url": "https://community.obsidian.md/assets/community-plugins.json?diagnostic=vault-quote-20261106",
+      "headers": {
+        "Date": "Fri, 06 Nov 2026 14:37:38 GMT",
+        "cache-control": "s-maxage=3600",
+        "cf-cache-status": "DYNAMIC"
+      },
+      "entries": 10029,
+      "matches": [
+        {
+          "id": "vault-quote",
+          "name": "Vault Quote",
+          "author": "kleinwu",
+          "description": "Register local Obsidian vaults as read-only reference sources for AI coding harnesses. - This plugin has not been manually reviewed by Obsidian staff.",
+          "repo": "kleinklein0824/dsh-obsidian-quote"
+        }
+      ],
+      "sha256": "f3097d1de8fa20dd49f57beefaaa53d20213dc87ea510e549d8ab9efcdb117eb"
+    },
+    "github_catalog": {
+      "ok": true,
+      "url": "https://github.com/obsidianmd/obsidian-releases/blob/master/community-plugins.json",
+      "git_blob_sha": "8897688f23aabf3e27e5e31bf3620be30c3ca740",
+      "entries": 10028,
+      "matches": [],
+      "sha256": "05b69aec28ca67ba4a6ee84862e52ea621fce8a19990ab358ccb4020ff644325"
+    }
+  },
+  "mirror": {
+    "schedule_utc": "minute 17 every hour; actual start may be delayed",
+    "latest_run": {
+      "id": 42233060806,
+      "created_at": "2026-11-06T14:20:36Z",
+      "updated_at": "2026-11-06T14:20:58Z",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/obsidianmd/obsidian-releases/actions/runs/42233060806"
+    },
+    "workflow_url": "https://github.com/obsidianmd/obsidian-releases/blob/master/.github/workflows/mirror-community-json.yml"
+  },
+  "limits": "Public directory membership only; no desktop installation or user configuration changed.",
+  "checked_at_taipei": "2026-11-06T22:37:49.064618+08:00",
+  "earlier_canonical_export": {
+    "checked_at_utc": "2026-11-06T14:34:35.808423+00:00",
+    "url": "https://community.obsidian.md/assets/community-plugins.json",
+    "entries": 10028,
+    "matches": [],
+    "headers": {
+      "Date": "Fri, 06 Nov 2026 14:33:51 GMT",
+      "cache-control": "s-maxage=3600",
+      "cf-cache-status": "DYNAMIC"
+    },
+    "sha256": "ed244a4571f41a51fc8ad0928047a1d69897bb8ef97e8bde83573232f11da3c3"
+  },
+  "conclusion_zh": "官网自动审核已完成，官方导出数据已包含 vault-quote；同一轮核验时，桌面端使用的 GitHub 目录镜像尚无该条目，属于目录同步尚未完成。本次未进行真实桌面安装，不能宣称桌面安装已验收。",
+  "primary_sources": {
+    "client_catalog_behavior": "https://github.com/obsidianmd/obsidian-releases#how-community-plugins-are-pulled",
+    "listing": "https://community.obsidian.md/plugins/vault-quote",
+    "entry_management": "https://docs.obsidian.md/community-directory/manage-entry",
+    "official_faq": "https://docs.obsidian.md/community-directory/faq"
+  }
+}

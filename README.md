@@ -12,7 +12,7 @@ Obsidian 社区插件名称为 **Vault Quote**，ID 为 **`vault-quote`**，桌�
 
 Obsidian 安装用 [**0.2.8 Release（无 `v`）**](https://github.com/kleinklein0824/dsh-obsidian-quote/releases/tag/0.2.8)，标签与 `manifest.json` 版本完全一致，提供 `main.js`、`manifest.json`、`styles.css` 三个安装文件。完整源码、Harness 预构建包、演示视频和各客户端接入说明见 [**v0.2.7 配套发行**](https://github.com/kleinklein0824/dsh-obsidian-quote/releases/tag/v0.2.7)与[发行说明](RELEASE-NOTES-v0.2.7.md)。GitHub 发行和 awesome-dsh 投稿均不代表已通过 Obsidian 社区审核。
 
-**2026-11-06 状态：0.2.8 的官方自动审核已完成（Completed），原两项 Risks 已清除，公开页的 Add to Obsidian 安装入口已启用。** 0.2.8 移除描述中的品牌词、保留卸载后的面板位置，并修复配置目录排除与样式选择器；修复详情见[发行说明](RELEASE-NOTES-0.2.8.md)。可从[官方社区页面](https://community.obsidian.md/plugins/vault-quote)打开插件安装详情。旧安装迁移见 [Obsidian 上架与配置迁移](docs/OBSIDIAN-SUBMISSION.md)。**DeepSeek 已有面板无需重新部署，原有知识库、来源、引用组合和连接令牌继续使用。**
+**2026-11-06 22:37（台北时间）状态：0.2.8 自动审核已完成（Completed），官网安装按钮已启用，官方导出数据已收录；桌面端使用的 GitHub 目录镜像尚未收录，应用内仍可能搜索不到。** 官网按钮的出现不能证明桌面搜索已同步，详见 [FAQ 9](#9-awesome-dsh-的申请等于-obsidian-上架了吗现在能搜索到吗)与[目录核验记录](docs/community-catalog-status-2026-11-06.json)。0.2.8 的审核修复见[发行说明](RELEASE-NOTES-0.2.8.md)，旧安装迁移见 [Obsidian 上架与配置迁移](docs/OBSIDIAN-SUBMISSION.md)。**DeepSeek 已有面板无需重新部署，原有知识库、来源、引用组合和连接令牌继续使用。**
 
 **先按自己的客户端选择用法：[各 Harness 安装与使用指南](docs/HARNESS-USAGE.md)**。其中分别说明 Codex 桌面设置面板、Codex CLI 文本检索、DeepSeek 侧栏、Claude Code 六工具，以及其他客户端的 MCP 与浏览器入口。
 
@@ -73,7 +73,7 @@ Obsidian 新插件提交规则禁止 ID 包含 `obsidian`，显示名称也不�
 
 新建 **AI 编码工程**时，可复用当前正在运行的 Obsidian 服务与已安装的 Harness 接入。需要引用另一个知识库时，在现有 Obsidian 管理面板登记该库及允许范围。
 
-新建 **Obsidian 知识库**时，插件安装/启用状态由该库分别管理。希望在新库里也打开管理面板，需要在新库安装并启用插件；只想把它作为已有服务的参考来源，可在现有面板登记它。社区审核通过后能在“第三方插件 → 浏览”搜索 **Vault Quote**，省去手动复制安装文件。保持实际使用的一套引用服务供客户端连接。
+新建 **Obsidian 知识库**时，插件安装/启用状态由该库分别管理。希望在新库里也打开管理面板，需要在新库安装并启用插件；只想把它作为已有服务的参考来源，可在现有面板登记它。社区目录实际收录并同步到客户端后，可在“第三方插件 → 浏览”搜索 **Vault Quote**，省去手动复制安装文件；同步前可使用下方的 Release 三文件或 ZIP。保持实际使用的一套引用服务供客户端连接。
 
 ### 8. 仓库包含两张图的全部组件吗？包含我的知识库吗？
 
@@ -83,7 +83,9 @@ Obsidian 新插件提交规则禁止 ID 包含 `obsidian`，显示名称也不�
 
 ### 9. awesome-dsh 的申请等于 Obsidian 上架了吗，现在能搜索到吗？
 
-这是两个独立目录。DeepSeek 沿用已有的 [awesome-dsh PR #12409](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin/pull/12409)，条目指向 `harness-plugin/`，无需重复投稿。Obsidian 的 **0.2.8 已完成自动审核，且[官方 Community 条目](https://community.obsidian.md/plugins/vault-quote)已启用 Add to Obsidian 安装入口**；旧版 0.2.7 的 Failed 是历史记录。可在 Obsidian 的第三方插件浏览页搜索 **Vault Quote**，或点击上述官网按钮打开插件详情。应用内搜索仍以客户端实际同步的目录为准，本次没有替用户执行安装。
+这是两个独立目录。DeepSeek 沿用已有的 [awesome-dsh PR #12409](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin/pull/12409)，条目指向 `harness-plugin/`，无需重复投稿。Obsidian 的 **0.2.8 已完成自动审核，且[官方 Community 条目](https://community.obsidian.md/plugins/vault-quote)已启用 Add to Obsidian 按钮**；旧版 0.2.7 的 Failed 是历史记录。
+
+**截至 2026-11-06 22:37（台北时间），官网导出的 10,029 项插件中已有 `vault-quote`，但桌面端读取的 GitHub 镜像仍为 10,028 项，缺少该条目，因此应用内仍可能搜索不到。** 官方[镜像任务](https://github.com/obsidianmd/obsidian-releases/blob/master/.github/workflows/mirror-community-json.yml)按小时运行；本次最近一次执行为台北时间 22:20，早于条目进入导出数据。导出响应还标注了 `s-maxage=3600` 缓存。等待镜像同步后重新打开插件浏览页，再搜索 **Vault Quote**；不能保证具体生效分钟。官网按钮只提供客户端跳转入口，能否显示安装详情仍取决于客户端实际读取到的目录。[原始核验记录](docs/community-catalog-status-2026-11-06.json)与[排查步骤](docs/OBSIDIAN-SUBMISSION.md#官网正常但-obsidian-里搜索不到怎么办)保留了这次差异。
 
 本次无需再次提交或请求审核。以后发布新版本时，作者可进入 **Plugins → Your entries → Vault Quote → `…` → Check for new releases**，确认新版本被识别；需要立即重新扫描时再选择 **`…` → Request review**。[官方说明](https://docs.obsidian.md/community-directory/manage-entry)指出 Warnings 不阻止提交，应先核对新版本的错误或风险。
 
@@ -163,9 +165,9 @@ Obsidian 新插件提交规则禁止 ID 包含 `obsidian`，显示名称也不�
 <你的知识库>/.obsidian/plugins/vault-quote/
 ```
 
-或者将 0.2.8 Release 的 `vault-quote-v0.2.8.zip` 中的 `vault-quote/` 文件夹解压到 `<你的知识库>/.obsidian/plugins/`。如果改过 Obsidian 配置目录，以上 `.obsidian` 均替换为实际配置目录。重新加载 Obsidian，在第三方插件中启用 **Vault Quote**。只提供桌面版；现在也可通过[官方条目的 Add to Obsidian 按钮](https://community.obsidian.md/plugins/vault-quote)打开安装详情。已有 `obsidian-quote/` 用户请先按[迁移说明](docs/OBSIDIAN-SUBMISSION.md#已有用户怎样保留配置)保留 `data.json`，避免把旧插件和新插件同时启用。
+或者将 0.2.8 Release 的 `vault-quote-v0.2.8.zip` 中的 `vault-quote/` 文件夹解压到 `<你的知识库>/.obsidian/plugins/`。如果改过 Obsidian 配置目录，以上 `.obsidian` 均替换为实际配置目录。重新加载 Obsidian，在第三方插件中启用 **Vault Quote**。只提供桌面版。[官方条目的 Add to Obsidian 按钮](https://community.obsidian.md/plugins/vault-quote)可唤起客户端，但目录同步前仍可能无法显示安装详情。已有 `obsidian-quote/` 用户请先按[迁移说明](docs/OBSIDIAN-SUBMISSION.md#已有用户怎样保留配置)保留 `data.json`，避免把旧插件和新插件同时启用。
 
-在各知识库的“第三方插件 → 浏览”中搜索 **Vault Quote** 安装并启用，也可从官方条目打开安装详情。Obsidian 按知识库管理插件，上架后仍需为新的 Obsidian 知识库安装/启用；如果只是新建 AI 编码项目，可直接复用已运行的 Obsidian 服务，不必为每个编码项目复制插件。
+社区目录同步到客户端后，在各知识库的“第三方插件 → 浏览”中搜索 **Vault Quote** 安装并启用，也可从官方条目跳转。当前同步情况见 [FAQ 9](#9-awesome-dsh-的申请等于-obsidian-上架了吗现在能搜索到吗)。Obsidian 按知识库管理插件，上架后仍需为新的 Obsidian 知识库安装/启用；如果只是新建 AI 编码项目，可直接复用已运行的 Obsidian 服务，不必为每个编码项目复制插件。
 
 在仓库根目录执行开发构建：
 

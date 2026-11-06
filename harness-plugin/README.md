@@ -8,7 +8,7 @@ Adds a knowledge-base sidebar to DeepSeek Harness. It queries a **separately ins
 
 Install and enable **Vault Quote** in Obsidian (previously named **Obsidian Quote**). Register the vaults you want to search, enable the local service, and click **写入接入配置**. Keep that Obsidian instance running. The panel reuses the existing local connection file; an already-working installation does not need a new token or a reinstallation.
 
-Obsidian 社区目录仍需审核，发布 GitHub Release 不等于上架。审核通过前可用仓库 Release 的 `main.js`、`manifest.json`、`styles.css` 手动安装。已有旧 ID 的配置迁移见[升级说明](https://github.com/kleinklein0824/dsh-obsidian-quote/blob/main/docs/OBSIDIAN-SUBMISSION.md)。
+Obsidian **Vault Quote 0.2.8** 已完成自动审核；截至 2026-11-06 22:37（台北时间），官方导出数据已收录，但桌面端使用的 GitHub 镜像尚未同步，应用内仍可能搜索不到。官网按钮启用不代表桌面目录已更新，具体排查见[上架与目录同步说明](https://github.com/kleinklein0824/dsh-obsidian-quote/blob/main/docs/OBSIDIAN-SUBMISSION.md)。同步前可用 0.2.8 Release 的 `main.js`、`manifest.json`、`styles.css` 手动安装；已有可用服务和 Harness 面板无需重新部署。已有旧 ID 的配置迁移也见上述说明。
 
 ## Install / 安装
 
