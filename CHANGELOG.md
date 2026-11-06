@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.2.8 — 2026-11-06 (community scorecard fixes)
+
+- Remove the forbidden product name from the manifest description and keep root/installable metadata aligned.
+- Stop detaching workspace leaves during unload, preserving the user's dock placement while still stopping services, timers, watchers and subscriptions.
+- Exclude the current vault's actual `Vault.configDir` from indexing and watcher events using platform path comparison, including Windows casing; preserve ordinary same-named folders in separately registered vaults.
+- Replace thirteen `:has()` occurrences with explicit wide-setting classes, preserving free-text and compact numeric layouts.
+- Remove routine console logging and use explicit Node service timers compatible with headless HTTP consumers.
+- Add an English overview, a matching README title and CONTRIBUTING.md. Explain filesystem/clipboard capabilities, legacy settings-search compatibility and missing artifact attestations without claiming all warnings are removed.
+- Add regression checks for the description, unload position/cleanup, rendered row classes and actual multi-vault config-directory exclusion. Keep all nine Chinese FAQs, real screenshots and the original v0.2.7 video URLs.
+- Keep DeepSeek 0.5.1, Codex 0.1.4, Claude 0.1.2, CLI/MCP 0.2.3, the HTTP API and the minimum Obsidian version 1.5.0. Do not overwrite live installations or personal configuration.
+
 ## 0.2.7 — 2026-11-06 (Obsidian submission compatibility)
 
 - Rename the Obsidian manifest id to `vault-quote` and its display name to `Vault Quote`, satisfying the community's forbidden-name rules. Keep the repository and AI-client brand Obsidian Quote.

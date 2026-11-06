@@ -21,6 +21,10 @@ test('Obsidian plugin display name satisfies the community submission naming rul
   assert.ok(!/plugin/i.test(manifest.name), 'Plugin name must not contain "Plugin"');
 });
 
+test('the directory description omits the redundant product name', () => {
+  assert.ok(!/obsidian/i.test(manifest.description), 'Plugin description must not include "Obsidian"');
+});
+
 test('root and installable manifests describe the same plugin and release', () => {
   assert.deepEqual(manifest, read('plugin/manifest.json'));
   assert.match(manifest.version, /^\d+\.\d+\.\d+$/);

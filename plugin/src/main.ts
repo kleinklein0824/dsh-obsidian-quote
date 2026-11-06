@@ -26,6 +26,7 @@ import type {
 } from "./types";
 import {
 	createVaultEntry,
+	isWithinDirectory,
 	isValidVaultPath,
 	makeVaultId,
 	normalizeVaultPath,
@@ -52,7 +53,7 @@ export default class QuotePlugin extends Plugin implements QuoteHost {
 	async onload(): Promise<void> {
 		await this.loadSettings();
 
-		this.indexer = new VaultIndexer(() => this.settings);
+		this.indexer = new VaultIndexer(() => this.settings, (vaultPath) => this.configDirForVault(vaultPath));
 		this.server = new QuoteServer(this);
 
 		this.registerView(VIEW_TYPE, (leaf) => new QuotePanel(leaf, this));
@@ -120,7 +121,6 @@ export default class QuotePlugin extends Plugin implements QuoteHost {
 		this.listeners.clear();
 		this.closeWatchers();
 		void this.server.stop();
-		this.app.workspace.detachLeavesOfType(VIEW_TYPE);
 	}
 
 	async loadSettings(): Promise<void> {
@@ -357,11 +357,12 @@ export default class QuotePlugin extends Plugin implements QuoteHost {
 		this.scheduleSave(4000);
 	}
 
-	log(message: string): void {
-		console.log(`[obsidian-quote] ${message}`);
-	}
-
 	// --------------------------------------------------------------- watchers
+	private configDirForVault(vaultPath: string): string | undefined {
+		const currentPath = (this.app.vault.adapter as { getBasePath?: () => string }).getBasePath?.();
+		if (!currentPath || path.relative(currentPath, vaultPath) !== "") return undefined;
+		return this.app.vault.configDir;
+	}
 	private syncWatchers(): void {
 		const signature = `${this.settings.index.watch}|${this.settings.vaults
 			.filter((vault) => vault.enabled)
@@ -377,22 +378,25 @@ export default class QuotePlugin extends Plugin implements QuoteHost {
 			if (!vault.enabled) continue;
 			try {
 				const watcher = fs.watch(vault.path, { recursive: true }, (_event, filename) => {
-					if (typeof filename === "string" && filename.length > 0 && !this.isRelevantChange(filename)) return;
+					if (typeof filename === "string" && filename.length > 0 && !this.isRelevantChange(filename, vault.path)) return;
 					this.scheduleRebuild(1200);
 				});
 				watcher.on("error", () => undefined);
 				this.watchers.push(watcher);
 			} catch (error) {
-				this.log(`无法监听 ${vault.path}：${error instanceof Error ? error.message : String(error)}`);
+				new Notice(`知识库文件监听不可用，请手动重建索引：${error instanceof Error ? error.message : String(error)}`);
 			}
 		}
 	}
 
-	private isRelevantChange(filename: string): boolean {
+	private isRelevantChange(filename: string, vaultPath: string): boolean {
 		const normalized = filename.replace(/\\/g, "/");
-		if (normalized.includes("/.git/") || normalized.includes("/.obsidian/") || normalized.includes("/node_modules/")) {
+		const parts = normalized.split("/");
+		if (parts.some((part) => part.startsWith(".") || part === "node_modules")) {
 			return false;
 		}
+		const configDir = this.configDirForVault(vaultPath)?.replace(/\\/g, "/").replace(/\/+$/, "");
+		if (configDir && isWithinDirectory(normalized, configDir)) return false;
 		const base = normalized.split("/").pop() ?? normalized;
 		return base.toLowerCase().endsWith(".md");
 	}

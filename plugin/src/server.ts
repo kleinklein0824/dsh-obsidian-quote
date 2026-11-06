@@ -1,4 +1,5 @@
 import * as http from "http";
+import * as nodeTimers from "node:timers";
 import type { IncomingMessage, ServerResponse } from "http";
 import { randomBytes, timingSafeEqual } from "crypto";
 import { URL } from "url";
@@ -40,7 +41,6 @@ export interface QuoteHost {
 	getStats(): StatsResponse;
 	recordCitation(kind: string, query: string, refs: CitationRef[]): void;
 	rebuild(): Promise<void>;
-	log(message: string): void;
 }
 
 const MAX_BODY_BYTES = 1_000_000;
@@ -246,7 +246,6 @@ export class QuoteServer {
 			try {
 				await this.listen(port);
 				this.boundPort = port;
-				this.host.log(`引用服务已启动：${this.url}`);
 				return;
 			} catch (error) {
 				lastError = error;
@@ -274,14 +273,15 @@ export class QuoteServer {
 			const finish = () => {
 				if (settled) return;
 				settled = true;
-				clearTimeout(timer);
+				nodeTimers.clearTimeout(timer);
 				resolve();
 			};
-			const timer = setTimeout(finish, 1000);
+			// The HTTP service also runs in headless Node fixtures; these timers
+			// belong to that service, independently of any popout window.
+			const timer = nodeTimers.setTimeout(finish, 1000);
 			server.close(finish);
 			server.closeAllConnections?.();
 		});
-		this.host.log("引用服务已停止");
 	}
 
 	private listen(port: number): Promise<void> {

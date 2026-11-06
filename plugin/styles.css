@@ -288,38 +288,29 @@
 	gap: 6px;
 }
 
-/* Rows that carry a free-text field need the full card width; numeric rows
-   stay compact. :has() is supported by Obsidian's Electron runtime. */
-.obsidian-quote-panel .oq-card-body .setting-item:has(.oq-textarea),
-.obsidian-quote-panel .oq-card-body .setting-item:has(.oq-token),
-.obsidian-quote-panel .oq-card-body .setting-item:has(.oq-input:not(.oq-input-number)) {
+/* Free-text rows opt into the full card width when rendered. */
+.obsidian-quote-panel .oq-card-body .oq-setting-wide {
 	flex-direction: column;
 	align-items: stretch;
 }
 
-.obsidian-quote-panel .oq-card-body .setting-item:has(.oq-textarea) .setting-item-info,
-.obsidian-quote-panel .oq-card-body .setting-item:has(.oq-token) .setting-item-info,
-.obsidian-quote-panel .oq-card-body .setting-item:has(.oq-input:not(.oq-input-number)) .setting-item-info {
+.obsidian-quote-panel .oq-card-body .oq-setting-wide .setting-item-info {
 	flex: none;
 }
 
-.obsidian-quote-panel .oq-card-body .setting-item:has(.oq-textarea) .setting-item-control,
-.obsidian-quote-panel .oq-card-body .setting-item:has(.oq-token) .setting-item-control,
-.obsidian-quote-panel .oq-card-body .setting-item:has(.oq-input:not(.oq-input-number)) .setting-item-control {
+.obsidian-quote-panel .oq-card-body .oq-setting-wide .setting-item-control {
 	width: 100%;
 	flex-wrap: nowrap;
 }
 
-.obsidian-quote-panel .oq-card-body .setting-item:has(.oq-textarea) .oq-input,
-.obsidian-quote-panel .oq-card-body .setting-item:has(.oq-token) .oq-input,
-.obsidian-quote-panel .oq-card-body .setting-item:has(.oq-input:not(.oq-input-number)) .oq-input {
+.obsidian-quote-panel .oq-card-body .oq-setting-wide .oq-input {
 	flex: 1 1 auto;
 	width: auto;
 	max-width: none;
 	min-width: 0;
 }
 
-.obsidian-quote-panel .oq-card-body .setting-item:has(.oq-textarea) .oq-textarea {
+.obsidian-quote-panel .oq-card-body .oq-setting-wide .oq-textarea {
 	flex: 1 1 auto;
 	width: 100%;
 }

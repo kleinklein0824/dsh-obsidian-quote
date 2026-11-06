@@ -206,6 +206,7 @@ export function renderQuotePanel(root: HTMLElement, plugin: QuotePlugin, options
 
 	let draftPath = "";
 	new Setting(vaultBody)
+		.setClass("oq-setting-wide")
 		.setName("登记知识库")
 		.setDesc("填写知识库根目录的绝对路径。")
 		.addText((text) => {
@@ -275,6 +276,7 @@ export function renderQuotePanel(root: HTMLElement, plugin: QuotePlugin, options
 	const scopeBody = addCard(root, "引用范围", "目录均相对知识库根目录，每行一条；留空表示不限。");
 
 	new Setting(scopeBody)
+		.setClass("oq-setting-wide")
 		.setName("包含目录")
 		.setDesc("仅检索这些目录下的笔记。留空表示全库。")
 		.addTextArea((area) => {
@@ -291,6 +293,7 @@ export function renderQuotePanel(root: HTMLElement, plugin: QuotePlugin, options
 		});
 
 	new Setting(scopeBody)
+		.setClass("oq-setting-wide")
 		.setName("排除目录")
 		.setDesc("这些目录不参与检索。")
 		.addTextArea((area) => {
@@ -307,6 +310,7 @@ export function renderQuotePanel(root: HTMLElement, plugin: QuotePlugin, options
 		});
 
 	new Setting(scopeBody)
+		.setClass("oq-setting-wide")
 		.setName("仅含标签")
 		.setDesc("笔记需至少带有一个标签，逗号分隔；留空表示不过滤。")
 		.addText((text) => {
@@ -451,6 +455,7 @@ export function renderQuotePanel(root: HTMLElement, plugin: QuotePlugin, options
 		let profileSources = "";
 		let profileName = "";
 		new Setting(profileBody)
+			.setClass("oq-setting-wide")
 			.setName("组合来源")
 			.setDesc("每行一个：库名，或 库名/子目录。可跨库混合。")
 			.addTextArea((area) => {
@@ -462,6 +467,7 @@ export function renderQuotePanel(root: HTMLElement, plugin: QuotePlugin, options
 			});
 
 		new Setting(profileBody)
+			.setClass("oq-setting-wide")
 			.setName("组合名称")
 			.addText((text) => {
 				text.inputEl.addClass("oq-input");
@@ -596,6 +602,7 @@ export function renderQuotePanel(root: HTMLElement, plugin: QuotePlugin, options
 		});
 
 	new Setting(serviceBody)
+		.setClass("oq-setting-wide")
 		.setName("访问令牌")
 		.setDesc("harness 请求需携带 Bearer 令牌。")
 		.addText((text) => {

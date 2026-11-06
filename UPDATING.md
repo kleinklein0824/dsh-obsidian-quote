@@ -1,6 +1,6 @@
 # 排查与更新说明
 
-修订日期：2026-11-06。Obsidian 社区组件 **Vault Quote 0.2.7**，ID **`vault-quote`**；DeepSeek 面板 **0.5.1**；Codex 接入 **0.1.4**；Claude 清单 **0.1.2**；CLI/MCP **0.2.3**。各组件独立编号。
+修订日期：2026-11-06。Obsidian 社区组件 **Vault Quote 0.2.8**，ID **`vault-quote`**；DeepSeek 面板 **0.5.1**；Codex 接入 **0.1.4**；Claude 清单 **0.1.2**；CLI/MCP **0.2.3**。各组件独立编号。
 
 ## 已经在本地正常使用
 
@@ -14,18 +14,26 @@
 
 原 `obsidian-quote` ID 和 `Obsidian Quote` 显示名称包含官方禁止的 `obsidian` 字样。本地加载与社区新插件提交的校验不同，能在本地使用不代表能通过市场提交。
 
-发布版改为 **`vault-quote` / Vault Quote**，根清单、安装清单、开发包和版本映射同步到 **0.2.7**。设置按钮读取实际加载的清单 ID，兼容新旧安装身份。面板、索引、检索、规则、上下文、摘要和本机 API 保留；各 AI 客户端和仓库继续使用 Obsidian Quote 品牌。
+发布版改为 **`vault-quote` / Vault Quote**，根清单、安装清单、开发包和版本映射同步到 **0.2.8**。设置按钮读取实际加载的清单 ID，兼容新旧安装身份。面板、索引、检索、规则、上下文、摘要和本机 API 保留；各 AI 客户端和仓库继续使用 Obsidian Quote 品牌。
 
-Obsidian 自动安装使用 **`0.2.7`（无 `v`）** Release，附件是 `main.js`、`manifest.json`、`styles.css`。完整源码、Harness ZIP/tgz、视频、校验和在 **`v0.2.7` 配套发行**中。GitHub 发布和 awesome-dsh 收录不替代 Obsidian 官方社区审核。
+Obsidian 自动安装使用 **`0.2.8`（无 `v`）** Release，附件是 `main.js`、`manifest.json`、`styles.css`。完整源码、Harness ZIP/tgz、视频、校验和在 **`v0.2.7` 配套发行**中。GitHub 发布和 awesome-dsh 收录不替代 Obsidian 官方社区审核。
+
+## 官网显示 Risks 时怎样更新
+
+现有官方条目的 0.2.7 分数卡指出描述禁词和卸载时关闭面板标签两项风险；0.2.8 修复这两项，并处理宽行样式、当前库自定义配置目录、常规日志、计时器和英文 README。保留原有面板、HTTP API 与最低 Obsidian 1.5.0 支持。
+
+作者登录后进入已有 Vault Quote 条目的开发者管理入口，使用 **Check for new releases** 检查 GitHub 的 **0.2.8**，确认新版本被识别，再等待扫描与审核。如果页面另有 **Request review** 且尚未排队，按页面要求申请；以网站实际状态为准。不要重新创建同 ID 条目，也不要只刷新旧版分数卡。
+
+文件访问、主动复制接入配置、1.13 全局设置搜索未迁移和缺少 GitHub artifact attestation 的说明见 [审核指南](docs/OBSIDIAN-SUBMISSION.md)。本地测试和发布成功不代表官网已经重新扫描通过。
 
 ## 希望迁移到新的 Obsidian 市场 ID
 
-1. 停用旧 Obsidian Quote，私下备份 `.obsidian/plugins/obsidian-quote/data.json` 与现有接入配置。
-2. 安装新 Vault Quote 到 `.obsidian/plugins/vault-quote/`，先保持停用。
+1. 停用旧 Obsidian Quote，私下备份 `<库配置目录>/plugins/obsidian-quote/data.json` 与现有接入配置。
+2. 安装新 Vault Quote 到 `<库配置目录>/plugins/vault-quote/`，先保持停用。
 3. 将旧 `data.json` 复制到新目录；新目录已存在此文件时先备份，保留旧目录原件。
 4. 启用新 Vault Quote，核对原有库登记、范围、引用组合、服务地址和查询结果。保持旧插件停用，避免两份引用服务同时启动。
 
-同一份 `data.json` 的格式仍然兼容，保存的设置和引用台账可沿用。已有共享地址和令牌正确时，DeepSeek/Codex 无需重新配置。安装新 ID 本身不会自动读取旧目录的设置文件；完整说明见 [Obsidian 上架与配置迁移](docs/OBSIDIAN-SUBMISSION.md)。
+其中 `<库配置目录>` 默认为 `.obsidian`，修改过时使用实际目录。同一份 `data.json` 的格式仍然兼容，保存的设置和引用台账可沿用。已有共享地址和令牌正确时，DeepSeek/Codex 无需重新配置。安装新 ID 本身不会自动读取旧目录的设置文件；完整说明见 [Obsidian 上架与配置迁移](docs/OBSIDIAN-SUBMISSION.md)。
 
 ## Codex 当前已经是 0.1.4
 
@@ -48,4 +56,4 @@ Obsidian 自动安装使用 **`0.2.7`（无 `v`）** Release，附件是 `main.j
 
 ## 本轮验证
 
-生产构建、完整回归 **134/134**、Host **25/25**、Client **90/90**、新增发布/设置按钮检查 **5/5**。新检查覆盖名称/ID、清单与版本一致性，以及新旧插件身份下点击实际设置按钮的行为。旧客户端及真实 Obsidian 全功能没有在本轮逐项重新验收；已有截图和历史测试保留各自验证范围。
+生产构建、完整回归 **134/134**、Host **25/25**、Client **90/90**、发布与审核回归检查 **9/9**。检查覆盖名称/ID/描述、清单与版本一致性、新旧插件设置按钮、卸载清理与面板位置、宽行分类，以及当前库自定义配置目录排除和外库同名目录保留。旧客户端及真实 Obsidian 全功能没有在本轮逐项重新验收；已有截图和历史测试保留各自验证范围。

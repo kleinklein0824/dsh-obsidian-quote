@@ -4,6 +4,12 @@ import * as os from "os";
 import * as path from "path";
 import type { VaultEntry } from "./types";
 
+/** Path containment with the platform's comparison rules (including Windows casing). */
+export function isWithinDirectory(candidate: string, directory: string): boolean {
+	const relative = path.relative(directory, candidate);
+	return relative === "" || (relative !== ".." && !relative.startsWith(`..${path.sep}`) && !path.isAbsolute(relative));
+}
+
 export function normalizeVaultPath(input: string): string {
 	let value = input.trim();
 	if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'"))) {

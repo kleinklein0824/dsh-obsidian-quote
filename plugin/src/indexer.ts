@@ -5,6 +5,7 @@ import { renderContextHeader } from "./format";
 import { parseNote } from "./note-parser";
 import { extractRules, priorityWeight, publicRule, ruleKey, type RuleInternal } from "./rules";
 import { tokenize } from "./tokenizer";
+import { isWithinDirectory } from "./vault-registry";
 import type {
 	BriefOptions,
 	BriefResponse,
@@ -23,7 +24,6 @@ import type {
 } from "./types";
 
 const SKIP_DIRS = new Set([
-	".obsidian",
 	".git",
 	".trash",
 	".stfolder",
@@ -131,10 +131,11 @@ function splitByLength(text: string, max: number): string[] {
 	return parts;
 }
 
-async function collectFiles(root: string, settings: QuoteSettings): Promise<string[]> {
+async function collectFiles(root: string, settings: QuoteSettings, configDir?: string): Promise<string[]> {
 	const out: string[] = [];
 	const includes = settings.scope.includeFolders.map(normalizePrefix).filter(Boolean);
 	const excludes = settings.scope.excludeFolders.map(normalizePrefix).filter(Boolean);
+	const configPrefix = normalizePrefix(configDir ?? "");
 
 	const visit = async (rel: string): Promise<void> => {
 		let entries: fs.Dirent[];
@@ -145,6 +146,7 @@ async function collectFiles(root: string, settings: QuoteSettings): Promise<stri
 		}
 		for (const entry of entries) {
 			const childRel = rel ? `${rel}/${entry.name}` : entry.name;
+			if (configPrefix && isWithinDirectory(childRel, configPrefix)) continue;
 			if (entry.isDirectory()) {
 				if (entry.name.startsWith(".") || SKIP_DIRS.has(entry.name.toLowerCase())) continue;
 				if (excludes.some((prefix) => matchesPrefix(childRel, prefix))) continue;
@@ -248,7 +250,10 @@ export class VaultIndexer {
 
 	lastBuiltAt = 0;
 
-	constructor(private readonly getSettings: () => QuoteSettings) {}
+	constructor(
+		private readonly getSettings: () => QuoteSettings,
+		private readonly getConfigDir: (vaultPath: string) => string | undefined = () => undefined
+	) {}
 
 	get isBuilding(): boolean {
 		return this.building !== null;
@@ -409,7 +414,7 @@ export class VaultIndexer {
 				continue;
 			}
 
-			const files = await collectFiles(vault.path, settings);
+			const files = await collectFiles(vault.path, settings, this.getConfigDir(vault.path));
 			for (const relPath of files) {
 				const absolute = path.join(vault.path, relPath);
 				try {
