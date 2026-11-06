@@ -12,7 +12,7 @@ Obsidian 社区插件名称为 **Vault Quote**，ID 为 **`vault-quote`**，桌�
 
 Obsidian 安装用 [**0.2.8 Release（无 `v`）**](https://github.com/kleinklein0824/dsh-obsidian-quote/releases/tag/0.2.8)，标签与 `manifest.json` 版本完全一致，提供 `main.js`、`manifest.json`、`styles.css` 三个安装文件。完整源码、Harness 预构建包、演示视频和各客户端接入说明见 [**v0.2.7 配套发行**](https://github.com/kleinklein0824/dsh-obsidian-quote/releases/tag/v0.2.7)与[发行说明](RELEASE-NOTES-v0.2.7.md)。GitHub 发行和 awesome-dsh 投稿均不代表已通过 Obsidian 社区审核。
 
-0.2.7 已提交并显示在[官方社区页面](https://community.obsidian.md/plugins/vault-quote)，自动审核发现两项风险。0.2.8 移除描述中的品牌词、保留卸载后的面板位置，并修复配置目录排除与样式选择器；修复详情见[发行说明](RELEASE-NOTES-0.2.8.md)。官网需重新检测新版本，发布本身不代表审核通过。旧安装迁移见 [Obsidian 上架与配置迁移](docs/OBSIDIAN-SUBMISSION.md)。**DeepSeek 已有面板无需重新部署，原有知识库、来源、引用组合和连接令牌继续使用。**
+**2026-11-06 状态：0.2.8 的官方自动审核已完成（Completed），原两项 Risks 已清除，公开页的 Add to Obsidian 安装入口已启用。** 0.2.8 移除描述中的品牌词、保留卸载后的面板位置，并修复配置目录排除与样式选择器；修复详情见[发行说明](RELEASE-NOTES-0.2.8.md)。可从[官方社区页面](https://community.obsidian.md/plugins/vault-quote)打开插件安装详情。旧安装迁移见 [Obsidian 上架与配置迁移](docs/OBSIDIAN-SUBMISSION.md)。**DeepSeek 已有面板无需重新部署，原有知识库、来源、引用组合和连接令牌继续使用。**
 
 **先按自己的客户端选择用法：[各 Harness 安装与使用指南](docs/HARNESS-USAGE.md)**。其中分别说明 Codex 桌面设置面板、Codex CLI 文本检索、DeepSeek 侧栏、Claude Code 六工具，以及其他客户端的 MCP 与浏览器入口。
 
@@ -83,11 +83,11 @@ Obsidian 新插件提交规则禁止 ID 包含 `obsidian`，显示名称也不�
 
 ### 9. awesome-dsh 的申请等于 Obsidian 上架了吗，现在能搜索到吗？
 
-这是两个独立目录。DeepSeek 沿用已有的 [awesome-dsh PR #12409](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin/pull/12409)，条目指向 `harness-plugin/`，无需重复投稿。Obsidian 已有[官方 Community 条目](https://community.obsidian.md/plugins/vault-quote)，用户截图显示 0.2.7 的自动审核仍有风险。0.2.8 针对这些意见修复；作者需在现有条目的管理入口检查新发行并跟进审核，避免重复提交。**公开条目、GitHub Release 和 awesome-dsh 申请均不能单独证明 Obsidian 已完成审核或已能在应用内搜索。**
+这是两个独立目录。DeepSeek 沿用已有的 [awesome-dsh PR #12409](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin/pull/12409)，条目指向 `harness-plugin/`，无需重复投稿。Obsidian 的 **0.2.8 已完成自动审核，且[官方 Community 条目](https://community.obsidian.md/plugins/vault-quote)已启用 Add to Obsidian 安装入口**；旧版 0.2.7 的 Failed 是历史记录。可在 Obsidian 的第三方插件浏览页搜索 **Vault Quote**，或点击上述官网按钮打开插件详情。应用内搜索仍以客户端实际同步的目录为准，本次没有替用户执行安装。
 
-作者现在登录社区网站，进入 **Plugins → Your entries → Vault Quote → `…` → Check for new releases**，确认识别 **0.2.8**；需要立即重新扫描时再选择 **`…` → Request review**。[官方说明](https://docs.obsidian.md/community-directory/manage-entry)指出 Warnings 不阻止提交，应先核对新版本的错误或风险。
+本次无需再次提交或请求审核。以后发布新版本时，作者可进入 **Plugins → Your entries → Vault Quote → `…` → Check for new releases**，确认新版本被识别；需要立即重新扫描时再选择 **`…` → Request review**。[官方说明](https://docs.obsidian.md/community-directory/manage-entry)指出 Warnings 不阻止提交，应先核对新版本的错误或风险。
 
-Obsidian 审核通过前，按下文用 Release 的三文件或 ZIP 手动安装；通过后搜索 **Vault Quote**。正式 Obsidian 安装使用标签 **`0.2.8`（无 `v`）**；完整源码、Harness 包和原版视频放在 **`v0.2.7` 配套发行**。提交与迁移步骤见 [Obsidian 上架说明](docs/OBSIDIAN-SUBMISSION.md)。
+也可按下文用 Release 的三文件或 ZIP 手动安装。正式 Obsidian 安装使用标签 **`0.2.8`（无 `v`）**；完整源码、Harness 包和原版视频放在 **`v0.2.7` 配套发行**。提交与迁移步骤见 [Obsidian 上架说明](docs/OBSIDIAN-SUBMISSION.md)。
 
 ## 演示视频
 
@@ -163,9 +163,9 @@ Obsidian 审核通过前，按下文用 Release 的三文件或 ZIP 手动安装
 <你的知识库>/.obsidian/plugins/vault-quote/
 ```
 
-或者将 0.2.8 Release 的 `vault-quote-v0.2.8.zip` 中的 `vault-quote/` 文件夹解压到 `<你的知识库>/.obsidian/plugins/`。如果改过 Obsidian 配置目录，以上 `.obsidian` 均替换为实际配置目录。重新加载 Obsidian，在第三方插件中启用 **Vault Quote**。只提供桌面版；社区目录审核通过前，仍需手动安装。已有 `obsidian-quote/` 用户请先按[迁移说明](docs/OBSIDIAN-SUBMISSION.md#已有用户怎样保留配置)保留 `data.json`，避免把旧插件和新插件同时启用。
+或者将 0.2.8 Release 的 `vault-quote-v0.2.8.zip` 中的 `vault-quote/` 文件夹解压到 `<你的知识库>/.obsidian/plugins/`。如果改过 Obsidian 配置目录，以上 `.obsidian` 均替换为实际配置目录。重新加载 Obsidian，在第三方插件中启用 **Vault Quote**。只提供桌面版；现在也可通过[官方条目的 Add to Obsidian 按钮](https://community.obsidian.md/plugins/vault-quote)打开安装详情。已有 `obsidian-quote/` 用户请先按[迁移说明](docs/OBSIDIAN-SUBMISSION.md#已有用户怎样保留配置)保留 `data.json`，避免把旧插件和新插件同时启用。
 
-社区审核通过后，在各知识库的“第三方插件 → 浏览”中搜索 **Vault Quote** 安装并启用。Obsidian 按知识库管理插件，上架后仍需为新的 Obsidian 知识库安装/启用；如果只是新建 AI 编码项目，可直接复用已运行的 Obsidian 服务，不必为每个编码项目复制插件。
+在各知识库的“第三方插件 → 浏览”中搜索 **Vault Quote** 安装并启用，也可从官方条目打开安装详情。Obsidian 按知识库管理插件，上架后仍需为新的 Obsidian 知识库安装/启用；如果只是新建 AI 编码项目，可直接复用已运行的 Obsidian 服务，不必为每个编码项目复制插件。
 
 在仓库根目录执行开发构建：
 
@@ -337,7 +337,9 @@ Host 从本机配置读取令牌，通过 `/dsh-obsidian-quote-panel/rpc` 代查
 
 0.2.7 的截图显示 **2 项 Risks、22 项 Warnings、3 项 Other**。其中 13 处 `:has()` 和两处配置目录写法会逐行计数，不代表有 22 个独立故障。0.2.8 的修复包括描述禁词、卸载后标签位置保留、明确的宽行样式类、当前库实际 `Vault.configDir` 排除、常规日志移除、服务专属 Node timers、英文介绍和标题一致性；另新增贡献指南。
 
-多库读取仍需 Node `fs`；管理面板的复制按钮写入接入示例，浏览器面板还可复制检索结果的 Markdown，均由用户点击触发，代码不读取剪贴板。最低 Obsidian 版本保留 1.5.0，因此尚未迁移到 1.13 的声明式全局设置搜索，现有设置页和管理面板可继续使用。Release 暂未附 GitHub artifact attestation，SHA-256 只能校验下载一致性，不能替代构建来源证明。这些能力与缺失项可能继续显示在分数卡中。详见[审核与重新检查步骤](docs/OBSIDIAN-SUBMISSION.md)。
+0.2.8 的自动审核已完成，剩余提示包括多库所需的 Node `fs`、主动剪贴板写入、1.13 声明式全局设置搜索尚未迁移，以及缺少 GitHub artifact attestation。虽然本 README 已补英文介绍，扫描器仍提示英文不足，保留为文档改进项。Release 的 ZIP 和 SHA-256 也被提示为额外附件，Obsidian 安装器只下载三个程序文件。这些提示没有阻止本次安装入口启用。
+
+管理面板的复制按钮写入接入示例，浏览器面板还可复制检索结果的 Markdown，均由用户点击触发，代码不读取剪贴板。最低 Obsidian 版本保留 1.5.0，现有设置页和管理面板可继续使用。SHA-256 只能校验下载一致性，不能替代构建来源证明。详见[审核与重新检查步骤](docs/OBSIDIAN-SUBMISSION.md)。
 
 ## 可复现验证（2026-11-06）
 

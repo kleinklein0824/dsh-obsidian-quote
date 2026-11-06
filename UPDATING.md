@@ -20,6 +20,8 @@ Obsidian 自动安装使用 **`0.2.8`（无 `v`）** Release，附件是 `main.j
 
 ## 官网显示 Risks 时怎样更新
 
+**0.2.8 的自动审核现已完成（Completed），公开条目的 Add to Obsidian 按钮已启用。** 下面保留旧版修复记录及以后检查新发行的方法；本次无需重复提交。文件访问、剪贴板、全局设置搜索、英文 README、构建来源证明和额外附件仍有 Warning/Recommendation，未阻止本次安装入口启用。
+
 现有官方条目的 0.2.7 分数卡指出描述禁词和卸载时关闭面板标签两项风险；0.2.8 修复这两项，并处理宽行样式、当前库自定义配置目录、常规日志、计时器和英文 README。保留原有面板、HTTP API 与最低 Obsidian 1.5.0 支持。
 
 作者登录后进入 **Plugins → Your entries → Vault Quote**，打开 **`…` → Check for new releases** 检查 GitHub 的 **0.2.8**，确认新版本被识别。需要立即重新扫描时再选择 **`…` → Request review**；已有审核队列时继续跟进现有项。路径依据[官方条目管理说明](https://docs.obsidian.md/community-directory/manage-entry)。不要重新创建同 ID 条目，也不要只刷新旧版分数卡。

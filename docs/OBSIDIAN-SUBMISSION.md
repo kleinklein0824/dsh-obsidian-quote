@@ -2,6 +2,8 @@
 
 更新日期：2026-11-06。
 
+**当前状态：0.2.8 自动审核已完成（Completed），原两项 Risks 已清除，公开条目已启用 Add to Obsidian 安装入口。** 旧版 0.2.7 的 Failed 保留为历史记录。本次无需重复提交或请求审核，下方保留修复记录与以后更新时的操作方法。
+
 ## 报错原因和本版修复
 
 Obsidian 的清单规范禁止插件 ID 含 `obsidian`，显示名称也不能含 `Obsidian` 或 `Plugin`。因此原 `obsidian-quote` / `Obsidian Quote` 可以本地加载，却不能通过新插件提交校验。
@@ -27,7 +29,9 @@ Obsidian 用标签 **`0.2.8`**，不带 `v`，与清单版本逐字一致；该 
 | 常规 console 日志与裸 timer | 移除常规日志，HTTP 服务显式使用 Node timers，兼容无窗口运行 |
 | README 英文和标题、缺贡献指南 | 补英文介绍、标题改为 Vault Quote，新增 CONTRIBUTING.md |
 
-### 作者现在怎样操作
+### 以后发布新版本怎样检查
+
+以下以本次已完成审核的 0.2.8 为例；以后操作时替换为实际新发行版本，无需再次检查已经完成的这一项。
 
 1. 登录创建此条目的 Obsidian 账号，在侧栏进入 **Plugins → Your entries → Vault Quote**，打开已有条目的管理页面。公开 Scorecard 页主要展示结果，GitHub 登录不等于已登录该开发者账号。
 2. 在管理页打开 **`…` → Check for new releases**。GitHub 仓库仍是 `https://github.com/kleinklein0824/dsh-obsidian-quote`，目标发行是 **`0.2.8`（无 `v`、正式发行）**，不要改成 `v0.2.7` 的配套素材发行。
@@ -45,6 +49,8 @@ Obsidian 用标签 **`0.2.8`**，不带 `v`，与清单版本逐字一致；该 
 - **Clipboard Access**：管理面板复制接入示例，浏览器面板也可复制检索结果的 Markdown；均需用户点击，代码不读取剪贴板。接入示例可能含令牌，不能公开分享。
 - **1.13 设置搜索**：尚未迁移声明式 `getSettingDefinitions()`，新版本的全局设置搜索可能无法列出本插件设置。现有设置页和管理面板保留，最低版本仍为 1.5.0；不会添加空实现冒充已支持。
 - **Artifact attestation**：当前尚未提供 GitHub 构建来源证明。Release 提供的 SHA-256 可核对下载字节，但不能替代来源证明。
+- **README 英文提示**：虽然 0.2.8 已提供英文介绍，扫描器仍给出此 Warning，保留为后续文档改进项。
+- **额外发行附件**：ZIP 与 SHA-256 被列为 Recommendation，Obsidian 安装器只下载三个程序文件，额外附件供手动安装和下载校验。
 - **Malware scan not available**：属于网站的扫描可用性披露，不能通过修改文档宣称消除。
 
 当前库的自定义配置目录会被自动排除。外部登记库的非隐藏自定义配置目录无法通过当前 `Vault.configDir` 推断，应在排除范围中明确填写。文件权限和凭据边界见 [SECURITY.md](../SECURITY.md)。
