@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.10 — 2026-11-10 (add paths from the Codex panel)
+
+- Add an authenticated Codex panel action for registering a local folder through the running Obsidian service. Validate absolute paths, reject duplicates, persist settings and start indexing.
+- Show indexing state in the panel, disable search while the new index is building, and refresh the source list when indexing completes.
+- Let newly registered paths join existing paths in the per-query multi-select scope; keep empty or stale scopes from widening retrieval.
+- Advance the Obsidian plugin to 0.2.10 and Codex integration to 0.1.6. Service settings and include/exclude scope remain managed in Obsidian; DeepSeek, Claude and CLI/MCP stay unchanged.
+
 ## 0.2.9 — 2026-11-10 (multi-path local retrieval)
 
 - Allow registering local knowledge-base directories outside the currently open Obsidian vault.

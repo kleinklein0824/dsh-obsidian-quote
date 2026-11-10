@@ -7,7 +7,7 @@ import { VaultIndexer } from "./indexer";
 import { CitationLedger, type LedgerData } from "./ledger";
 import { QuotePanel } from "./panel";
 import { QuoteServer } from "./server";
-import type { CitationRef, QuoteHost } from "./server";
+import type { CitationRef, QuoteHost, VaultRegistration } from "./server";
 import { QuoteSettingTab } from "./settings";
 import type {
 	BriefOptions,
@@ -26,6 +26,7 @@ import type {
 } from "./types";
 import {
 	createVaultEntry,
+	isAbsoluteVaultPath,
 	isWithinDirectory,
 	isValidVaultPath,
 	makeVaultId,
@@ -273,6 +274,30 @@ export default class QuotePlugin extends Plugin implements QuoteHost {
 		}
 		this.settings.vaults.push(createVaultEntry(absolute));
 		return { ok: true, message: "已添加" };
+	}
+
+	async registerVault(input: string): Promise<VaultRegistration> {
+		if (!isAbsoluteVaultPath(input)) {
+			return { ok: false, status: 400, message: "请输入有效的本机文件夹绝对路径" };
+		}
+		const result = this.addVault(input);
+		if (!result.ok) {
+			return {
+				ok: false,
+				status: result.message === "该知识库已登记" ? 409 : 400,
+				message: result.message,
+			};
+		}
+
+		const vault = this.settings.vaults[this.settings.vaults.length - 1];
+		try {
+			await this.saveSettings();
+		} catch (error) {
+			this.settings.vaults = this.settings.vaults.filter((entry) => entry.id !== vault.id);
+			throw error;
+		}
+		this.scheduleRebuild(0);
+		return { ok: true, vault: { id: vault.id, name: vault.name, enabled: vault.enabled } };
 	}
 
 	async openPanel(): Promise<void> {

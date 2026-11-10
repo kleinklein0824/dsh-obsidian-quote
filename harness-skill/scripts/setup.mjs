@@ -27,7 +27,7 @@ export async function inspectConnection({ home = os.homedir(), env = process.env
     if (!response.ok) return { state: 'service-error', message: '读取知识库登记状态失败。' };
     const body = await response.json();
     if (!Array.isArray(body.vaults)) return { state: 'service-error', message: '服务返回的知识库列表格式异常。' };
-    return { state: 'ready', version: status.version, vaults: body.vaults.length, enabledVaults: body.vaults.filter(vault => vault.enabled).length, docs: status.docs, chunks: status.chunks, panelUrl, message: '连接成功。知识库登记与设置在 Obsidian 中管理；浏览器面板提供检索和来源选择。' };
+    return { state: 'ready', version: status.version, vaults: body.vaults.length, enabledVaults: body.vaults.filter(vault => vault.enabled).length, docs: status.docs, chunks: status.chunks, panelUrl, message: '连接成功。可在 Codex 知识库面板添加本机文件夹并多选检索；服务配置与检索范围仍在 Obsidian 管理。浏览器面板提供检索和来源选择。' };
   } catch { return { state: 'service-offline', message: '无法读取本机引用服务；请保持 Obsidian 打开并启用 Obsidian Quote 服务。' }; }
 }
 

@@ -11,6 +11,7 @@ const root = path.resolve(__dirname, '..');
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'oq-native-ui-'));
 const checks = [];
 const queries = [];
+const customPath = 'D:\\Notes\\Custom Vault';
 let vaults = [
   { id: 'selected-vault', name: '测试库', enabled: true, docs: 2, chunks: 3 },
   { id: 'second-vault', name: '另一个库', enabled: true, docs: 4, chunks: 6 },
@@ -58,9 +59,15 @@ class Cdp {
       if (['/vaults', '/search', '/context'].includes(req.url)) {
         assert.equal(req.headers.authorization, 'Bearer UI_TEST_ONLY');
         if (slow) await new Promise(resolve => setTimeout(resolve, 11000));
-        if (req.url === '/vaults') return res.end(JSON.stringify({ vaults }));
         let raw = ''; for await (const chunk of req) raw += chunk;
-        const data = JSON.parse(raw); queries.push({ endpoint: req.url, data });
+        const data = raw ? JSON.parse(raw) : null;
+        if (req.url === '/vaults' && req.method === 'POST') {
+          assert.equal(data.path, customPath);
+          vaults.push({ id: 'custom-vault', name: '自定义目录', enabled: true, docs: 2, chunks: 3 });
+          return res.end(JSON.stringify({ vault: { id: 'custom-vault', name: '自定义目录', enabled: true } }));
+        }
+        if (req.url === '/vaults') return res.end(JSON.stringify({ vaults, indexing: false }));
+        queries.push({ endpoint: req.url, data });
         if (req.url === '/context') return res.end(JSON.stringify({ markdown: '引用结果 ' + data.query, warnings: [] }));
         return res.end(JSON.stringify({ hits: [{ title: '<img src=x onerror="parent.injected=1">', path: '规范/测试.md', vault: '测试库', excerpt: '查询结果 ' + data.query }], warnings: [] }));
       }
@@ -179,6 +186,18 @@ class Cdp {
         assert.equal(await ui('return d.querySelector("#status").textContent'), '检索完成。');
         assert.equal(await ui('return d.querySelector("#results pre").textContent'), '引用结果 慢速检索');
       } finally { slow = false; }
+    });
+    await check('Codex registers a custom path and searches it together with the selected existing path', async () => {
+      await ui('d.querySelector("#vault-path").value=' + JSON.stringify(customPath) + ';d.querySelector("#add-vault").click()');
+      await waitFor(prefix + '.querySelector("#status").textContent.includes("已添加")');
+      assert.equal(await ui('return d.querySelector("#vault-path").value'), '');
+      assert.equal(await ui('return d.querySelector("[data-source=custom-vault]").checked'), true);
+      await ui('d.querySelector("#query").value="新目录联合查询";d.querySelector("#search").click()');
+      await waitFor(prefix + '.querySelector("#status").textContent==="检索完成。"');
+      assert.deepEqual(queries.at(-1).data.sources, [
+        { vault: '另一个库', vaultId: 'another-vault' },
+        { vault: '自定义目录', vaultId: 'custom-vault' },
+      ]);
     });
     await check('Narrow windows keep the form and results inside the visible width', async () => {
       await cdp.send('Emulation.setDeviceMetricsOverride', { width: 320, height: 850, deviceScaleFactor: 1, mobile: false });

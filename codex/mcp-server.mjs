@@ -15,16 +15,19 @@ const tools = [
     outputSchema: { type: 'object', properties: { schema: { type: 'object' }, values: empty, layout: { type: 'array', items: { type: 'object' } } }, required: ['schema', 'values'], additionalProperties: false } },
   { name: 'oq_settings_update', title: '知识库面板设置', description: '面板入口没有可写的连接设置。', inputSchema: { type: 'object', properties: { set: empty }, required: ['set'], additionalProperties: false },
     outputSchema: { type: 'object', properties: { values: empty }, required: ['values'], additionalProperties: false } },
-  { name: 'oq_panel', title: 'Obsidian 知识库', description: '打开知识库面板，选择一个或多个本地路径，检索并在面板内查看结果。', inputSchema: empty,
+  { name: 'oq_panel', title: 'Obsidian 知识库', description: '打开知识库面板，登记本地路径并选择一个或多个来源检索。', inputSchema: empty,
     _meta: { ui: { resourceUri: RESOURCE, visibility: ['app'] }, 'openai/ui': { entrypoints: [{ type: 'global' }, { type: 'thread' }] } } },
   { name: 'oq_panel_state', title: '刷新知识库连接', description: '只读列出知识库状态和笔记数量，不返回凭据或绝对目录。', inputSchema: empty },
+  { name: 'oq_panel_add_vault', title: '添加本地路径', description: '在 Obsidian 本机服务中校验、登记并索引一个本地文件夹；不返回绝对路径。',
+    inputSchema: { type: 'object', properties: { path: { type: 'string', minLength: 1, maxLength: 4096 } }, required: ['path'], additionalProperties: false },
+    annotations: { ...annotations, readOnlyHint: false } },
   { name: 'oq_panel_query', title: '检索知识库', description: '按面板选择的一个或多个来源执行只读检索；来源失效时停止，不扩大检索范围。',
     inputSchema: { type: 'object', properties: {
       query: { type: 'string', minLength: 1, maxLength: 500 }, source: { type: 'string', maxLength: 256 },
       sources: { type: 'array', items: { type: 'string', minLength: 1, maxLength: 256 }, minItems: 1, maxItems: 256, uniqueItems: true },
       mode: { type: 'string', enum: ['search', 'context'] }, limit: { type: 'integer', minimum: 1, maximum: 10 },
     }, required: ['query', 'mode', 'limit'], oneOf: [{ required: ['source'] }, { required: ['sources'] }], additionalProperties: false } },
-].map(tool => ({ ...tool, annotations, _meta: tool._meta ?? meta }));
+].map(tool => ({ ...tool, annotations: tool.annotations ?? annotations, _meta: tool._meta ?? meta }));
 
 function connection() {
   let config = {};
@@ -51,7 +54,15 @@ async function service(endpoint, body) {
       body: body ? JSON.stringify(body) : undefined, signal: AbortSignal.timeout(15000) });
   } catch { throw Error('无法连接知识库服务。请保持 Obsidian 打开，并启用 Obsidian Quote 引用服务。'); }
   if ([401, 403].includes(response.status)) throw Error('服务可达，但接入鉴权失败。请检查已有配置和环境变量覆盖。');
-  if (!response.ok) throw Error('知识库服务请求失败（' + response.status + '）。');
+  if (!response.ok) {
+    if (endpoint === '/vaults' && body) {
+      let result;
+      try { result = await response.json(); } catch {}
+      if (['请输入有效的本机文件夹绝对路径', '路径不存在或不是文件夹', '该知识库已登记'].includes(result?.error))
+        throw Error(result.error);
+    }
+    throw Error('知识库服务请求失败（' + response.status + '）。');
+  }
   try { return await response.json(); } catch { throw Error('知识库服务返回格式异常。'); }
 }
 
@@ -65,7 +76,7 @@ async function vaultState() {
       id: v.id, name: v.name, enabled: v.enabled === true, docs: count(v.docs), chunks: count(v.chunks),
     }));
   if (new Set(vaults.map(v => v.id)).size !== vaults.length) throw Error('知识库标识重复，请检查 Obsidian 登记状态。');
-  return { state: 'ready', checkedAt: new Date().toISOString(), vaults };
+  return { state: 'ready', checkedAt: new Date().toISOString(), indexing: data.indexing === true, vaults };
 }
 
 async function runTool(name, args) {
@@ -76,11 +87,20 @@ async function runTool(name, args) {
   };
   if (name === 'oq_settings_update') {
     if (!args.set || typeof args.set !== 'object' || Array.isArray(args.set) || Object.keys(args.set).length)
-      throw Error('此入口没有可写的连接设置。知识库登记与服务配置请在 Obsidian 中管理。');
+      throw Error('此入口没有可写的连接设置。服务配置请在 Obsidian 中管理；本地路径可从知识库面板添加。');
     return { values: {} };
   }
   if (name === 'oq_panel') return { opened: true };
   if (name === 'oq_panel_state') return vaultState();
+  if (name === 'oq_panel_add_vault') {
+    if (!args || typeof args !== 'object' || Array.isArray(args) || typeof args.path !== 'string' || !args.path.trim() || args.path.length > 4096)
+      throw Error('请输入有效的本机文件夹绝对路径');
+    const data = await service('/vaults', { path: args.path.trim() });
+    const vault = data?.vault;
+    if (!vault || typeof vault.id !== 'string' || !vault.id || typeof vault.name !== 'string' || !vault.name || vault.enabled !== true)
+      throw Error('知识库服务返回的登记结果格式异常。');
+    return { vault: { id: vault.id.slice(0, 256), name: vault.name.slice(0, 256), enabled: true } };
+  }
   if (name !== 'oq_panel_query') throw Error('未知面板工具。');
   if (!args || typeof args !== 'object' || Array.isArray(args) || typeof args.query !== 'string' || !args.query.trim() || args.query.length > 500 ||
       !['search', 'context'].includes(args.mode) || !Number.isInteger(args.limit) || args.limit < 1 || args.limit > 10)
@@ -124,7 +144,7 @@ async function handle(message) {
   const { id, method, params = {} } = message;
   const reply = result => send({ jsonrpc: '2.0', id, result });
   if (method === 'initialize') return reply({ protocolVersion: params.protocolVersion || '2025-03-26',
-    serverInfo: { name: 'obsidian-quote-panel', title: 'Obsidian 知识库', version: '0.1.5' },
+    serverInfo: { name: 'obsidian-quote-panel', title: 'Obsidian 知识库', version: '0.1.6' },
     capabilities: { tools: {}, resources: {}, extensions: { 'openai/settings': { readTool: 'oq_settings_read', updateTool: 'oq_settings_update' } } } });
   if (method === 'ping') return reply({});
   if (method === 'tools/list') return reply({ tools });

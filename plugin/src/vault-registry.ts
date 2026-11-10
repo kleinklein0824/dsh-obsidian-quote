@@ -22,6 +22,16 @@ export function normalizeVaultPath(input: string): string {
 	return path.resolve(value);
 }
 
+export function isAbsoluteVaultPath(input: string): boolean {
+	let value = input.trim();
+	if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'"))) {
+		value = value.slice(1, -1);
+	}
+	value = value.replace(/^file:\/\//i, "");
+	if (/^\/[A-Za-z]:\//.test(value)) value = value.slice(1);
+	return path.isAbsolute(value);
+}
+
 export function makeVaultId(absolutePath: string): string {
 	return crypto.createHash("sha1").update(absolutePath.toLowerCase()).digest("hex").slice(0, 12);
 }

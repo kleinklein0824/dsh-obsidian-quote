@@ -1,6 +1,6 @@
 # Vault Quote
 
-Vault Quote connects local Markdown vaults to AI coding assistants as read-only reference sources. Register local folders, including folders outside the currently open vault, then choose one or several paths in the Codex panel for each query. The repository and AI-client integrations retain the **Obsidian Quote** brand; the community desktop plugin is **Vault Quote**, with ID **`vault-quote`**.
+Vault Quote connects local Markdown vaults to AI coding assistants as read-only reference sources. Register local folders, including folders outside the currently open vault, directly from the Codex panel, then choose one or several paths for each query. The repository and AI-client integrations retain the **Obsidian Quote** brand; the community desktop plugin is **Vault Quote**, with ID **`vault-quote`**.
 
 Install and enable the desktop plugin first, register your vaults, and explicitly write the local connection configuration. Install the appropriate client integration separately: DeepSeek Harness provides its own sidebar, Codex has a settings panel where supported, and other local MCP clients can use six retrieval tools. Keep the desktop application running. Installing a client integration does not install the desktop plugin or copy your notes.
 
@@ -8,11 +8,11 @@ Indexing and search run locally. The service listens on loopback and authenticat
 
 把多个本地 Obsidian 知识库接成 AI 编码助手的只读参考资料。按需检索笔记、提取编码规则、生成带来源的上下文和项目规范摘要，提供浏览器面板、命令行与 MCP 接口。
 
-Obsidian 社区插件名称为 **Vault Quote**，ID 为 **`vault-quote`**，桌面插件版本 **0.2.9**；项目与各 AI 客户端继续使用 **Obsidian Quote** 品牌。DeepSeek Harness 面板为 **0.5.1**，Codex 接入 **0.1.5**，Claude Code 清单 **0.1.2**，CLI/MCP **0.2.3**。Codex 面板可从当前 Obsidian 库以外登记的目录中多选检索，同时保留原对话调用。下方保留作者实际安装的 Codex、DeepSeek 面板截图。
+Obsidian 社区插件名称为 **Vault Quote**，ID 为 **`vault-quote`**，桌面插件版本 **0.2.10**；项目与各 AI 客户端继续使用 **Obsidian Quote** 品牌。DeepSeek Harness 面板为 **0.5.1**，Codex 接入 **0.1.6**，Claude Code 清单 **0.1.2**，CLI/MCP **0.2.3**。Codex 面板可直接添加当前库以外的本机文件夹，并与已登记目录一起多选检索。服务设置和包含/排除范围仍在 Obsidian 管理。
 
-Obsidian 安装用 [**0.2.9 Release（无 `v`）**](https://github.com/kleinklein0824/dsh-obsidian-quote/releases/tag/0.2.9)，标签与 `manifest.json` 版本完全一致，提供 `main.js`、`manifest.json`、`styles.css`、手动安装 ZIP 和校验和。Codex 0.1.5 的多路径面板源码随 `0.2.9` 标签发布；旧的演示视频与预构建素材仍在 [**v0.2.7 配套发行**](https://github.com/kleinklein0824/dsh-obsidian-quote/releases/tag/v0.2.7)。详见[0.2.9 发行说明](RELEASE-NOTES-0.2.9.md)。GitHub 发行和 awesome-dsh 投稿均不代表已通过 Obsidian 社区审核。
+Obsidian 安装用 [**0.2.10 Release（无 `v`）**](https://github.com/kleinklein0824/dsh-obsidian-quote/releases/tag/0.2.10)，标签与 `manifest.json` 版本完全一致，提供 `main.js`、`manifest.json`、`styles.css`、手动安装 ZIP 和校验和。Codex 0.1.6 可直接添加本机路径并多选检索；旧的演示视频与预构建素材仍在 [**v0.2.7 配套发行**](https://github.com/kleinklein0824/dsh-obsidian-quote/releases/tag/v0.2.7)。详见[0.2.10 发行说明](RELEASE-NOTES-0.2.10.md)。GitHub 发行和 awesome-dsh 投稿均不代表已通过 Obsidian 社区审核。
 
-**历史状态：2026-11-06 22:37（台北时间），0.2.8 自动审核已完成（Completed），官网安装按钮已启用；当时桌面端 GitHub 目录镜像尚未收录。** 这不代表新发布的 0.2.9 已完成社区检查。作者需要在开发者后台对 0.2.9 执行 **Check for new releases**，并按需要请求复审。详见 [FAQ 9](#9-awesome-dsh-的申请等于-obsidian-上架了吗现在能搜索到吗)与[目录核验记录](docs/community-catalog-status-2026-11-06.json)。**DeepSeek 已有面板无需重新部署，原有知识库、来源、引用组合和连接令牌继续使用。**
+**历史状态：2026-11-06 22:37（台北时间），0.2.8 自动审核已完成（Completed），官网安装按钮已启用；当时桌面端 GitHub 目录镜像尚未收录。** 这不代表新发布的 0.2.10 已完成社区检查。作者需要在开发者后台对 0.2.10 执行 **Check for new releases**，并按需要请求复审。详见 [FAQ 9](#9-awesome-dsh-的申请等于-obsidian-上架了吗现在能搜索到吗)与[目录核验记录](docs/community-catalog-status-2026-11-06.json)。**DeepSeek 已有面板无需重新部署，原有知识库、来源、引用组合和连接令牌继续使用。**
 
 **先按自己的客户端选择用法：[各 Harness 安装与使用指南](docs/HARNESS-USAGE.md)**。其中分别说明 Codex 桌面设置面板、Codex CLI 文本检索、DeepSeek 侧栏、Claude Code 六工具，以及其他客户端的 MCP 与浏览器入口。
 
@@ -27,7 +27,7 @@ Obsidian 安装用 [**0.2.9 Release（无 `v`）**](https://github.com/kleinklei
 | CLI 与六工具 MCP | `harness-skill/` | 为支持本机 MCP 的 AI 客户端提供检索工具 |
 | Codex 与 Claude 接入 | `codex/`、`.codex-plugin/`、`.claude-plugin/` 及根清单 | 提供各客户端的安装入口和对应工具/面板接入 |
 
-两个目录的安装入口分别分发相应组件。希望在 DeepSeek 里使用原生侧栏，需要安装 Harness 组件，并连接已启用的 Obsidian 插件；单独安装 Obsidian 社区插件会得到 Obsidian 管理面板。图中 Harness 的 **0.5.1** 和服务的 **0.2.1** 是两个组件的独立版本，服务升级到 **0.2.9** 后，现有 Harness 0.5.1 继续使用。
+两个目录的安装入口分别分发相应组件。希望在 DeepSeek 里使用原生侧栏，需要安装 Harness 组件，并连接已启用的 Obsidian 插件；单独安装 Obsidian 社区插件会得到 Obsidian 管理面板。图中 Harness 的 **0.5.1** 和服务的 **0.2.1** 是两个组件的独立版本，服务升级到 **0.2.10** 后，现有 Harness 0.5.1 继续使用。
 
 本仓库包含上述插件与接入源码。个人笔记、已登记的库路径、令牌和用户配置保存在各自本机；Obsidian 与 DeepSeek Harness 宿主应用需另外安装。社区首次安装提供相同面板功能，个人数据需要自行登记或按[迁移说明](docs/OBSIDIAN-SUBMISSION.md#已有用户怎样保留配置)沿用。
 
@@ -59,19 +59,19 @@ Obsidian 新插件提交规则禁止 ID 包含 `obsidian`，显示名称也不�
 
 ### 5. 社区版会保留我现在 Obsidian 里的面板和功能吗？
 
-**会保留。** 0.2.9 保留“知识库引用”管理面板、登记知识库、启用/停用、包含/排除范围、引用组合、重建索引、接入配置和引用统计等功能，并支持登记当前库以外的本地目录；Codex 面板可以一次选取多个已启用来源检索。上一版的社区名称/ID、卸载行为、配置目录排除和样式修复继续保留。
+**会保留。** 0.2.10 保留“知识库引用”管理面板、启用/停用、包含/排除范围、引用组合、重建索引、接入配置和引用统计等功能；Codex 面板可直接添加当前库以外的本地目录，并一次选取多个已启用来源检索。服务和范围设置仍由 Obsidian 管理。上一版的社区名称/ID、卸载行为、配置目录排除和样式修复继续保留。
 
 首次安装者会得到同一套面板功能，并按自己的本机知识库生成索引；截图中的作者笔记、库路径、令牌、范围和历史统计不会随插件附送。已有用户迁移 `data.json` 后可沿用自己的登记、范围、引用组合与令牌。
 
 ### 6. 已部署的 DeepSeek Harness 和 Codex 需要更新吗？
 
-**已经正常运行的 DeepSeek 0.5.1 无需更新。** Codex 接入升级为 **0.1.5** 后，支持同时检索多个已登记目录；已有连接地址和令牌无需修改。DeepSeek 面板、配置与共享连接格式保持原样。
+**已经正常运行的 DeepSeek 0.5.1 无需更新。** Codex 接入升级为 **0.1.6** 后，可直接添加本机文件夹并与其他来源一起多选检索。已安装的 0.1.5 不会随 GitHub 更新自动变化，需要刷新市场并更新插件、重新加载 Codex；已有连接地址和令牌无需修改。DeepSeek 面板、配置与共享连接格式保持原样。
 
-图中面板 **0.5.1** 与服务 **0.2.1** 是独立组件的版本；Obsidian 服务换为 **0.2.9** 后，Harness 面板仍可保持 **0.5.1**。迁移 Obsidian 时保留原服务地址和令牌，已有客户端连接可继续复用；连接有变化时再由当前启用的 Obsidian 插件写入接入配置。Codex 更新步骤见 [UPDATING.md](UPDATING.md)。
+图中面板 **0.5.1** 与服务 **0.2.1** 是独立组件的版本；Obsidian 服务换为 **0.2.10** 后，Harness 面板仍可保持 **0.5.1**。迁移 Obsidian 时保留原服务地址和令牌，已有客户端连接可继续复用；连接有变化时再由当前启用的 Obsidian 插件写入接入配置。Codex 更新步骤见 [UPDATING.md](UPDATING.md)。
 
 ### 7. 新建一个项目或 Obsidian 知识库，还要重新部署吗？
 
-新建 **AI 编码工程**时，可复用当前正在运行的 Obsidian 服务与已安装的 Harness 接入。需要引用另一个知识库时，在现有 Obsidian 管理面板登记该库及允许范围。
+新建 **AI 编码工程**时，可复用当前正在运行的 Obsidian 服务与已安装的 Harness 接入。需要把另一个本机文件夹加入 Codex 检索时，可在 Codex 知识库面板添加路径；服务设置、包含/排除目录等仍在 Obsidian 管理。
 
 新建 **Obsidian 知识库**时，插件安装/启用状态由该库分别管理。希望在新库里也打开管理面板，需要在新库安装并启用插件；只想把它作为已有服务的参考来源，可在现有面板登记它。社区目录实际收录并同步到客户端后，可在“第三方插件 → 浏览”搜索 **Vault Quote**，省去手动复制安装文件；同步前可使用下方的 Release 三文件或 ZIP。保持实际使用的一套引用服务供客户端连接。
 
@@ -83,13 +83,13 @@ Obsidian 新插件提交规则禁止 ID 包含 `obsidian`，显示名称也不�
 
 ### 9. awesome-dsh 的申请等于 Obsidian 上架了吗，现在能搜索到吗？
 
-这是两个独立目录。DeepSeek 沿用已有的 [awesome-dsh PR #12409](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin/pull/12409)，条目指向 `harness-plugin/`，无需重复投稿。Obsidian 的 **0.2.8 已完成自动审核，且[官方 Community 条目](https://community.obsidian.md/plugins/vault-quote)已启用 Add to Obsidian 按钮**；这只是旧版本的审核状态。新发布的 **0.2.9 尚未核实审核结果**，作者应按[更新步骤](docs/OBSIDIAN-SUBMISSION.md)检查新发行；0.2.7 的 Failed 是历史记录。
+这是两个独立目录。DeepSeek 沿用已有的 [awesome-dsh PR #12409](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin/pull/12409)，条目指向 `harness-plugin/`，无需重复投稿。Obsidian 的 **0.2.8 已完成自动审核，且[官方 Community 条目](https://community.obsidian.md/plugins/vault-quote)已启用 Add to Obsidian 按钮**；这只是旧版本的审核状态。新发布的 **0.2.10 尚未核实审核结果**，作者应按[更新步骤](docs/OBSIDIAN-SUBMISSION.md)检查新发行；0.2.7 的 Failed 是历史记录。
 
 **截至 2026-11-06 22:37（台北时间），官网导出的 10,029 项插件中已有 `vault-quote`，但桌面端读取的 GitHub 镜像仍为 10,028 项，缺少该条目，因此应用内仍可能搜索不到。** 官方[镜像任务](https://github.com/obsidianmd/obsidian-releases/blob/master/.github/workflows/mirror-community-json.yml)按小时运行；本次最近一次执行为台北时间 22:20，早于条目进入导出数据。导出响应还标注了 `s-maxage=3600` 缓存。等待镜像同步后重新打开插件浏览页，再搜索 **Vault Quote**；不能保证具体生效分钟。官网按钮只提供客户端跳转入口，能否显示安装详情仍取决于客户端实际读取到的目录。[原始核验记录](docs/community-catalog-status-2026-11-06.json)与[排查步骤](docs/OBSIDIAN-SUBMISSION.md#官网正常但-obsidian-里搜索不到怎么办)保留了这次差异。
 
 本次无需再次提交或请求审核。以后发布新版本时，作者可进入 **Plugins → Your entries → Vault Quote → `…` → Check for new releases**，确认新版本被识别；需要立即重新扫描时再选择 **`…` → Request review**。[官方说明](https://docs.obsidian.md/community-directory/manage-entry)指出 Warnings 不阻止提交，应先核对新版本的错误或风险。
 
-也可按下文用 Release 的三文件或 ZIP 手动安装。正式 Obsidian 安装使用标签 **`0.2.9`（无 `v`）**；**`0.2.9`** 同时包含 Codex 多路径检索更新，**`v0.2.7`** 保留原有 Harness 包和演示视频。提交与迁移步骤见 [Obsidian 上架说明](docs/OBSIDIAN-SUBMISSION.md)。
+也可按下文用 Release 的三文件或 ZIP 手动安装。正式 Obsidian 安装使用标签 **`0.2.10`（无 `v`）**；**`0.2.10`** 同时包含 Codex 面板添加路径与多选检索更新，**`v0.2.7`** 保留原有 Harness 包和演示视频。提交与迁移步骤见 [Obsidian 上架说明](docs/OBSIDIAN-SUBMISSION.md)。
 
 ## 演示视频
 
@@ -101,10 +101,11 @@ Obsidian 新插件提交规则禁止 ID 包含 `obsidian`，显示名称也不�
 
 1. **点击打开面板**：进入 Codex **插件 → Obsidian Quote → 设置 → 点击右侧「Obsidian 知识库」按钮**。选择来源、返回内容与关键词后点击“查询”，结果直接显示在面板内，无需发送对话指令。入口通过原生插件设置扩展提供；插件也声明侧栏和会话面板入口，由支持这些入口的客户端显示。
 2. **保留对话调用**：仍可运行“首次配置”，输入“在 Codex 对话里显示 Obsidian 知识库面板”，或直接说“在前端规范库查找组件命名规则”。旧对话面板按钮仍请求 Codex 在后续回复中调用工具，原有功能保留。
-3. **添加/移除知识库、设置包含/排除目录**：到 Obsidian → 设置 → 第三方插件 → **Vault Quote（旧安装为 Obsidian Quote）**，或点击 Obsidian 左侧书本图标。首次连接时按需写入接入配置并建立索引；已有连接正常时直接复用，无需重置令牌或重新登记。
-4. **浏览器检索**：明确要求打开浏览器，或运行 `node harness-skill/scripts/setup.mjs --open`。浏览器使用已有本机令牌登录，知识库管理仍在 Obsidian 中。
+3. **添加本机路径并多选检索**：在 Codex 知识库面板的“添加本地路径”输入完整文件夹路径并添加；可重复添加，再勾选一个或多个目录。新路径由 Obsidian 服务校验、保存并建立索引。
+4. **设置服务和检索范围**：到 Obsidian → 设置 → 第三方插件 → **Vault Quote（旧安装为 Obsidian Quote）**，或点击 Obsidian 左侧书本图标。首次连接时按需写入接入配置；包含/排除目录、标签和其他来源设置仍在 Obsidian。已有连接正常时直接复用，无需重置令牌或重新登记。
+5. **浏览器检索**：明确要求打开浏览器，或运行 `node harness-skill/scripts/setup.mjs --open`。浏览器使用已有本机令牌登录；它提供检索与来源选择，服务和范围设置仍在 Obsidian 中管理。
 
-原生设置入口使用独立的 `obsidian-quote-panel` MCP 服务，只返回本机知识库元数据和用户主动检索的内容；不会把令牌放进页面。原有 `obsidian-quote` 服务和六工具保持独立。旧客户端接入 **0.1.0 / 0.1.1 存在 MCP 路径加载故障**，0.1.4 修复该问题，当前 **0.1.5** 增加多路径选择。更新后刷新插件或重启 Codex；仅能看到 Skill 或插件徽标不能证明服务已加载。
+原生设置入口使用独立的 `obsidian-quote-panel` MCP 服务，只返回本机知识库元数据和用户主动检索的内容；不会把令牌放进页面。原有 `obsidian-quote` 服务和六工具保持独立。旧客户端接入 **0.1.0 / 0.1.1 存在 MCP 路径加载故障**，0.1.4 修复该问题，0.1.5 增加已登记路径多选，当前 **0.1.6** 可从 Codex 面板直接添加路径。更新后刷新插件或重启 Codex；仅能看到 Skill 或插件徽标不能证明服务已加载。
 
 客户端不支持原生设置扩展时，保留文本检索及支持可视化时的对话面板。DeepSeek 已有侧栏、profile、知识库登记与连接配置继续使用。
 已安装用户的排查和更新步骤见 [UPDATING.md](UPDATING.md)。已经正常使用的 DeepSeek 环境无需为本次 Codex 改动重装、改令牌或重写连接配置。
@@ -165,7 +166,7 @@ Obsidian 新插件提交规则禁止 ID 包含 `obsidian`，显示名称也不�
 <你的知识库>/.obsidian/plugins/vault-quote/
 ```
 
-或者将 0.2.9 Release 的 `vault-quote-v0.2.9.zip` 中的 `vault-quote/` 文件夹解压到 `<你的知识库>/.obsidian/plugins/`。如果改过 Obsidian 配置目录，以上 `.obsidian` 均替换为实际配置目录。重新加载 Obsidian，在第三方插件中启用 **Vault Quote**。只提供桌面版。[官方条目的 Add to Obsidian 按钮](https://community.obsidian.md/plugins/vault-quote)可唤起客户端，但目录同步前仍可能无法显示安装详情。已有 `obsidian-quote/` 用户请先按[迁移说明](docs/OBSIDIAN-SUBMISSION.md#已有用户怎样保留配置)保留 `data.json`，避免把旧插件和新插件同时启用。
+或者将 0.2.10 Release 的 `vault-quote-v0.2.10.zip` 中的 `vault-quote/` 文件夹解压到 `<你的知识库>/.obsidian/plugins/`。如果改过 Obsidian 配置目录，以上 `.obsidian` 均替换为实际配置目录。重新加载 Obsidian，在第三方插件中启用 **Vault Quote**。只提供桌面版。[官方条目的 Add to Obsidian 按钮](https://community.obsidian.md/plugins/vault-quote)可唤起客户端，但目录同步前仍可能无法显示安装详情。已有 `obsidian-quote/` 用户请先按[迁移说明](docs/OBSIDIAN-SUBMISSION.md#已有用户怎样保留配置)保留 `data.json`，避免把旧插件和新插件同时启用。
 
 社区目录同步到客户端后，在各知识库的“第三方插件 → 浏览”中搜索 **Vault Quote** 安装并启用，也可从官方条目跳转。当前同步情况见 [FAQ 9](#9-awesome-dsh-的申请等于-obsidian-上架了吗现在能搜索到吗)。Obsidian 按知识库管理插件，上架后仍需为新的 Obsidian 知识库安装/启用；如果只是新建 AI 编码项目，可直接复用已运行的 Obsidian 服务，不必为每个编码项目复制插件。
 
@@ -233,12 +234,12 @@ npm test
 在 Codex 的“添加插件市场”窗口填写：
 
 - 来源：`https://github.com/kleinklein0824/dsh-obsidian-quote`
-- Git 引用：`main`（或固定版本 `0.2.9`）
+- Git 引用：`main`（或固定版本 `0.2.10`）
 - 稀疏路径：**留空**，本项目的清单和工具跨多个目录。
 
 添加后选择市场 **Klein · Obsidian Quote**，安装并启用 **Obsidian Quote**。按客户端提示重开会话或刷新插件，再要求“检索我的 Obsidian 知识库中的命名规范”。接入包带首次配置与检索两项 Skill，以及 `kb_search` 等六个工具。
 
-如果出现 `marketplace root does not contain a supported manifest`，检查是否仍在使用旧缓存、旧标签 `v0.2.1`，或填写了稀疏路径。**首次 `v0.2.1` Release 早于市场适配；此入口应使用更新后的 `main` 或 `0.2.9`。**添加市场不等于已安装其中的插件。
+如果出现 `marketplace root does not contain a supported manifest`，检查是否仍在使用旧缓存、旧标签 `v0.2.1`，或填写了稀疏路径。**首次 `v0.2.1` Release 早于市场适配；此入口应使用更新后的 `main` 或 `0.2.10`。**添加市场不等于已安装其中的插件。
 
 ### Claude Code：从插件市场安装
 
@@ -367,7 +368,7 @@ Host 从本机配置读取令牌，通过 `/dsh-obsidian-quote-panel/rpc` 代查
 
 ## 发布
 
-Obsidian 使用与版本完全一致的 **`0.2.9` Release**，自动安装所需附件为 `main.js`、`manifest.json`、`styles.css`，另提供手装 ZIP 与 SHA-256。该标签的源码也包含 Codex 0.1.5 多路径选择更新；**`v0.2.7`** 继续保存原版演示视频与旧配套素材。根清单与 `plugin/manifest.json` 一致，`versions.json` 记录最低 Obsidian 版本。
+Obsidian 使用与版本完全一致的 **`0.2.10` Release**，自动安装所需附件为 `main.js`、`manifest.json`、`styles.css`，另提供手装 ZIP 与 SHA-256。该标签的源码也包含 Codex 0.1.6 面板内添加路径与多选检索更新；**`v0.2.7`** 继续保存原版演示视频与旧配套素材。根清单与 `plugin/manifest.json` 一致，`versions.json` 记录最低 Obsidian 版本。
 
 DeepSeek 社区目录沿用已有申请 [awesome-dsh-plugin #12409](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin/pull/12409)，只投稿 `harness-plugin/` 这一可安装组件。Obsidian 社区目录是独立审核，操作与旧配置迁移见 [说明](docs/OBSIDIAN-SUBMISSION.md)。
 

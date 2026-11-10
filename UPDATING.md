@@ -1,30 +1,30 @@
 # 排查与更新说明
 
-修订日期：2026-11-10。Obsidian 社区组件 **Vault Quote 0.2.9**，ID **`vault-quote`**；DeepSeek 面板 **0.5.1**；Codex 接入 **0.1.5**；Claude 清单 **0.1.2**；CLI/MCP **0.2.3**。各组件独立编号。
+修订日期：2026-11-10。Obsidian 社区组件 **Vault Quote 0.2.10**，ID **`vault-quote`**；DeepSeek 面板 **0.5.1**；Codex 接入 **0.1.6**；Claude 清单 **0.1.2**；CLI/MCP **0.2.3**。各组件独立编号。
 
 ## 已经在本地正常使用
 
 **原来的 Obsidian Quote 0.2.1/0.2.3 可以继续使用，现有 DeepSeek 和 Codex 连接也可以保留。** GitHub 发布、改清单名称和提交市场，不会自动修改本机已安装的文件。本次没有覆盖原 Obsidian 插件、DeepSeek 安装目录、profile、库登记、来源范围、引用组合、令牌或共享接入配置。
 
-已经本地部署的 DeepSeek `harness-plugin/` 与仓库 0.5.1 的运行文件逐字节一致，包括两个语言文件，无需更新或重新安装。Codex 面板更新到 0.1.5，支持同时选择多个已登记的本地目录；Claude 0.1.2 和六工具服务代码保持不变。
+已经本地部署的 DeepSeek `harness-plugin/` 与仓库 0.5.1 的运行文件逐字节一致，包括两个语言文件，无需更新或重新安装。Codex 0.1.6 可直接从面板添加本机文件夹，再与已有路径一起多选检索；Claude 0.1.2 和六工具服务代码保持不变。GitHub 推送和市场刷新不会自动替换已安装的 Codex 插件文件。
 
-如果只是新建 AI 编码项目，继续复用已有 Obsidian 本机服务。可登记当前 Obsidian 库以外的本机目录，并在 Codex 面板为每次查询单独选择一个或多个来源；无需给每个编码工程复制一份 Obsidian 插件。
+如果只是新建 AI 编码项目，继续复用已有 Obsidian 本机服务。可在 Codex 面板登记当前 Obsidian 库以外的本机目录，并为每次查询单独选择一个或多个来源；服务设置、包含/排除范围仍在 Obsidian 管理，无需给每个编码工程复制一份 Obsidian 插件。
 
 ## Obsidian 上架为什么改名
 
 原 `obsidian-quote` ID 和 `Obsidian Quote` 显示名称包含官方禁止的 `obsidian` 字样。本地加载与社区新插件提交的校验不同，能在本地使用不代表能通过市场提交。
 
-发布版使用 **`vault-quote` / Vault Quote**，根清单、安装清单、开发包和版本映射同步到 **0.2.9**。新增外部本地目录登记和 Codex 多路径检索；已有面板、索引、检索、规则、上下文、摘要和本机 API 保留。各 AI 客户端和仓库继续使用 Obsidian Quote 品牌。
+发布版使用 **`vault-quote` / Vault Quote**，根清单、安装清单、开发包和版本映射同步到 **0.2.10**。新增在 Codex 面板直接登记外部本地目录并多选检索；已有面板、索引、检索、规则、上下文、摘要和本机 API 保留。各 AI 客户端和仓库继续使用 Obsidian Quote 品牌。
 
-Obsidian 自动安装使用 **`0.2.9`（无 `v`）** Release，附件是 `main.js`、`manifest.json`、`styles.css`、ZIP 和校验和。该标签也可供 Codex 固定这次多路径检索源码；旧的完整源码、Harness ZIP/tgz 和视频仍在 **`v0.2.7` 配套发行**中。GitHub 发布和 awesome-dsh 收录不替代 Obsidian 官方社区审核。
+Obsidian 自动安装使用 **`0.2.10`（无 `v`）** Release，附件是 `main.js`、`manifest.json`、`styles.css`、ZIP 和校验和。该标签也包含 Codex 0.1.6 路径登记更新；旧的完整源码、Harness ZIP/tgz 和视频仍在 **`v0.2.7` 配套发行**中。GitHub 发布和 awesome-dsh 收录不替代 Obsidian 官方社区审核。
 
 ## 官网显示 Risks 时怎样更新
 
-**0.2.8 的自动审核现已完成（Completed），公开条目的 Add to Obsidian 按钮已启用。** 截至 2026-11-06 22:37（台北时间），官方导出数据已有 `vault-quote`，桌面端使用的 GitHub 镜像尚未收录，应用内仍可能搜索不到；按钮出现不能证明桌面目录已同步。该状态只对应 0.2.8，尚未核实新发布 0.2.9 的审核结果。详见[目录同步排查](docs/OBSIDIAN-SUBMISSION.md#官网正常但-obsidian-里搜索不到怎么办)。文件访问、剪贴板、全局设置搜索、英文 README、构建来源证明和额外附件仍有 Warning/Recommendation。
+**0.2.8 的自动审核现已完成（Completed），公开条目的 Add to Obsidian 按钮已启用。** 截至 2026-11-06 22:37（台北时间），官方导出数据已有 `vault-quote`，桌面端使用的 GitHub 镜像尚未收录，应用内仍可能搜索不到；按钮出现不能证明桌面目录已同步。该状态只对应 0.2.8，尚未核实新发布 0.2.10 的审核结果。详见[目录同步排查](docs/OBSIDIAN-SUBMISSION.md#官网正常但-obsidian-里搜索不到怎么办)。文件访问、剪贴板、全局设置搜索、英文 README、构建来源证明和额外附件仍有 Warning/Recommendation。
 
 现有官方条目的 0.2.7 分数卡指出描述禁词和卸载时关闭面板标签两项风险；0.2.8 修复这两项，并处理宽行样式、当前库自定义配置目录、常规日志、计时器和英文 README。保留原有面板、HTTP API 与最低 Obsidian 1.5.0 支持。
 
-作者登录后进入 **Plugins → Your entries → Vault Quote**，打开 **`…` → Check for new releases** 检查 GitHub 的 **0.2.9**，确认新版本被识别。需要立即重新扫描时再选择 **`…` → Request review**；已有审核队列时继续跟进现有项。路径依据[官方条目管理说明](https://docs.obsidian.md/community-directory/manage-entry)。不要重新创建同 ID 条目，也不要只刷新旧版分数卡。
+作者登录后进入 **Plugins → Your entries → Vault Quote**，打开 **`…` → Check for new releases** 检查 GitHub 的 **0.2.10**，确认新版本被识别。需要立即重新扫描时再选择 **`…` → Request review**；已有审核队列时继续跟进现有项。路径依据[官方条目管理说明](https://docs.obsidian.md/community-directory/manage-entry)。不要重新创建同 ID 条目，也不要只刷新旧版分数卡。
 
 文件访问、主动复制接入配置、1.13 全局设置搜索未迁移和缺少 GitHub artifact attestation 的说明见 [审核指南](docs/OBSIDIAN-SUBMISSION.md)。本地测试和发布成功不代表官网已经重新扫描通过。
 
@@ -37,11 +37,11 @@ Obsidian 自动安装使用 **`0.2.9`（无 `v`）** Release，附件是 `main.j
 
 其中 `<库配置目录>` 默认为 `.obsidian`，修改过时使用实际目录。同一份 `data.json` 的格式仍然兼容，保存的设置和引用台账可沿用。已有共享地址和令牌正确时，DeepSeek/Codex 无需重新配置。安装新 ID 本身不会自动读取旧目录的设置文件；完整说明见 [Obsidian 上架与配置迁移](docs/OBSIDIAN-SUBMISSION.md)。
 
-## Codex 当前已经是 0.1.5
+## Codex 更新到 0.1.6
 
-继续使用 **插件 → Obsidian Quote → 设置 → Obsidian 知识库** 按钮，面板内可直接检索；原对话调用继续保留。本次不用重复安装。
+**0.1.6** 在原多选功能上增加“添加本地路径”输入框，可直接加入任意本机绝对路径；Obsidian 服务验证、保存并索引后，新目录会出现在多选列表中。服务配置、包含/排除范围等仍由 Obsidian 管理，对话检索继续保留。
 
-如果仍使用接入 0.1.0/0.1.1 且 MCP 未启动，或使用 0.1.3/0.1.4 而缺少对应功能，再把 Codex 插件市场和插件更新到 0.1.5，刷新或重启客户端。来源为本仓库，Git 引用 `main` 或 `0.2.9`，稀疏路径留空。客户端本身需要支持对应设置扩展。
+已经安装的 **0.1.5 不会因 GitHub 新版或市场刷新自动更新**。在 Codex 中先刷新 **Klein · Obsidian Quote** 市场，再更新/重新安装 **Obsidian Quote** 插件本身，并重新加载或重启 Codex；确认插件版本为 **0.1.6**。新安装来源为本仓库，Git 引用 `main` 或 `0.2.10`，稀疏路径留空。客户端本身需要支持对应设置扩展。
 
 ## DeepSeek 社区目录
 

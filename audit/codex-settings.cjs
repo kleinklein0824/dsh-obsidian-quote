@@ -10,6 +10,7 @@ const readline = require('node:readline');
 const root = path.resolve(__dirname, '..');
 const secret = 'TEST_ONLY_NATIVE_PANEL_SECRET';
 const privatePath = 'PRIVATE_VAULT_PATH_MUST_NOT_BE_IN_UI';
+const customPath = 'C:\\Users\\Klein\\Notes\\Custom Vault';
 const checks = [];
 const calls = [];
 let vaults = [
@@ -51,7 +52,12 @@ function connect(script, env) {
     const body = raw ? JSON.parse(raw) : null;
     calls.push({ method: req.method, endpoint: req.url, body });
     res.setHeader('content-type', 'application/json');
-    if (req.url === '/vaults') res.end(JSON.stringify({ vaults }));
+    if (req.url === '/vaults' && req.method === 'POST') {
+      if (body.path === 'C:/missing-folder') { res.writeHead(400).end(JSON.stringify({ error: '路径不存在或不是文件夹' })); return; }
+      if (body.path === 'C:/already-registered') { res.writeHead(409).end(JSON.stringify({ error: '该知识库已登记' })); return; }
+      vaults.push({ id: 'custom-vault', name: '自定义目录', enabled: true, docs: 6, chunks: 8, path: body.path });
+      res.end(JSON.stringify({ vault: { id: 'custom-vault', name: '自定义目录', enabled: true } }));
+    } else if (req.url === '/vaults') res.end(JSON.stringify({ vaults }));
     else if (req.url === '/search') res.end(JSON.stringify({ query: body.query, hits: [{ title: '<img src=x onerror="window.injected=1">', path: '规范/测试.md', vault: '同名库', excerpt: 'quoted text ' + body.query }], warnings: [] }));
     else if (req.url === '/context') res.end(JSON.stringify({ markdown: 'context ' + body.query, warnings: [] }));
     else { res.writeHead(404).end(); }
@@ -93,6 +99,9 @@ function connect(script, env) {
       const querySchema = tools.find(tool => tool.name === 'oq_panel_query')?.inputSchema;
       assert.ok(querySchema?.oneOf?.some(branch => branch.required?.includes('sources')));
       assert.equal(querySchema?.properties?.sources?.type, 'array');
+      const addSchema = tools.find(tool => tool.name === 'oq_panel_add_vault')?.inputSchema;
+      assert.equal(addSchema?.properties?.path?.type, 'string');
+      assert.equal(tools.find(tool => tool.name === 'oq_panel_add_vault')?.annotations?.readOnlyHint, false);
       const resource = await server.rpc('resources/read', { uri: descriptor._meta.ui.resourceUri });
       html = resource.contents[0].text;
       assert.equal(resource.contents[0].mimeType, 'text/html;profile=mcp-app');
@@ -120,6 +129,30 @@ function connect(script, env) {
         { vault: '同名库', vaultId: 'vault-b' },
       ]);
     });
+    await check('Codex can register a custom directory and retrieve it with an existing directory', async () => {
+      const added = await server.call('oq_panel_add_vault', { path: customPath });
+      assert.equal(added.isError, false);
+      assert.deepEqual(added.structuredContent.vault, { id: 'custom-vault', name: '自定义目录', enabled: true });
+      assert.ok(!JSON.stringify(added).includes(customPath));
+      assert.deepEqual(calls.at(-1), { method: 'POST', endpoint: '/vaults', body: { path: customPath } });
+      const state = await server.call('oq_panel_state');
+      assert.equal(state.structuredContent.vaults.length, 4);
+      assert.ok(!JSON.stringify(state).includes(customPath));
+      const query = await server.call('oq_panel_query', { query: '引用', sources: ['vault-a', 'custom-vault'], mode: 'search', limit: 5 });
+      assert.equal(query.isError, false);
+      assert.deepEqual(calls.at(-1).body.sources, [
+        { vault: '同名库', vaultId: 'vault-a' },
+        { vault: '自定义目录', vaultId: 'custom-vault' },
+      ]);
+    });
+    await check('Invalid and duplicate custom paths return the Obsidian validation message', async () => {
+      const invalid = await server.call('oq_panel_add_vault', { path: 'C:/missing-folder' });
+      const duplicate = await server.call('oq_panel_add_vault', { path: 'C:/already-registered' });
+      assert.equal(invalid.isError, true);
+      assert.match(invalid.content[0].text, /路径不存在或不是文件夹/);
+      assert.equal(duplicate.isError, true);
+      assert.match(duplicate.content[0].text, /该知识库已登记/);
+    });
     await check('Deleted, disabled, and malformed selections fail without broadening retrieval', async () => {
       const before = calls.filter(call => call.endpoint === '/search' || call.endpoint === '/context').length;
       for (const args of [
@@ -142,7 +175,7 @@ function connect(script, env) {
     });
     await check('Opening and querying the panel leaves connection configuration unwritten', () => {
       assert.equal(fs.existsSync(path.join(tmp, '.obsidian-quote/config.json')), false);
-      assert.ok(calls.every(call => ['GET /vaults', 'POST /search', 'POST /context'].includes(call.method + ' ' + call.endpoint)));
+      assert.ok(calls.every(call => ['GET /vaults', 'POST /vaults', 'POST /search', 'POST /context'].includes(call.method + ' ' + call.endpoint)));
     });
     fs.writeFileSync(path.join(__dirname, 'codex-settings-results.json'), JSON.stringify({ total: checks.length, passed: checks.length, checks }, null, 2) + '\n');
   } finally {

@@ -25,9 +25,14 @@ export interface CitationRef {
 	title: string;
 }
 
+export type VaultRegistration =
+	| { ok: true; vault: { id: string; name: string; enabled: boolean } }
+	| { ok: false; status: 400 | 409; message: string };
+
 export interface QuoteHost {
 	getSettings(): QuoteSettings;
 	getStatus(): HostStatus;
+	registerVault(input: string): Promise<VaultRegistration>;
 	search(query: string, options: SearchOptions): SearchResponse;
 	buildContext(
 		query: string,
@@ -493,7 +498,22 @@ export class QuoteServer {
 		try {
 			if (req.method === "GET" && url.pathname === "/vaults") {
 				const status = this.host.getStatus();
-				this.sendJson(res, 200, { vaults: status.vaults });
+				this.sendJson(res, 200, { vaults: status.vaults, indexing: status.indexing });
+				return;
+			}
+
+			if (req.method === "POST" && url.pathname === "/vaults") {
+				const body = await readObjectBody(req);
+				const vaultPath = asString(body.path)?.trim();
+				if (!vaultPath || vaultPath.length > 4096 || vaultPath.includes("\0")) {
+					throw new HttpError(400, "请输入有效的本机文件夹绝对路径");
+				}
+				const result = await this.host.registerVault(vaultPath);
+				if (!result.ok) {
+					this.sendJson(res, result.status, { error: result.message });
+					return;
+				}
+				this.sendJson(res, 201, { vault: result.vault });
 				return;
 			}
 

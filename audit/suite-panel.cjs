@@ -135,6 +135,26 @@ module.exports = [
 		},
 	},
 	{
+		id: "T141",
+		name: "本机服务登记路径后保存配置并重建该路径索引",
+		severity: "high",
+		run: async () => {
+			const p = await makePlugin([]);
+			const relative = await p.registerVault(path.relative(process.cwd(), VB));
+			const relativeRejected = relative.ok === false && relative.status === 400 && p.settings.vaults.length === 0;
+			const result = await p.registerVault(VB);
+			await new Promise((resolve) => setTimeout(resolve, 80));
+			const duplicate = await p.registerVault(VB);
+			const quotedDuplicate = await p.registerVault('"' + VB + '"');
+			const indexed = p.indexer.statsList.find((stat) => stat.vaultId === result.vault?.id);
+			const persisted = p.__data.settings.vaults.length === 1 && p.__data.settings.vaults[0].path === VB;
+			const pass = relativeRejected && result.ok && persisted && Boolean(indexed && indexed.docs > 0) && duplicate.ok === false && duplicate.status === 409 &&
+				quotedDuplicate.ok === false && quotedDuplicate.status === 409 &&
+				!JSON.stringify(result).includes(VB);
+			return { pass, detail: "relativeRejected=" + relativeRejected + " persisted=" + persisted + " indexedDocs=" + (indexed?.docs ?? 0) + " duplicateStatus=" + (duplicate.status ?? "none") + " quotedDuplicate=" + (quotedDuplicate.status ?? "none") };
+		},
+	},
+	{
 		id: "T017",
 		name: "“当前库”按钮可登记当前 vault",
 		severity: "medium",

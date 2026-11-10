@@ -1,6 +1,6 @@
 {
   "name": "obsidian-quote",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Search local Obsidian vaults, retrieve cited context and coding conventions through six read-only MCP tools.",
   "author": {
     "name": "Klein"
@@ -12,7 +12,7 @@
   "interface": {
     "displayName": "Obsidian Quote",
     "shortDescription": "检索本地 Obsidian 笔记与编码规范",
-    "longDescription": "通过插件设置页打开知识库面板，可选择全部或多个已登记的本地目录进行检索；也保留对话面板与六个只读 MCP 工具。目录可位于当前 Obsidian 库以外。使用现有本机接入配置，知识库登记与服务管理位于 Obsidian。原生界面需要客户端支持 MCP Apps 与插件设置扩展。",
+    "longDescription": "通过插件设置页打开知识库面板，可直接添加本机文件夹并与已有目录一起多选检索；也保留对话面板与六个只读 MCP 工具。路径经 Obsidian 本机服务校验、保存并建立索引。服务配置、包含/排除范围等管理仍在 Obsidian。原生界面需要客户端支持 MCP Apps 与插件设置扩展。",
     "developerName": "Klein",
     "category": "Productivity",
     "capabilities": [

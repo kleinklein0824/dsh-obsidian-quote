@@ -66,6 +66,35 @@ module.exports = [
 			}),
 	},
 	{
+		id: "T140",
+		name: "新增本地目录接口要求鉴权并返回不含绝对路径的登记结果",
+		severity: "high",
+		run: async () => {
+			const svc = await startService(settings({ server: { port: 45741, token: TOKEN } }));
+			const requested = [];
+			svc.host.registerVault = async (vaultPath) => {
+				requested.push(vaultPath);
+				if (vaultPath === "C:/missing-folder") return { ok: false, status: 400, message: "路径不存在或不是文件夹" };
+				if (vaultPath === "C:/already-registered") return { ok: false, status: 409, message: "该知识库已登记" };
+				return { ok: true, vault: { id: "custom-vault", name: "自定义目录", enabled: true } };
+			};
+			try {
+				const customPath = "C:/Users/Klein/Notes/Custom Vault";
+				const unauth = await call(svc.base, "/vaults", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ path: customPath }) });
+				const empty = await call(svc.base, "/vaults", { method: "POST", headers: JSON_HEADERS, body: JSON.stringify({ path: "  " }) });
+				const created = await call(svc.base, "/vaults", { method: "POST", headers: JSON_HEADERS, body: JSON.stringify({ path: customPath }) });
+				const invalid = await call(svc.base, "/vaults", { method: "POST", headers: JSON_HEADERS, body: JSON.stringify({ path: "C:/missing-folder" }) });
+				const duplicate = await call(svc.base, "/vaults", { method: "POST", headers: JSON_HEADERS, body: JSON.stringify({ path: "C:/already-registered" }) });
+				const pass = unauth.status === 401 && empty.status === 400 && created.status === 201 &&
+					created.body.vault.id === "custom-vault" && !JSON.stringify(created.body).includes(customPath) &&
+					invalid.status === 400 && duplicate.status === 409 && requested.length === 3 && requested[0] === customPath;
+				return { pass, detail: "unauthorized=" + unauth.status + " empty=" + empty.status + " created=" + created.status + " invalid=" + invalid.status + " duplicate=" + duplicate.status + " delegated=" + requested.length };
+			} finally {
+				await svc.server.stop();
+			}
+		},
+	},
+	{
 		id: "T075",
 		name: "CORS 预检返回 204 与允许方法，且不向任意来源开放",
 		severity: "medium",

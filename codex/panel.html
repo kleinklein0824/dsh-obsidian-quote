@@ -25,6 +25,8 @@
   .scope-list { display: grid; gap: 2px; max-height: 140px; overflow: auto; border: 1px solid var(--border); border-radius: 8px; padding: 4px; }
   .scope-stale { opacity: .72; }
   .scope-empty { padding: 8px; }
+  .add-path { display: grid; gap: 8px; min-width: 0; }
+  .add-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; min-width: 0; }
   button { padding: 8px 14px; cursor: pointer; } button:disabled { cursor: default; opacity: .5; }
   :focus-visible { outline: 2px solid Highlight; outline-offset: 3px; }
   button[type=submit] { background: CanvasText; color: Canvas; border-color: CanvasText; }
@@ -42,18 +44,22 @@
       <label class="scope-item"><input id="all-sources" type="checkbox" checked disabled><span>全部已启用目录</span></label>
       <div id="source-list" class="scope-list" role="group" aria-label="可选本地目录"></div>
     </div>
+    <div class="add-path">
+      <label class="scope-title" for="vault-path">添加本地路径</label>
+      <div class="add-row"><input id="vault-path" type="text" maxlength="4096" autocomplete="off" spellcheck="false" placeholder="例如 C:\Users\Klein\Notes"><button id="add-vault" type="button" disabled>添加</button></div>
+    </div>
     <div class="fields"><label>返回内容<select id="mode"><option value="search">原文片段</option><option value="context">引用上下文</option></select></label></div>
     <label>关键词<input id="query" maxlength="500" autocomplete="off" placeholder="例如：组件命名规范"></label>
     <div class="row"><button id="search" type="submit" disabled>查询</button><label>返回条数<select id="limit"><option>3</option><option selected>5</option><option>10</option></select></label></div>
   </form>
   <p id="status" role="status" aria-live="polite">正在初始化面板…</p>
   <div id="results" aria-label="检索结果"></div>
-  <p class="muted">可在 Obsidian 登记当前库以外的本地目录，并同时选择多个路径。服务配置仍在 Obsidian 中管理。</p>
+  <p class="muted">输入本机文件夹完整路径即可添加。新路径会保存并建立索引，可与其他目录一起多选检索。</p>
 </main>
 <script>
 (() => {
   const $ = id => document.getElementById(id);
-  let next = 0, ready = false, busy = false, invalidSource = false;
+  let next = 0, ready = false, busy = false, invalidSource = false, indexing = false, refreshTimer = null;
   let enabledVaults = [], allVaults = [], selectedSources = null;
   const knownVaults = new Map();
   const pending = new Map();
@@ -88,7 +94,9 @@
   function lock(value) {
     busy = value; $('form').setAttribute('aria-busy', String(value));
     $('refresh').disabled = value || !ready;
-    $('search').disabled = value || !ready || enabledVaults.length === 0;
+    $('search').disabled = value || !ready || indexing || enabledVaults.length === 0;
+    $('add-vault').disabled = value || !ready || indexing;
+    $('vault-path').disabled = value || !ready || indexing;
     $('all-sources').disabled = value || !ready || enabledVaults.length === 0;
     $('source-list').querySelectorAll('input').forEach(input => { input.disabled = value || !ready; });
   }
@@ -134,20 +142,28 @@
     $('status').textContent = invalidSource ? '之前选择的路径已失效，请移除失效项或重新选择。' :
       selectedSources !== null && selectedSources.length === 0 ? '请至少选择一个检索路径后再查询。' : '';
   }
+  function applyState(data) {
+    if (!Array.isArray(data.vaults)) throw Error('知识库列表格式异常。');
+    allVaults = data.vaults;
+    allVaults.forEach(vault => knownVaults.set(vault.id, vault));
+    enabledVaults = allVaults.filter(vault => vault.enabled);
+    indexing = data.indexing === true;
+    renderScope();
+    const docs = enabledVaults.every(v => Number.isSafeInteger(v.docs)) ? ' · ' + enabledVaults.reduce((sum, v) => sum + v.docs, 0) + ' 篇笔记' : '';
+    $('summary').textContent = enabledVaults.length + ' 个已启用目录' + docs + (indexing ? ' · 正在建立索引' : ' · 刚刚刷新');
+  }
+  function scheduleIndexRefresh() {
+    if (refreshTimer) clearTimeout(refreshTimer);
+    refreshTimer = indexing && ready ? setTimeout(() => { refreshTimer = null; void refresh(); }, 1500) : null;
+  }
   async function refresh() {
     lock(true); $('status').textContent = '正在检查知识库连接…';
     try {
       const data = await call('oq_panel_state');
-      if (!Array.isArray(data.vaults)) throw Error('知识库列表格式异常。');
-      allVaults = data.vaults;
-      allVaults.forEach(vault => knownVaults.set(vault.id, vault));
-      enabledVaults = allVaults.filter(vault => vault.enabled);
-      renderScope();
-      const docs = enabledVaults.every(v => Number.isSafeInteger(v.docs)) ? ' · ' + enabledVaults.reduce((sum, v) => sum + v.docs, 0) + ' 篇笔记' : '';
-      $('summary').textContent = enabledVaults.length + ' 个已启用目录' + docs + ' · 刚刚刷新';
-      $('status').textContent = invalidSource ? '之前选择的路径已失效，请移除失效项或重新选择。' : enabledVaults.length ? '连接成功。选择一个或多个目录后查询，结果会直接显示在下方。' : '没有已启用目录，请在 Obsidian 中登记本地路径。';
+      applyState(data);
+      $('status').textContent = indexing ? '正在建立索引，完成后即可查询。' : invalidSource ? '之前选择的路径已失效，请移除失效项或重新选择。' : enabledVaults.length ? '连接成功。选择一个或多个目录后查询，结果会直接显示在下方。' : '没有已启用目录，请添加本地文件夹路径。';
     } catch (error) { $('summary').textContent = '连接尚未验证'; $('status').textContent = error.message; }
-    finally { lock(false); }
+    finally { lock(false); scheduleIndexRefresh(); }
   }
   $('all-sources').addEventListener('change', event => {
     selectedSources = event.currentTarget.checked ? null : [];
@@ -163,6 +179,26 @@
     scopeChanged();
   });
   $('refresh').addEventListener('click', refresh);
+  $('add-vault').addEventListener('click', async () => {
+    if (busy || !ready || indexing) return;
+    const vaultPath = $('vault-path').value.trim();
+    if (!vaultPath) { $('status').textContent = '请输入本机文件夹的完整路径。'; $('vault-path').focus(); return; }
+    lock(true); $('status').textContent = '正在验证并添加路径…'; $('results').replaceChildren();
+    try {
+      const added = await call('oq_panel_add_vault', { path: vaultPath });
+      const id = added.vault.id;
+      if (selectedSources !== null && !selectedSources.includes(id)) selectedSources = [...selectedSources, id];
+      $('vault-path').value = '';
+      const data = await call('oq_panel_state');
+      if (!data.vaults.some(vault => vault.id === id)) throw Error('路径已登记，但目录列表尚未更新，请刷新连接。');
+      applyState(data);
+      $('status').textContent = indexing ? '路径已添加，正在建立索引…' : '路径已添加，并已加入检索范围。';
+    } catch (error) { $('status').textContent = error.message; }
+    finally { lock(false); scheduleIndexRefresh(); }
+  });
+  $('vault-path').addEventListener('keydown', event => {
+    if (event.key === 'Enter') { event.preventDefault(); $('add-vault').click(); }
+  });
   $('form').addEventListener('submit', async event => {
     event.preventDefault(); if (busy || !ready) return;
     if (invalidSource) { $('status').textContent = '之前选择的来源已失效，请重新选择检索范围。'; return; }
@@ -190,12 +226,13 @@
   });
   async function start() {
     try {
-      const init = await rpc('ui/initialize', { protocolVersion: '2026-01-26', appInfo: { name: 'Obsidian Quote', version: '0.1.5' }, appCapabilities: {} });
+      const init = await rpc('ui/initialize', { protocolVersion: '2026-01-26', appInfo: { name: 'Obsidian Quote', version: '0.1.6' }, appCapabilities: {} });
       theme(init?.hostContext); notify('ui/notifications/initialized', {}); ready = true;
       new ResizeObserver(() => notify('ui/notifications/size-changed', { height: document.documentElement.scrollHeight })).observe(document.body);
       await refresh();
     } catch (error) { $('status').textContent = '当前窗口未建立原生面板连接。请从插件设置中的“打开知识库面板”重新打开。'; }
   }
+  window.addEventListener('pagehide', () => { if (refreshTimer) clearTimeout(refreshTimer); });
   start();
 })();
 </script>
