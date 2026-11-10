@@ -208,7 +208,7 @@ export function renderQuotePanel(root: HTMLElement, plugin: QuotePlugin, options
 	new Setting(vaultBody)
 		.setClass("oq-setting-wide")
 		.setName("登记知识库")
-		.setDesc("填写知识库根目录的绝对路径。")
+		.setDesc("填写本机可访问的知识库根目录绝对路径，可登记当前 Obsidian 库以外的目录。")
 		.addText((text) => {
 			text.inputEl.addClass("oq-input");
 			text.setPlaceholder("D:\\Notes\\MyVault").onChange((value) => {

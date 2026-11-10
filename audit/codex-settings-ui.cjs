@@ -11,7 +11,12 @@ const root = path.resolve(__dirname, '..');
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'oq-native-ui-'));
 const checks = [];
 const queries = [];
-let vaults = [{ id: 'selected-vault', name: '测试库', enabled: true, docs: 2, chunks: 3 }];
+let vaults = [
+  { id: 'selected-vault', name: '测试库', enabled: true, docs: 2, chunks: 3 },
+  { id: 'second-vault', name: '另一个库', enabled: true, docs: 4, chunks: 6 },
+  { id: 'third-vault', name: '第三个库', enabled: true, docs: 5, chunks: 7 },
+  { id: 'disabled-vault', name: '已停用', enabled: false, docs: 1, chunks: 1 },
+];
 let slow = false;
 async function check(name, fn) { await fn(); checks.push({ name, passed: true }); console.log('PASS ' + name); }
 
@@ -126,15 +131,23 @@ class Cdp {
     const ui = expression => cdp.evaluate('(()=>{const d=' + prefix + ';' + expression + '})()');
     await waitFor(prefix + '?.querySelector("#status")?.textContent.includes("连接成功")');
     await check('Opening the panel initializes the standard bridge and loads actual service metadata', async () => {
-      assert.ok(await ui('return d.querySelector("#summary").textContent.includes("2 篇笔记")'));
+      assert.ok(await ui('return d.querySelector("#summary").textContent.includes("11 篇笔记")'));
       assert.equal(await ui('return d.querySelector("#query").value'), '');
+      assert.equal(await ui('return d.querySelectorAll("[data-source]").length'), 3);
+      assert.equal(await ui('return d.querySelector("#all-sources").checked'), true);
       assert.equal(queries.length, 0);
     });
-    await check('A click retrieves scoped results directly without sending a model message', async () => {
-      await ui('d.querySelector("#source").value="selected-vault";d.querySelector("#query").value="中断";d.querySelector("#search").click();d.querySelector("#search").click()');
+    await check('Empty scope is blocked; multiple chosen directories are sent together', async () => {
+      await ui('d.querySelector("#all-sources").click();d.querySelector("#query").value="无来源";d.querySelector("#search").click()');
+      await waitFor(prefix + '.querySelector("#status").textContent.includes("至少选择一个")');
+      assert.equal(queries.length, 0);
+      await ui('d.querySelector("[data-source=selected-vault]").click();d.querySelector("[data-source=third-vault]").click();d.querySelector("#query").value="中断";d.querySelector("#search").click();d.querySelector("#search").click()');
       await waitFor(prefix + '.querySelector("#status").textContent==="检索完成。"');
       assert.equal(queries.length, 1);
-      assert.deepEqual(queries[0].data.sources, [{ vault: '测试库', vaultId: 'selected-vault' }]);
+      assert.deepEqual(queries[0].data.sources, [
+        { vault: '测试库', vaultId: 'selected-vault' },
+        { vault: '第三个库', vaultId: 'third-vault' },
+      ]);
       assert.equal(await ui('return d.querySelector("#results pre").textContent'), '查询结果 中断');
       assert.equal(await cdp.evaluate('window.methods.some(m=>m==="ui/message"||m==="sendFollowUpMessage")'), false);
     });
@@ -146,15 +159,16 @@ class Cdp {
     await check('Refresh preserves an expired source; typing a query cannot silently select all vaults', async () => {
       vaults = [{ id: 'another-vault', name: '另一个库', enabled: true, docs: 3, chunks: 4 }];
       await ui('d.querySelector("#refresh").click()');
-      await waitFor(prefix + '.querySelector("#status").textContent.includes("之前选择的来源已失效")');
+      await waitFor(prefix + '.querySelector("#status").textContent.includes("之前选择的路径已失效")');
       await ui('d.querySelector("#query").value="新词";d.querySelector("#query").dispatchEvent(new Event("input",{bubbles:true}));d.querySelector("#search").click()');
       assert.equal(queries.length, 1);
-      assert.equal(await ui('return d.querySelector("#source").value'), 'selected-vault');
+      assert.equal(await ui('return d.querySelectorAll("[data-stale=true]:checked").length'), 2);
     });
     await check('Explicit reselection restores context retrieval and clears old results', async () => {
-      await ui('d.querySelector("#source").value="another-vault";d.querySelector("#source").dispatchEvent(new Event("change",{bubbles:true}));d.querySelector("#mode").value="context";d.querySelector("#search").click()');
+      await ui('d.querySelector("[data-source=selected-vault]").click();d.querySelector("[data-source=third-vault]").click();d.querySelector("[data-source=another-vault]").click();d.querySelector("#mode").value="context";d.querySelector("#search").click()');
       await waitFor(prefix + '.querySelector("#status").textContent==="检索完成。"');
       assert.equal(queries.length, 2); assert.equal(queries[1].endpoint, '/context');
+      assert.deepEqual(queries[1].data.sources, [{ vault: '另一个库', vaultId: 'another-vault' }]);
       assert.equal(await ui('return d.querySelector("#results pre").textContent'), '引用结果 新词');
     });
     await check('Valid slow metadata and query responses finish within the panel deadline', async () => {

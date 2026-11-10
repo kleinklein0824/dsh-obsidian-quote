@@ -12,10 +12,19 @@
   header, .row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
   header { justify-content: space-between; }
   form { display: grid; gap: 16px; margin-top: 20px; }
-  .fields { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; }
+  .fields { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
   label { display: grid; gap: 6px; min-width: 0; }
   input, select, button { font: inherit; color: inherit; background: Canvas; border: 1px solid var(--border); border-radius: 8px; min-height: 44px; }
   input, select { padding: 8px 10px; width: 100%; min-width: 0; }
+  .scope { display: grid; gap: 8px; min-width: 0; }
+  .scope-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+  .scope-title { font-weight: 600; }
+  .scope-item { display: flex; align-items: center; gap: 10px; min-height: 40px; padding: 4px 8px; border-radius: 6px; cursor: pointer; }
+  .scope-item input { flex: 0 0 16px; width: 16px; height: 16px; min-height: 16px; margin: 0; padding: 0; }
+  .scope-item span { min-width: 0; overflow-wrap: anywhere; }
+  .scope-list { display: grid; gap: 2px; max-height: 140px; overflow: auto; border: 1px solid var(--border); border-radius: 8px; padding: 4px; }
+  .scope-stale { opacity: .72; }
+  .scope-empty { padding: 8px; }
   button { padding: 8px 14px; cursor: pointer; } button:disabled { cursor: default; opacity: .5; }
   :focus-visible { outline: 2px solid Highlight; outline-offset: 3px; }
   button[type=submit] { background: CanvasText; color: Canvas; border-color: CanvasText; }
@@ -28,21 +37,25 @@
   <header><h1>Obsidian 知识库</h1><button id="refresh" type="button" disabled>刷新连接</button></header>
   <p id="summary" class="muted">正在连接已有知识库服务…</p>
   <form id="form">
-    <div class="fields">
-      <label>检索范围<select id="source" disabled><option value="">全部已启用知识库</option></select></label>
-      <label>返回内容<select id="mode"><option value="search">原文片段</option><option value="context">引用上下文</option></select></label>
+    <div class="scope" role="group" aria-label="检索路径">
+      <div class="scope-head"><span class="scope-title">检索范围</span><span id="scope-count" class="muted">全部已启用目录</span></div>
+      <label class="scope-item"><input id="all-sources" type="checkbox" checked disabled><span>全部已启用目录</span></label>
+      <div id="source-list" class="scope-list" role="group" aria-label="可选本地目录"></div>
     </div>
+    <div class="fields"><label>返回内容<select id="mode"><option value="search">原文片段</option><option value="context">引用上下文</option></select></label></div>
     <label>关键词<input id="query" maxlength="500" autocomplete="off" placeholder="例如：组件命名规范"></label>
     <div class="row"><button id="search" type="submit" disabled>查询</button><label>返回条数<select id="limit"><option>3</option><option selected>5</option><option>10</option></select></label></div>
   </form>
   <p id="status" role="status" aria-live="polite">正在初始化面板…</p>
   <div id="results" aria-label="检索结果"></div>
-  <p class="muted">知识库登记与服务配置在 Obsidian 中管理。对话调用方式也可以继续使用。</p>
+  <p class="muted">可在 Obsidian 登记当前库以外的本地目录，并同时选择多个路径。服务配置仍在 Obsidian 中管理。</p>
 </main>
 <script>
 (() => {
   const $ = id => document.getElementById(id);
   let next = 0, ready = false, busy = false, invalidSource = false;
+  let enabledVaults = [], allVaults = [], selectedSources = null;
+  const knownVaults = new Map();
   const pending = new Map();
   function notify(method, params) { parent.postMessage({ jsonrpc: '2.0', method, params }, '*'); }
   function rpc(method, params) {
@@ -74,42 +87,94 @@
   }
   function lock(value) {
     busy = value; $('form').setAttribute('aria-busy', String(value));
-    $('refresh').disabled = value || !ready; $('search').disabled = value || !ready;
-    $('source').disabled = value || !ready;
+    $('refresh').disabled = value || !ready;
+    $('search').disabled = value || !ready || enabledVaults.length === 0;
+    $('all-sources').disabled = value || !ready || enabledVaults.length === 0;
+    $('source-list').querySelectorAll('input').forEach(input => { input.disabled = value || !ready; });
+  }
+  function renderScope() {
+    const enabledIds = new Set(enabledVaults.map(vault => vault.id));
+    const selected = selectedSources === null ? enabledVaults.map(vault => vault.id) : selectedSources;
+    invalidSource = selectedSources !== null && selectedSources.some(id => !enabledIds.has(id));
+    const allSelected = enabledVaults.length > 0 && !invalidSource && enabledVaults.every(vault => selected.includes(vault.id));
+    $('all-sources').checked = selectedSources === null || allSelected;
+    $('all-sources').indeterminate = selectedSources !== null && !allSelected && selected.length > 0;
+    const validCount = selected.filter(id => enabledIds.has(id)).length;
+    $('scope-count').textContent = selectedSources === null ? '全部 ' + enabledVaults.length + ' 个目录' : '已选 ' + validCount + ' 个目录';
+    const list = $('source-list');
+    list.replaceChildren();
+    const nameCounts = new Map();
+    allVaults.forEach(vault => nameCounts.set(vault.name, (nameCounts.get(vault.name) || 0) + 1));
+    function addOption(vault, stale) {
+      const label = document.createElement('label');
+      label.className = stale ? 'scope-item scope-stale' : 'scope-item';
+      const input = document.createElement('input');
+      input.type = 'checkbox'; input.value = vault.id; input.dataset.source = vault.id;
+      if (stale) input.dataset.stale = 'true';
+      input.checked = selected.includes(vault.id); input.disabled = busy || !ready;
+      const name = nameCounts.get(vault.name) > 1 ? vault.name + ' (' + vault.id + ')' : vault.name;
+      const noteCount = Number.isSafeInteger(vault.docs) ? ' · ' + vault.docs + ' 篇' : '';
+      const suffix = stale ? (vault.enabled ? '（已失效）' : '（已停用）') : '';
+      const text = document.createElement('span'); text.textContent = name + noteCount + suffix;
+      label.append(input, text); list.append(label);
+    }
+    enabledVaults.forEach(vault => addOption(vault, false));
+    const rendered = new Set(enabledVaults.map(vault => vault.id));
+    selected.forEach(id => {
+      if (rendered.has(id)) return;
+      addOption(knownVaults.get(id) || { id, name: '之前选择的路径', enabled: true }, true);
+    });
+    if (list.childElementCount === 0) {
+      const empty = document.createElement('span'); empty.className = 'muted scope-empty'; empty.textContent = '没有已启用的本地目录。'; list.append(empty);
+    }
+  }
+  function scopeChanged() {
+    renderScope();
+    $('results').replaceChildren();
+    $('status').textContent = invalidSource ? '之前选择的路径已失效，请移除失效项或重新选择。' :
+      selectedSources !== null && selectedSources.length === 0 ? '请至少选择一个检索路径后再查询。' : '';
   }
   async function refresh() {
     lock(true); $('status').textContent = '正在检查知识库连接…';
     try {
-      const selected = $('source').value;
       const data = await call('oq_panel_state');
-      const enabled = data.vaults.filter(v => v.enabled);
-      $('source').replaceChildren(new Option('全部已启用知识库', ''));
-      for (const vault of enabled) {
-        const duplicates = enabled.filter(v => v.name === vault.name).length > 1;
-        $('source').appendChild(new Option(vault.name + (duplicates ? ' (' + vault.id + ')' : ''), vault.id));
-      }
-      invalidSource = selected !== '' && !enabled.some(v => v.id === selected);
-      if (invalidSource) {
-        const expired = new Option('之前的来源已失效，请重新选择', selected); expired.disabled = true;
-        $('source').appendChild(expired);
-      }
-      $('source').value = selected;
-      const docs = enabled.every(v => Number.isSafeInteger(v.docs)) ? ' · ' + enabled.reduce((sum, v) => sum + v.docs, 0) + ' 篇笔记' : '';
-      $('summary').textContent = enabled.length + ' 个已启用知识库' + docs + ' · 刚刚刷新';
-      $('status').textContent = invalidSource ? '之前选择的来源已失效，请重新选择检索范围。' : enabled.length ? '连接成功。选择来源并查询，结果会直接显示在下方。' : '没有已启用知识库，请在 Obsidian 中检查登记状态。';
+      if (!Array.isArray(data.vaults)) throw Error('知识库列表格式异常。');
+      allVaults = data.vaults;
+      allVaults.forEach(vault => knownVaults.set(vault.id, vault));
+      enabledVaults = allVaults.filter(vault => vault.enabled);
+      renderScope();
+      const docs = enabledVaults.every(v => Number.isSafeInteger(v.docs)) ? ' · ' + enabledVaults.reduce((sum, v) => sum + v.docs, 0) + ' 篇笔记' : '';
+      $('summary').textContent = enabledVaults.length + ' 个已启用目录' + docs + ' · 刚刚刷新';
+      $('status').textContent = invalidSource ? '之前选择的路径已失效，请移除失效项或重新选择。' : enabledVaults.length ? '连接成功。选择一个或多个目录后查询，结果会直接显示在下方。' : '没有已启用目录，请在 Obsidian 中登记本地路径。';
     } catch (error) { $('summary').textContent = '连接尚未验证'; $('status').textContent = error.message; }
     finally { lock(false); }
   }
-  $('source').addEventListener('change', () => { invalidSource = false; $('status').textContent = ''; $('results').replaceChildren(); });
+  $('all-sources').addEventListener('change', event => {
+    selectedSources = event.currentTarget.checked ? null : [];
+    scopeChanged();
+  });
+  $('source-list').addEventListener('change', event => {
+    const input = event.target;
+    if (!(input instanceof HTMLInputElement) || !input.dataset.source) return;
+    const selected = new Set(selectedSources === null ? enabledVaults.map(vault => vault.id) : selectedSources);
+    if (input.checked) selected.add(input.dataset.source);
+    else selected.delete(input.dataset.source);
+    selectedSources = [...selected];
+    scopeChanged();
+  });
   $('refresh').addEventListener('click', refresh);
   $('form').addEventListener('submit', async event => {
     event.preventDefault(); if (busy || !ready) return;
     if (invalidSource) { $('status').textContent = '之前选择的来源已失效，请重新选择检索范围。'; return; }
+    const enabledIds = new Set(enabledVaults.map(vault => vault.id));
+    const sources = selectedSources === null ? enabledVaults.map(vault => vault.id) : selectedSources;
+    if (sources.some(id => !enabledIds.has(id))) { $('status').textContent = '之前选择的路径已失效，请移除失效项或重新选择。'; return; }
+    if (sources.length === 0) { $('status').textContent = '请至少选择一个检索路径后再查询。'; return; }
     const query = $('query').value.trim();
     if (!query) { $('status').textContent = '请先填写关键词。'; $('query').focus(); return; }
     lock(true); $('status').textContent = '正在检索…'; $('results').replaceChildren();
     try {
-      const data = await call('oq_panel_query', { query, source: $('source').value, mode: $('mode').value, limit: Number($('limit').value) });
+      const data = await call('oq_panel_query', { query, sources, mode: $('mode').value, limit: Number($('limit').value) });
       const results = $('results');
       for (const hit of data.hits || []) {
         const article = document.createElement('article');

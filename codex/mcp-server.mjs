@@ -15,14 +15,15 @@ const tools = [
     outputSchema: { type: 'object', properties: { schema: { type: 'object' }, values: empty, layout: { type: 'array', items: { type: 'object' } } }, required: ['schema', 'values'], additionalProperties: false } },
   { name: 'oq_settings_update', title: '知识库面板设置', description: '面板入口没有可写的连接设置。', inputSchema: { type: 'object', properties: { set: empty }, required: ['set'], additionalProperties: false },
     outputSchema: { type: 'object', properties: { values: empty }, required: ['values'], additionalProperties: false } },
-  { name: 'oq_panel', title: 'Obsidian 知识库', description: '打开知识库面板，直接选择来源、检索并在面板内查看结果。', inputSchema: empty,
+  { name: 'oq_panel', title: 'Obsidian 知识库', description: '打开知识库面板，选择一个或多个本地路径，检索并在面板内查看结果。', inputSchema: empty,
     _meta: { ui: { resourceUri: RESOURCE, visibility: ['app'] }, 'openai/ui': { entrypoints: [{ type: 'global' }, { type: 'thread' }] } } },
   { name: 'oq_panel_state', title: '刷新知识库连接', description: '只读列出知识库状态和笔记数量，不返回凭据或绝对目录。', inputSchema: empty },
-  { name: 'oq_panel_query', title: '检索知识库', description: '按面板选择的来源执行只读检索；来源失效时停止，不扩大检索范围。',
+  { name: 'oq_panel_query', title: '检索知识库', description: '按面板选择的一个或多个来源执行只读检索；来源失效时停止，不扩大检索范围。',
     inputSchema: { type: 'object', properties: {
       query: { type: 'string', minLength: 1, maxLength: 500 }, source: { type: 'string', maxLength: 256 },
+      sources: { type: 'array', items: { type: 'string', minLength: 1, maxLength: 256 }, minItems: 1, maxItems: 256, uniqueItems: true },
       mode: { type: 'string', enum: ['search', 'context'] }, limit: { type: 'integer', minimum: 1, maximum: 10 },
-    }, required: ['query', 'source', 'mode', 'limit'], additionalProperties: false } },
+    }, required: ['query', 'mode', 'limit'], oneOf: [{ required: ['source'] }, { required: ['sources'] }], additionalProperties: false } },
 ].map(tool => ({ ...tool, annotations, _meta: tool._meta ?? meta }));
 
 function connection() {
@@ -81,17 +82,32 @@ async function runTool(name, args) {
   if (name === 'oq_panel') return { opened: true };
   if (name === 'oq_panel_state') return vaultState();
   if (name !== 'oq_panel_query') throw Error('未知面板工具。');
-  if (!args || typeof args.query !== 'string' || !args.query.trim() || args.query.length > 500 ||
-      typeof args.source !== 'string' || args.source.length > 256 || !['search', 'context'].includes(args.mode) ||
-      !Number.isInteger(args.limit) || args.limit < 1 || args.limit > 10) throw Error('检索参数无效，请重新选择来源并填写关键词。');
+  if (!args || typeof args !== 'object' || Array.isArray(args) || typeof args.query !== 'string' || !args.query.trim() || args.query.length > 500 ||
+      !['search', 'context'].includes(args.mode) || !Number.isInteger(args.limit) || args.limit < 1 || args.limit > 10)
+    throw Error('检索参数无效，请重新选择来源并填写关键词。');
+  const hasSingleSource = Object.prototype.hasOwnProperty.call(args, 'source');
+  const hasMultipleSources = Object.prototype.hasOwnProperty.call(args, 'sources');
+  const validSingleSource = hasSingleSource && typeof args.source === 'string' && args.source.length <= 256;
+  const validMultipleSources = hasMultipleSources && Array.isArray(args.sources) && args.sources.length > 0 && args.sources.length <= 256 &&
+    args.sources.every(id => typeof id === 'string' && id.length > 0 && id.length <= 256) && new Set(args.sources).size === args.sources.length;
+  if (hasSingleSource === hasMultipleSources || (hasSingleSource && !validSingleSource) || (hasMultipleSources && !validMultipleSources))
+    throw Error('检索参数无效，请重新选择来源并填写关键词。');
   const state = await vaultState();
   const enabled = state.vaults.filter(v => v.enabled);
   if (!enabled.length) throw Error('没有已启用的知识库。请在 Obsidian 中检查知识库登记与启用状态。');
-  const source = args.source ? enabled.find(v => v.id === args.source) : null;
-  if (args.source && !source) throw Error('所选知识库已停用或不存在，请重新选择检索范围。');
+  let selected = null;
+  if (hasMultipleSources) {
+    const requested = new Set(args.sources);
+    selected = enabled.filter(v => requested.has(v.id));
+    if (selected.length !== requested.size) throw Error('所选路径中有已停用或不存在的来源，请刷新并重新选择检索范围。');
+  } else if (args.source) {
+    const source = enabled.find(v => v.id === args.source);
+    if (!source) throw Error('所选知识库已停用或不存在，请重新选择检索范围。');
+    selected = [source];
+  }
   const body = { query: args.query.trim(), limit: args.limit };
   if (args.mode === 'context') body.budget = 4000;
-  if (source) body.sources = [{ vault: source.name, vaultId: source.id }];
+  if (selected) body.sources = selected.map(source => ({ vault: source.name, vaultId: source.id }));
   const result = await service('/' + args.mode, body);
   const warnings = Array.isArray(result.warnings) ? result.warnings.slice(0, 20).map(v => text(v, 1000)) : [];
   if (args.mode === 'context') return { mode: 'context', markdown: text(result.markdown, 16000), warnings };

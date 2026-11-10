@@ -90,6 +90,9 @@ function connect(script, env) {
       assert.ok(action);
       const descriptor = tools.find(tool => tool.name === action.tool);
       assert.ok(descriptor?._meta?.ui?.resourceUri?.startsWith('ui://'));
+      const querySchema = tools.find(tool => tool.name === 'oq_panel_query')?.inputSchema;
+      assert.ok(querySchema?.oneOf?.some(branch => branch.required?.includes('sources')));
+      assert.equal(querySchema?.properties?.sources?.type, 'array');
       const resource = await server.rpc('resources/read', { uri: descriptor._meta.ui.resourceUri });
       html = resource.contents[0].text;
       assert.equal(resource.contents[0].mimeType, 'text/html;profile=mcp-app');
@@ -109,12 +112,24 @@ function connect(script, env) {
       assert.equal(result.structuredContent.hits[0].excerpt, 'quoted text 命名');
       assert.deepEqual(calls.at(-1).body.sources, [{ vault: '同名库', vaultId: 'vault-b' }]);
     });
+    await check('Panel search combines multiple selected directories by stable ids', async () => {
+      const result = await server.call('oq_panel_query', { query: '命名', sources: ['vault-a', 'vault-b'], mode: 'search', limit: 5 });
+      assert.equal(result.isError, false);
+      assert.deepEqual(calls.at(-1).body.sources, [
+        { vault: '同名库', vaultId: 'vault-a' },
+        { vault: '同名库', vaultId: 'vault-b' },
+      ]);
+    });
     await check('Deleted, disabled, and malformed selections fail without broadening retrieval', async () => {
       const before = calls.filter(call => call.endpoint === '/search' || call.endpoint === '/context').length;
       for (const args of [
         { query: '命名', source: 'does-not-exist', mode: 'search', limit: 5 },
         { query: '命名', source: 'vault-disabled', mode: 'search', limit: 5 },
         { query: '命名', source: [], mode: 'search', limit: 5 },
+        { query: '命名', sources: [], mode: 'search', limit: 5 },
+        { query: '命名', sources: ['vault-a', 'vault-disabled'], mode: 'search', limit: 5 },
+        { query: '命名', sources: ['vault-a', 'missing'], mode: 'search', limit: 5 },
+        { query: '命名', sources: ['vault-a', 'vault-a'], mode: 'search', limit: 5 },
         { query: '命名', source: 'vault-a', mode: 'search', limit: -1 },
         { query: '', source: 'vault-a', mode: 'context', limit: 5 },
       ]) assert.equal((await server.call('oq_panel_query', args)).isError, true);
