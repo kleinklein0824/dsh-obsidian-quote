@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.9 — 2026-11-10 (multi-path local retrieval)
+
+- Allow registering local knowledge-base directories outside the currently open Obsidian vault.
+- Let the Codex knowledge panel search all enabled directories or any selected combination of paths in one query.
+- Stop queries when a selection is empty or includes a disabled/missing path; never broaden retrieval to another source after a stale selection.
+- Advance the Obsidian plugin to 0.2.9 and Codex integration to 0.1.5. DeepSeek, Claude, CLI/MCP and the shared service API remain unchanged.
+
 ## 0.2.8 — 2026-11-06 (community scorecard fixes)
 
 - Remove the forbidden product name from the manifest description and keep root/installable metadata aligned.

@@ -1,8 +1,10 @@
 # Obsidian 社区上架与配置迁移
 
-更新日期：2026-11-06。
+更新日期：2026-11-10。
 
 **截至 2026-11-06 22:37（台北时间）：0.2.8 自动审核已完成（Completed），原两项 Risks 已清除，官网按钮已启用，官方导出数据已收录；桌面端使用的 GitHub 目录镜像尚未收录，应用内搜索仍可能没有结果。** 旧版 0.2.7 的 Failed 保留为历史记录。本次无需重复提交或请求审核，下方保留目录同步排查、修复记录与以后更新时的操作方法。
+
+**最新发行：Vault Quote 0.2.9，发布时间 2026-11-10。** 此版本增加当前 Obsidian 库以外的目录登记。0.2.8 的 Completed 状态是历史结果，不代表 0.2.9 已被官方扫描；发布后需在管理页面执行 **Check for new releases**，再查看新版本的审核结果。
 
 ## 官网正常但 Obsidian 里搜索不到怎么办
 
@@ -26,15 +28,15 @@
 4. 镜像已收录但客户端仍缺失时，再针对客户端获取目录的网络或缓存问题排查；保留具体错误，不要直接删除整个 Obsidian 缓存或用户配置。
 5. 若后续镜像任务成功却持续未导出该条目，可向官方 `#community-directory` 频道反馈，附上公开条目、插件 ID、版本和该核验记录。不要为同一插件新建重复条目。
 
-需要立即在新知识库使用时，可从 **0.2.8 Release** 手动安装三文件或 ZIP。已有旧 ID 的用户先按下方步骤备份并迁移 `data.json`，不要同时启用两套服务。本次没有执行真实桌面安装，不把官网入口可见表述为桌面安装已验收。
+需要立即在新知识库使用时，可从 **0.2.9 Release** 手动安装三文件或 ZIP。已有旧 ID 的用户先按下方步骤备份并迁移 `data.json`，不要同时启用两套服务。本次没有执行真实桌面安装，不把官网入口可见表述为桌面安装已验收。
 
 ## 报错原因和本版修复
 
 Obsidian 的清单规范禁止插件 ID 含 `obsidian`，显示名称也不能含 `Obsidian` 或 `Plugin`。因此原 `obsidian-quote` / `Obsidian Quote` 可以本地加载，却不能通过新插件提交校验。
 
-Obsidian 安装组件现在使用 **`vault-quote` / Vault Quote / 0.2.8**，根目录与 `plugin/manifest.json` 一致。面板的“全部设置”按钮读取当前 `plugin.manifest.id`，不再固定打开旧 ID。共享 HTTP API、视图类型、`~/.obsidian-quote/config.json`、环境变量和各客户端的插件 ID 不变。
+Obsidian 安装组件现在使用 **`vault-quote` / Vault Quote / 0.2.9**，根目录与 `plugin/manifest.json` 一致。可登记当前库以外的本地目录，并限制 Codex 查询到用户勾选的多个来源。共享 HTTP API、视图类型、`~/.obsidian-quote/config.json`、环境变量和各客户端的服务地址不变。
 
-Obsidian 用标签 **`0.2.8`**，不带 `v`，与清单版本逐字一致；该 Release 的安装附件是 `main.js`、`manifest.json`、`styles.css`。配套 **`v0.2.7`** 保存完整源码包、Harness tgz、ZIP、视频与校验和，不作为 Obsidian 自动安装标签。
+Obsidian 用标签 **`0.2.9`**，不带 `v`，与清单版本逐字一致；该 Release 提供 `main.js`、`manifest.json`、`styles.css`、手动安装 ZIP 和校验和。配套 **`v0.2.7`** 保存旧的完整源码包、Harness tgz、ZIP、视频与校验和，不作为 Obsidian 自动安装标签。
 
 规范来源：[清单参考](https://docs.obsidian.md/Reference/Manifest)、[提交要求](https://docs.obsidian.md/community-directory/submission-requirements-for-plugins)、[提交插件](https://docs.obsidian.md/plugins/releasing/submit-plugin)。GitHub 发布和通过本地验证都不等于社区审核通过。
 
@@ -55,13 +57,13 @@ Obsidian 用标签 **`0.2.8`**，不带 `v`，与清单版本逐字一致；该 
 
 ### 以后发布新版本怎样检查
 
-以下以本次已完成审核的 0.2.8 为例；以后操作时替换为实际新发行版本，无需再次检查已经完成的这一项。
+以下针对最新发行 0.2.9。0.2.8 的审核完成状态是历史结果；每次新发行都应检查对应版本的分数卡。
 
 1. 登录创建此条目的 Obsidian 账号，在侧栏进入 **Plugins → Your entries → Vault Quote**，打开已有条目的管理页面。公开 Scorecard 页主要展示结果，GitHub 登录不等于已登录该开发者账号。
-2. 在管理页打开 **`…` → Check for new releases**。GitHub 仓库仍是 `https://github.com/kleinklein0824/dsh-obsidian-quote`，目标发行是 **`0.2.8`（无 `v`、正式发行）**，不要改成 `v0.2.7` 的配套素材发行。
-3. 确认网站的发行/更新列表识别了 **0.2.8**。新发行的清单必须为 `vault-quote` / `Vault Quote` / `0.2.8`，并具有 `main.js`、`manifest.json`、`styles.css` 三个安装附件。
+2. 在管理页打开 **`…` → Check for new releases**。GitHub 仓库仍是 `https://github.com/kleinklein0824/dsh-obsidian-quote`，目标发行是 **`0.2.9`（无 `v`、正式发行）**，不要改成 `v0.2.7` 的配套素材发行。
+3. 确认网站的发行/更新列表识别了 **0.2.9**。新发行的清单必须为 `vault-quote` / `Vault Quote` / `0.2.9`，并具有 `main.js`、`manifest.json`、`styles.css` 三个安装附件。
 4. 需要立即重新扫描时，在管理页打开 **`…` → Request review**；已有队列时继续跟进现有项。官方说明新 Release 会触发新审核，这个菜单可主动请求立即检查。如果需要维护承诺确认，由作者阅读并确认；本仓库无法代替作者完成账号内操作。
-5. 重新打开 Scorecard，先确认它对应 **0.2.8** 再检查两项风险。仍显示 0.2.7 时是在看旧版结果；刷新公开页面本身不能保证后台已检查新发行。保留新版本号与具体意见后再定位剩余问题。
+5. 重新打开 Scorecard，先确认它对应 **0.2.9** 再检查新版本意见。仍显示 0.2.8 或 0.2.7 时是在看旧版结果；刷新公开页面本身不能保证后台已检查新发行。保留新版本号与具体意见后再定位剩余问题。
 
 上述路径来自[官方条目管理说明](https://docs.obsidian.md/community-directory/manage-entry)。官方说明 **Warnings 不阻止提交**，应先核对新版本仍有哪些错误或风险；不能把剩余能力提示等同于全部功能故障。公开简介仍显示旧文字时，可在 **Edit listing** 修改短介绍为 `Register local vaults as read-only reference sources for AI coding assistants.`，再点击 **Save**。
 

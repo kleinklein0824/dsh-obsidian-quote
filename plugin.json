@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "obsidian-quote",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Search local Obsidian vaults and cited coding conventions through six read-only MCP tools.",
   "author": {
     "name": "Klein"
@@ -15,7 +15,7 @@
       "interface": {
         "displayName": "Obsidian Quote",
         "shortDescription": "连接并检索本地 Obsidian 知识库",
-        "longDescription": "通过插件设置页打开知识库面板，直接选择来源、检索并查看结果；也保留对话面板与六个只读 MCP 工具。使用现有本机 Obsidian 接入配置，知识库登记与服务管理位于 Obsidian。原生界面需要客户端支持 MCP Apps 与插件设置扩展。",
+        "longDescription": "通过插件设置页打开知识库面板，可选择全部或多个已登记的本地目录进行检索；也保留对话面板与六个只读 MCP 工具。目录可位于当前 Obsidian 库以外。使用现有本机接入配置，知识库登记与服务管理位于 Obsidian。原生界面需要客户端支持 MCP Apps 与插件设置扩展。",
         "developerName": "Klein",
         "category": "Productivity",
         "capabilities": [

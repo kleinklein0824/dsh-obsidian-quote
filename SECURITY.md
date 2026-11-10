@@ -18,7 +18,7 @@ The desktop plugin uses Node `fs` because the user can explicitly register multi
 
 Explicit actions can write this plugin's settings/ledger and local connection configuration with a backup. Management-panel copy actions write generated client-connection examples; the browser UI can also copy retrieved Markdown. All clipboard writes require a user click, and the plugin does not read clipboard content. Connection examples can contain the token and should stay private.
 
-Release 0.2.8 provides SHA-256 checksums but does not yet provide GitHub artifact attestations. Checksums establish byte consistency, not trusted build provenance or a security review. The minimum supported application remains 1.5.0; the plugin retains its existing settings UI rather than declaring an empty 1.13 settings-search API to suppress a warning.
+Release 0.2.9 provides SHA-256 checksums but does not yet provide GitHub artifact attestations. Checksums establish byte consistency, not trusted build provenance or a security review. The minimum supported application remains 1.5.0; the plugin retains its existing settings UI rather than declaring an empty 1.13 settings-search API to suppress a warning.
 
 ## Rotate a credential
 

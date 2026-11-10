@@ -190,7 +190,7 @@
   });
   async function start() {
     try {
-      const init = await rpc('ui/initialize', { protocolVersion: '2026-01-26', appInfo: { name: 'Obsidian Quote', version: '0.1.4' }, appCapabilities: {} });
+      const init = await rpc('ui/initialize', { protocolVersion: '2026-01-26', appInfo: { name: 'Obsidian Quote', version: '0.1.5' }, appCapabilities: {} });
       theme(init?.hostContext); notify('ui/notifications/initialized', {}); ready = true;
       new ResizeObserver(() => notify('ui/notifications/size-changed', { height: document.documentElement.scrollHeight })).observe(document.body);
       await refresh();

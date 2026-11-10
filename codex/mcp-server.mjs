@@ -124,7 +124,7 @@ async function handle(message) {
   const { id, method, params = {} } = message;
   const reply = result => send({ jsonrpc: '2.0', id, result });
   if (method === 'initialize') return reply({ protocolVersion: params.protocolVersion || '2025-03-26',
-    serverInfo: { name: 'obsidian-quote-panel', title: 'Obsidian 知识库', version: '0.1.4' },
+    serverInfo: { name: 'obsidian-quote-panel', title: 'Obsidian 知识库', version: '0.1.5' },
     capabilities: { tools: {}, resources: {}, extensions: { 'openai/settings': { readTool: 'oq_settings_read', updateTool: 'oq_settings_update' } } } });
   if (method === 'ping') return reply({});
   if (method === 'tools/list') return reply({ tools });

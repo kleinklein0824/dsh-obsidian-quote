@@ -1,6 +1,6 @@
 {
   "name": "obsidian-quote",
-  "version": "0.2.8",
+  "version": "0.2.9",
   "description": "Register local vaults as read-only reference sources for AI coding assistants.",
   "main": "main.js",
   "scripts": {
